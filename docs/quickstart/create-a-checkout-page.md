@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Create a Checkout Page
+# Step 2: Create a Checkout Page
 
 Documents are **groups of pages** connected through:
 
