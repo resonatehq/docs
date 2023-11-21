@@ -1,6 +1,6 @@
 {
-  "label": "Resonate Engine",
-  "position": 3,
+  "label": "Start Here",
+  "position": 1,
   "collapsible": false, 
   "link": {
     "type": "generated-index"
