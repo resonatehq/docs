@@ -15,21 +15,16 @@ Resonate offers a cloud computing model that is **dead simple** to use. Build re
 ### Works with your existing libraries and tools
 > [ PHASE 01 INTEGRATION ]
 
-The Resonate platform is designed to integrate seamlessly with your tech stack. You can use your preferred language to build applications on Resonate. There is no need to learn complex new tooling. Resonate meets you where you are, allowing you to leverage your existing skills to create applications your user's love.
+Resonate is designed to integrate seamlessly with your tech stack. You can use your preferred language to build resilient applications on Resonate. There is no need to learn complex new tooling. Resonate meets you where you are, allowing you to leverage your existing skills to create applications that handle failures gracefully.
 
-### Coordinate between any service, anywhere
+### One API to coordinate them all
 > [ PHASE 02 UNIFICATION ] 
 
-Consolidate the bespoke cloud computing programming models you are using and simplify your coordination across cloud systems by orders of magnitude. Do this while using an intuitive abstraction you already know - **async • await**.
+Resonate allows you to consolidate the bespoke cloud computing programming models you are using and simplify coordination across cloud systems by orders of magnitude. This is done through an intuitive abstraction you already know - **async • await**.
 
 ## Why should you care?
 
-You care about Resonate because, unlike other cloud programming models, it simplifies distributed systems concepts through the intuitive **async • await** abstractions you already know. With Resonate, you debug only your application rather than platform underneath it.
-
-Resonate strikes a careful balance in how much complexity it hides from you. It doesn't hide so much that you lose control over the external services you need. But it also doesn't overwhelm you by exposing unnecessary technical details just for the sake of flexibility.
-
-Instead, Resonate aims for simplicity by providing just the right amount of abstraction. It gives you the power and flexibility you want, through an interface designed for all computation.
-
+You care about Resonate because, unlike other cloud programming models, it simplifies distributed systems concepts through the intuitive **async • await** abstractions you already know. Resonate strikes a careful balance in how much complexity it hides from you. It doesn't hide so much that you lose control over the external services you need. But it also doesn't overwhelm you by exposing unnecessary technical details just for the sake of flexibility. It gives you the power and flexibility you want, through an interface designed for all computation. With Resonate, you debug only your application rather than the platform underneath it.
 
 ## Next Step
 
