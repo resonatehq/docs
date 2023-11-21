@@ -17,11 +17,6 @@ Asynchronous programming enables non-blocking code for better performance, but a
 
 > Reliability Meter: VOLATILE
 
-import myLow from '../../static/img/rel_low.png';
-
-<img src={myLow} alt="Example banner" width="200" />
-
-&nbsp;
 
 ```tsx title="src/volatile-promises.tsx"
 
@@ -39,12 +34,6 @@ export async function bar(n: number) Promise<number> {
 > To elevate your code to the next level of reliability, embrace the Resonate library. With a slight modification to your async functions, allowing them to accept a Context object, you can leverage Resonate's run method. This transforms promises into resilient entities, capturing progress in-memory. Even after encountering failures, operations seamlessly resume from the last checkpoint. Yes. You can use this sdk WITHOUT an external server dependency!
 
 > Reliability Meter: RESILIENT
-
-import myMid from '../../static/img/rel_mid.png';
-
-<img src={myMid} alt="Example banner" width="200" />
-
-&nbsp;
 
 ```bash 
 # download resonate sdk
@@ -75,13 +64,6 @@ export async function bar(c: context, n: number) Promise<number> {
 > Connecting Resonate to a durable server provides the ultimate level of reliability. Even in the face of application crashes and restarts, operation can resume from the last checkpoint. The only change from the resilient mode is including a URL to your resonate engine.
 
 > Reliability Meter: DURABLE 
-
-
-import myHigh from '../../static/img/rel_high.png';
-
-<img src={myHigh} alt="Example banner" width="200" /> 
-
-&nbsp;
 
 ```bash 
 # download nightly build with install script (recommended)

@@ -7,21 +7,11 @@ sidebar_position: 1
 
 Resonate offers a cloud computing model that allows you to build resilient applications using an intuitive programming interface you already know — **async • await**. 
 
-```tsx title="src/aha.tsx"
-import { Resonate } from '@resonate/sdk';
+import myCarbon from '../../static/img/carbon.png';
 
-const resonate = new Resonate();
-
-const result = await resonate.run("foo", "fooUID", 5);
-
-async function foo(c: Context, n: number): Promise<number> {
-    return await c.run(bar, n); 
-}
-
-async function bar(c: context, n: number) Promise<number> {
-     return 2 * n;
-}
-```
+<center>
+<img src={myCarbon} alt="aha" width="600" /> 
+</center>
 
 ## Dead Simple Coordination
 
