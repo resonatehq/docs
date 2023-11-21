@@ -4,25 +4,24 @@ sidebar_position: 2
 
 # Dialing Up The Reliability 
 
-Asynchronous programming empowers developers to craft non-blocking code, ushering in enhanced performance and responsiveness. Nevertheless, the realm of asynchronous code is not without its own set of challenges, especially when it comes to gracefully handling failures.
-
-Enter the Resonate library – your key to conquering these challenges by infusing reliability into your asynchronous code. Resonate doesn't just enable asynchronous operations; it empowers you to make them resilient. Offering two distinct reliability modes – `Volatile` and `Durable` – Resonate caters to your specific needs, ensuring your code stands strong against the unpredictable winds of failure.
+Asynchronous programming enables non-blocking code for better performance, but also brings challenges in handling failures gracefully. The Resonate library tackles these issues by baking reliability into asynchronous operations. It offers two reliability modes - `Resilient` and `Durable` - to fit your specific needs, helping you write asynchronous code that stands resilient against failures.
 
 ## Prerequisite
 
--- node stuff -- typescript version
+- Latest stable version of NodeJS >= v18.17.1 
+- npm CLI >= 9.6.7
+- cURL
 
-## The Fragile Foundation of Vanilla Promises
-> mode: volatile
+## The Fragile Foundation of Async • Await
+> At the most basic level, we often rely on `volatile` async • await to create a simple abstraction for asynchronous code. However, the Achilles' heel lies in their vulnerability to failures. Consider the following example:
+
+> Reliability Meter: VOLATILE
 
 import myLow from '../static/img/rel_low.png';
 
 <img src={myLow} alt="Example banner" width="200" />
 
-1) no -- vanilla -> volatile 
-2) no promises -> say async await -- functions and promises only then is it programming model... 
-
-At the most basic level, we often rely on vanilla promises to create a simple abstraction for asynchronous code. However, the Achilles' heel lies in their vulnerability to failures. Consider the following example:
+&nbsp;
 
 ```tsx title="src/volatile-promises.tsx"
 
@@ -37,22 +36,20 @@ export async function bar(n: number) Promise<number> {
 ```
 
 ## Adding Resiliency with the Resonate Library
-> mode: resilient
+> To elevate your code to the next level of reliability, embrace the Resonate library. With a slight modification to your async functions, allowing them to accept a Context object, you can leverage Resonate's run method. This transforms promises into resilient entities, capturing progress in-memory. Even after encountering failures, operations seamlessly resume from the last checkpoint. Yes. You can use this sdk WITHOUT an external server dependency!
+
+> Reliability Meter: RESILIENT
 
 import myMid from '../static/img/rel_mid.png';
 
 <img src={myMid} alt="Example banner" width="200" />
 
-REMIND: no volatile store in sdk -- 
-ResilientStore
+&nbsp;
 
 ```bash 
 # download resonate sdk
 npm install @resonate/sdk
 ```
-
-To elevate your code to the next level of reliability, embrace the Resonate library. With a slight modification to your async functions, allowing them to accept a Context object, you can leverage Resonate's run method. This transforms promises into resilient entities, capturing progress in-memory. Even after encountering failures, operations seamlessly resume from the last checkpoint.
-
 
 ```tsx title="src/resilient-promises.tsx"
 import { Resonate } from '@resonate/sdk';
@@ -74,24 +71,28 @@ export async function bar(c: context, n: number) Promise<number> {
 }
 ```
 
-## Adding Durability with the Resonate Server
-> mode: durable 
+## Adding Durability with the Resonate Engine
+> Connecting Resonate to a durable server provides the ultimate level of reliability. Even in the face of application crashes and restarts, operation can resume from the last checkpoint. The only change from the resilient mode is including a URL to your resonate engine.
+
+> Reliability Meter: DURABLE 
+
 
 import myHigh from '../static/img/rel_high.png';
 
 <img src={myHigh} alt="Example banner" width="200" /> 
 
+&nbsp;
+
 ```bash 
 # download nightly build with install script (recommended)
 curl -fsSL https://resonatehq.sh/install | bash
+
+# run resonate server 
+resonate serve
 ```
 
-Connecting Resonate to a durable server provides enduring capabilities. Progress persists across application restarts. The only change is including URL. 
-
-For the epitome of resilience, connect Resonate to a durable server. This transforms promises into entities with enduring capabilities. Even in the face of application crashes and restarts, progress persists. By seamlessly integrating Resonate with a durable server, operations can resume from the last checkpoint, irrespective of the tumultuous journey.
-
-
 ```tsx title="src/durable-promises.tsx"
+// point to resonate server
 const url = 'http://localhost:8001';
 const resonate = new Resonate(url); 
 ```
