@@ -5,39 +5,30 @@ sidebar_position: 1
 
 # Why Resonate?
 
-Resonate offers a cloud computing model that allows you to build resilient applications using an intuitive programming interface centered around  **async • await**. With a familiar **async • await** interface, you can create distributed services without learning complex failure handling techniques or vendor-specific concepts. On day one, use your existing **async • await** programming knowledge to build systems that recover gracefully. 
+Resonate offers a cloud computing model that allows you to build resilient applications using an intuitive programming interface you already know — **async • await**. 
 
-&nbsp;
+## Dead Simple 
 
-![alt text](../../static/img/temp_intro.png)
+### Coordination 
+With a familiar async • await interface, you can create and coordinate distributed services without learning complex failure handling techniques or vendor-specific concepts. On day one, use your existing async • await programming knowledge to build systems that recover gracefully. 
 
-&nbsp;
+### Integration
 
-### Works with your existing libraries and tools
-> [ PHASE 01 INTEGRATION ]
+:::note
+Integration is phase 2 of our [roadmap](https://github.com/resonatehq/resonate/issues/131). This Integration section aims to highlight the ambition and vision of the product not existing features. 
+:::
 
-Resonate is designed to integrate seamlessly with your tech stack. You can use your preferred language to build resilient applications on Resonate. There is no need to learn complex new tooling. Resonate meets you where you are, allowing you to leverage your existing skills to create applications that handle failures gracefully.
+Resonate is already designed to integrate seamlessly with your tech stack. The next level is to allow you to consolidate the custom cloud computing programming models you are using and greatly simplify coordination across cloud systems by orders of magnitude through the same async • await interface.
 
-### One API to coordinate them all
-> [ PHASE 02 UNIFICATION ] 
+## Flexibility 
 
-Resonate allows you to consolidate the bespoke cloud computing programming models you are using and simplify coordination across cloud systems by orders of magnitude. This is done through an intuitive abstraction you already know - **async • await**.
+### Dials of Reliability
 
-## Why should you care?
+The Resonate library offers two reliability modes to meet your needs:
+- *Resilient* mode provides medium failsafe protection with progress stored in-memory, for less critical applications or testing. 
+- *Durable* mode offers the highest reliability with complete fault-tolerance across application restarts, using the Resonate engine.
 
-As a developer, you should care because you currently find yourself here (a.k.a drowning in complexity) 📍 
-
-import myCurrent from '../../static/img/current.jpeg';
-
-&nbsp;
-
-<center>
-<img src={myCurrent} alt="current distributed systems landscape" width="600" /> 
-</center>
-
-&nbsp;
-
-You care about Resonate because, unlike other cloud programming models, it simplifies distributed systems concepts through the intuitive **async • await** abstractions **you already know**. Resonate strikes a careful balance in how much complexity it hides from you. It doesn't hide so much that you lose control over the external services you need. But it also doesn't overwhelm you by exposing unnecessary technical details just for the sake of flexibility. It gives you the power and flexibility you want, through an interface designed for all computation. With Resonate, you debug only your application rather than the platform underneath it.
+You can tune between these two modes like a slider, depending on your reliability requirements.
 
 ## Next Step
 
