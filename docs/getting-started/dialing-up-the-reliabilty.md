@@ -17,7 +17,7 @@ Asynchronous programming enables non-blocking code for better performance, but a
 
 > Reliability Meter: VOLATILE
 
-import myLow from '../static/img/rel_low.png';
+import myLow from '../../static/img/rel_low.png';
 
 <img src={myLow} alt="Example banner" width="200" />
 
@@ -40,7 +40,7 @@ export async function bar(n: number) Promise<number> {
 
 > Reliability Meter: RESILIENT
 
-import myMid from '../static/img/rel_mid.png';
+import myMid from '../../static/img/rel_mid.png';
 
 <img src={myMid} alt="Example banner" width="200" />
 
@@ -77,7 +77,7 @@ export async function bar(c: context, n: number) Promise<number> {
 > Reliability Meter: DURABLE 
 
 
-import myHigh from '../static/img/rel_high.png';
+import myHigh from '../../static/img/rel_high.png';
 
 <img src={myHigh} alt="Example banner" width="200" /> 
 

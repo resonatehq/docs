@@ -1,6 +1,7 @@
 {
-  "label": "Reference",
-  "position": 6,
+  "label": "Resources",
+  "position": 4,
+  "collapsible": false, 
   "link": {
     "type": "generated-index"
   }

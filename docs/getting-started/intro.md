@@ -9,7 +9,7 @@ Resonate offers a cloud computing model that allows you to build resilient appli
 
 &nbsp;
 
-![alt text](../static/img/temp_intro.png)
+![alt text](../../static/img/temp_intro.png)
 
 &nbsp;
 
@@ -27,7 +27,7 @@ Resonate allows you to consolidate the bespoke cloud computing programming model
 
 As a developer, you should care because you currently find yourself here (a.k.a drowning in complexity) 📍 
 
-import myCurrent from '../static/img/current.jpeg';
+import myCurrent from '../../static/img/current.jpeg';
 
 &nbsp;
 
