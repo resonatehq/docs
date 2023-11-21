@@ -3,46 +3,34 @@ slug: /
 sidebar_position: 1
 ---
 
-# Welcome to Resonate
+# Why Resonate?
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Resonate offers a cloud computing model that is **dead simple** to use. Build resilient, scalable applications using familiar **async • await** syntax. This eliminates the need for you to learn complex new skills and concepts when creating distributed services that need the added benefit of handling failures correctly. With Resonate, you can build resilient applications, while using the asynchronous programming techniques you already know.
 
-## Getting Started
+&nbsp;
 
-Get started by **creating a new site**.
+![alt text](../static/img/temp_intro.png)
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
 
-### What you'll need
+### Works with your existing libraries and tools
+> [ PHASE 01 INTEGRATION ]
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+The Resonate platform is designed to integrate seamlessly with your tech stack. You can use your preferred language to build applications on Resonate. There is no need to learn complex new tooling. Resonate meets you where you are, allowing you to leverage your existing skills to create applications your user's love.
 
-## Generate a new site
+### Coordinate between any service, anywhere
+> [ PHASE 02 UNIFICATION ] 
 
-Generate a new Docusaurus site using the **classic template**.
+Consolidate the bespoke cloud computing programming models you are using and simplify your coordination across cloud systems by orders of magnitude. Do this while using an intuitive abstraction you already know - **async • await**.
 
-The classic template will automatically be added to your project after you run the command:
+## Why should you care?
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+You care about Resonate because, unlike other cloud programming models, it simplifies distributed systems concepts through the intuitive **async • await** abstractions you already know. With Resonate, you debug only your application rather than platform underneath it.
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+Resonate strikes a careful balance in how much complexity it hides from you. It doesn't hide so much that you lose control over the external services you need. But it also doesn't overwhelm you by exposing unnecessary technical details just for the sake of flexibility.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+Instead, Resonate aims for simplicity by providing just the right amount of abstraction. It gives you the power and flexibility you want, through an interface designed for all computation.
 
-## Start your site
 
-Run the development server:
+## Next Step
 
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+Let's go learn how to dial up the reliability of your application. 
