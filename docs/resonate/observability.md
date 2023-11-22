@@ -20,7 +20,7 @@ Resonate gives you the option of setting the log level with the `--log-level` fl
 
 ## Metrics 
 
-Resonate comes with a metrics server that collects the following metrics: 
+Resonate comes with a metrics server that collects the following metrics:
 
 - https://github.com/resonatehq/resonate/blob/main/docs/metrics.md
 
