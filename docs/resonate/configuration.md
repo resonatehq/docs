@@ -4,12 +4,6 @@ sidebar_position: 2
 
 # Configuration
 
-:::info
-WORK IN PROGRESS
-
-This guide is a work in progress. We have chosen to build in public, which means that some sections may be incomplete and information may change at any time.
-:::
-
 Resonate is designed to run out of the box with smart defaults, minimizing the need for complex configuration. Simply run the following command to start with the default settings:
 ```bash
 resonate serve
