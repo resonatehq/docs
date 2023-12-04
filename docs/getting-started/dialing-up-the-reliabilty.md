@@ -22,7 +22,7 @@ npm install @resonatehq/sdk
 Add resiliency to your application:
 
 ```tsx title="src/resilient-promises.tsx"
-import { Resonate, Context } from "resonate-sdk-ts";
+import { Resonate, Context } from "@resonatehq/sdk";
 
 const resonate = new Resonate();
 
