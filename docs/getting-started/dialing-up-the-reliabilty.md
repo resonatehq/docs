@@ -16,7 +16,7 @@ To elevate your code to the next level of reliability, embrace the Resonate libr
 Download Resonate SDK:
 
 ```bash
-npm install https://github.com/resonatehq/resonate-sdk-ts
+npm install @resonatehq/sdk
 ```
 
 Add resiliency to your application:

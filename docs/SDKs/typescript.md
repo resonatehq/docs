@@ -11,7 +11,7 @@ Resonate offers a Typescript SDK for authoring durable promises using Typescript
 The Typescript SDK can be installed via npm:
 
 ```bash
-npm install https://github.com/resonatehq/resonate-sdk-ts
+npm install @resonatehq/sdk
 ```
 
 ## Features
@@ -21,7 +21,7 @@ npm install https://github.com/resonatehq/resonate-sdk-ts
 Durable promises can be created like so:
 
 ```tsx title="src/resilient-promises.tsx"
-import { Resonate, Context } from "resonate-sdk-ts";
+import { Resonate, Context } from "@resonatehq/sdk";
 
 const resonate = new Resonate();
 
