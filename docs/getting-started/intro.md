@@ -5,7 +5,7 @@ sidebar_position: 1
 
 # Why Resonate?
 
-Resonate offers a cloud computing model that allows you to build resilient applications using an intuitive programming interface you already know — **async • await**.
+Resonate offers a programming model that allows you to build distributed applications using an intuitive paradigm you already know — async await.
 
 import myCarbon from '../../static/img/carbon.png';
 
