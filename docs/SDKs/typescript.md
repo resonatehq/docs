@@ -6,36 +6,38 @@ sidebar_position: 2
 
 Resonate offers a Typescript SDK for authoring durable promises using Typescript.
 
-## Installation 
+## Installation
 
 The Typescript SDK can be installed via npm:
-```bash 
-npm install @resonate/sdk
+
+```bash
+npm install https://github.com/resonatehq/resonate-sdk-ts
 ```
 
 ## Features
 
 ### How to Add Durability to your Async • Await Code
 
-Durable promises can be created like so: 
+Durable promises can be created like so:
 
 ```tsx title="src/resilient-promises.tsx"
-import { Resonate } from '@resonate/sdk';
+import { Resonate, Context } from "resonate-sdk-ts";
 
 const resonate = new Resonate();
+
 const result = await resonate.run("foo", "fooUID", 5);
 
-// Progress saved in memory. 
-export async function foo(c: Context, n: number): Promise<number> {
-    return await c.run(bar, n); 
+// Progress saved in memory.
+async function foo(c: Context, n: number): Promise<number> {
+  return await c.run(bar, n);
 }
 
-export async function bar(c: Context, n: number) Promise<number> {
-     return 2*n; 
+async function bar(c: Context, n: number): Promise<number> {
+  return 2 * n;
 }
 ```
 
-## Observability 
+## Observability
 
 The SDK provides:
 
@@ -53,12 +55,12 @@ The Resonate SDK simplifies local development and testing by allowing you to run
 
 The SDK provides clear error reporting to debug promise failures. Errors include coded classifications to easily identify common problems.
 
-See the error code reference for more details.
+See the [error code reference](../reference/error-codes.md) for more details.
 
-## Security 
+<!-- ## Security
 
 The NPM package is cryptographically signed to ensure it originates from Resonate. Follow these steps to verify the integrity of provenance attestations for resonate dependencies:
 
-```bash 
+```bash
 npm audit signatures
-```
+``` -->
