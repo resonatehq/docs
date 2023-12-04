@@ -2,30 +2,12 @@
 sidebar_position: 2
 ---
 
-# Dialing Up The Reliability
-
-Asynchronous programming enables non-blocking code for better performance, but also brings challenges in handling failures gracefully. The Resonate library tackles these issues by baking reliability into asynchronous operations. It offers two reliability modes - **Resilient** and **Durable** - to fit your specific needs, helping you write asynchronous code that stands resilient against failures.
+# Quickstart
 
 ## Prerequisite
 
 - Latest stable version of NodeJS >= v18.17.1
 - npm CLI >= 9.6.7
-- cURL
-
-## The Fragile Foundation of Async • Await
-
-At the most basic level, we often rely on volatile async • await to create a simple abstraction for asynchronous code. However, the Achilles' heel lies in their vulnerability to failures. Consider the following example:
-
-```tsx title="src/volatile-promises.tsx"
-// If bar fails, foo will reject and all progress is lost.
-async function foo(n: number): Promise<number> {
-  return await bar(n);
-}
-
-async function bar(n: number): Promise<number> {
-  return 2 * n;
-}
-```
 
 ## Adding Resiliency with the Resonate Library
 
@@ -34,13 +16,13 @@ To elevate your code to the next level of reliability, embrace the Resonate libr
 Download Resonate SDK:
 
 ```bash
-npm install @resonate/sdk
+npm install https://github.com/resonatehq/resonate-sdk-ts
 ```
 
 Add resiliency to your application:
 
 ```tsx title="src/resilient-promises.tsx"
-import { Resonate } from "@resonate/sdk";
+import { Resonate, Context } from "resonate-sdk-ts";
 
 const resonate = new Resonate();
 
@@ -63,8 +45,16 @@ Connecting Resonate to a durable server provides the ultimate level of reliabili
 
 Download nightly build with install script and run Resonate engine:
 
+|  OS   | Architecture |                                                                               Link |
+| :---: | :----------: | ---------------------------------------------------------------------------------: |
+| MacOS |    x86_64    |  [Install](https://storage.googleapis.com/resonate-release/darwin-x86_64/resonate) |
+| MacOS |   aarch64    | [Install](https://storage.googleapis.com/resonate-release/darwin-aarch64/resonate) |
+| Linux |    x86_64    |   [Install](https://storage.googleapis.com/resonate-release/linux-x86_64/resonate) |
+| Linux |   aarch64    |  [Install](https://storage.googleapis.com/resonate-release/linux-aarch64/resonate) |
+
+Once you added resonate to your path, start resonate:
+
 ```bash
-curl -fsSL https://resonatehq.sh/install | bash # for macOS and Linux
 resonate serve
 ```
 
