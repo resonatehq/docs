@@ -11,14 +11,18 @@ sidebar_position: 2
 
 ## Steps
 
+Install ts-node.
+```
+npm install -g ts-node
+```
+
 Install the Resonate SDK and Express.
 ```bash
 npm install @resonatehq/sdk
 npm install express @types/express
 ```
 
-Create a file named **app.ts** and write a simple Resonate application combining durable async await with an express web server.
-This application simulates charging a user for a song.
+Create a file named **app.ts** and write a simple Resonate application combining durable async await with an express web server. This application simulates charging a user for a song.
 
 ```tsx title="app.ts"
 import { Resonate, Context } from "@resonatehq/sdk";
@@ -33,7 +37,12 @@ type Song = {
   price: number;
 };
 
-async function purchase(ctx: Context, user: User, song: Song): Promise<{ charged: boolean; granted: boolean }> {
+type Status = {
+  charged: boolean;
+  granted: boolean;
+};
+
+async function purchase(ctx: Context, user: User, song: Song): Promise<Status> {
   const charged = await ctx.run(charge, user, song);
   const granted = await ctx.run(access, user, song);
 
@@ -62,8 +71,11 @@ app.post("/purchase", async (req: Request, res: Response) => {
   const user = { id: req.body?.user ?? 1 };
   const song = { id: req.body?.song ?? 1, price: 1.99 };
 
+  // id uniquely identifies the purchase
+  const id = `purchase-${user.id}-${song.id}`;
+
   try {
-    res.send(await resonate.run("purchase", `purchase-${user.id}-${song.id}`, user, song));
+    res.send(await resonate.run("purchase", id, user, song));
   } catch (err) {
     res.status(500).send("Could not purchase song");
   }
@@ -89,6 +101,6 @@ curl \
   http://localhost:3000/purchase
 ```
 
-Play around with providing different values for both the user and song id. Notice that multiple requests with the same ids will not result in duplicated charges. This is because the identity of a purchase is defined by the value provided to `run` and, in contrast to a regular function call, outlives a single execution.
+Play around with providing different values for both the user and song id. Notice that multiple requests with the same ids will not result in duplicated charges. This is because the identity of a purchase is defined by the value provided to `run` that, in contrast to a regular function call, outlives a single execution.
 
-By default, Resonate uses a volatile promise store that stores promises in memory. See [how to initialize with a durable store](/sdks/typescript#initialize-with-durable-store) for details on how to connect to the Resonate server.
+By default, Resonate uses a volatile promise store that stores promises in memory. See [durable mode](/sdks/typescript#durable-mode) for details on how to connect to the Resonate server.

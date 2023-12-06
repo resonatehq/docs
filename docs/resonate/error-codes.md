@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Error Codes
 
-This document enumerates the all error codes that can be returned by our API.
+This document lists all error codes that can be returned by our API.
 
 ## Troubleshooting
 
