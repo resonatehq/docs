@@ -2,65 +2,30 @@
 sidebar_position: 2
 ---
 
-# Typescript SDK
+# Typescript
 
-Resonate offers a Typescript SDK for authoring durable promises using Typescript.
+Resonate offers a Typescript SDK for writing simple and elegant durable async await applications.
 
-## Installation
-
-The Typescript SDK can be installed via npm:
+## Install
 
 ```bash
 npm install @resonatehq/sdk
 ```
 
-## Features
+## Initialize with default store
 
-### How to Add Durability to your Async • Await Code
+By default, Resonate uses a volatile promise store that will persist promises in memory.
 
-Durable promises can be created like so:
-
-```tsx title="src/resilient-promises.tsx"
+```ts
 import { Resonate, Context } from "@resonatehq/sdk";
-
 const resonate = new Resonate();
-
-const result = await resonate.run("foo", "fooUID", 5);
-
-// Progress saved in memory.
-async function foo(c: Context, n: number): Promise<number> {
-  return await c.run(bar, n);
-}
-
-async function bar(c: Context, n: number): Promise<number> {
-  return 2 * n;
-}
 ```
 
-## Observability
+## Initialize with durable store
 
-The SDK provides:
+Resonate can be configured to use a durable promise store. See the Resonate Server docs for details on how to run the durable promise store locally.
 
-- Metrics (using OpenTelemetry)
-- Logging
-- Tracing (using OpenTelemetry)
-
-This allows monitoring runtime behavior, performance and debugging.
-
-## Testing and Local Development
-
-The Resonate SDK simplifies local development and testing by allowing you to run in-memory, eliminating the need to connect to a live Resonate engine. This provides fast feedback without mocking services or dependencies, streamlining the development process.
-
-## Debugging
-
-The SDK provides clear error reporting to debug promise failures. Errors include coded classifications to easily identify common problems.
-
-See the [error code reference](../reference/error-codes.md) for more details.
-
-<!-- ## Security
-
-The NPM package is cryptographically signed to ensure it originates from Resonate. Follow these steps to verify the integrity of provenance attestations for resonate dependencies:
-
-```bash
-npm audit signatures
-``` -->
+```ts
+import { Resonate, Context } from "@resonatehq/sdk";
+const resonate = new Resonate("https://localhost:8001");
+```

@@ -1,0 +1,104 @@
+---
+sidebar_position: 4
+---
+
+# Error Codes
+
+This document enumerates the all error codes that can be returned by our API.
+
+## Troubleshooting
+
+When encountering an error, follow these general steps:
+
+1. **Identify the Error Code**
+   - Check the error code in the response or logs to understand the nature of the issue.
+
+2. **Refer to Documentation**
+   - Check this document to find the description and recommended actions for the specific error code.
+
+3. **Troubleshoot**
+   - Follow the provided recommendations to troubleshoot and resolve the issue.
+
+4. **Contact Support:**
+   - If the problem persists, open a [GitHub issue](https://github.com/resonatehq/resonate/issues/new) with details, including the error code and steps to reproduce.
+
+## Error Schema
+
+When an error occurs, the response body will contain the following information.
+
+```json 
+{
+    "error": {
+        "code": 5002,
+        "message": "failed to update promise",
+        "details": [
+            {
+                "@type": "ServerError",
+                "message": "attempt to write a readonly database",
+                "domain": "server",
+                "metadata": {
+                    "url": "https://docs.resonatehq.io/reference/error-codes#5002"
+                }
+            }
+        ]
+    }
+}
+```
+
+The `code` field can be used to programmatically identify the error. The message and details provide a human readable description of what went wrong.
+
+The `details` provide structured diagnostic data such as the originating subsystem and links to documentation which can assist in debugging and troubleshooting.
+
+## Request Errors (4000-4999)
+
+Request errors signify problems with the request. Generally, retrying the request will not resolve the issue.
+
+### 4000
+There was a validation error affecting one or more fields.
+
+### 4030
+The promise has already been resolved. Once a promise is resolved it can no longer be modified.
+
+### 4031
+The promise has already been rejected. Once a promise is rejected it can no longer be modified.
+
+### 4032
+The promise has already been canceled. Once a promise is canceled it can no longer be modified.
+
+### 4033
+The promise has already timed out. Once a promise is timed out it can no longer be modified.
+
+### 4040
+A promise with the provided identifier could not be found.
+
+### 4041
+A subscription with the provided identifier could not be found.
+
+### 4090
+A promise with the provided identifier already exists.
+
+
+## Server Errors (5000-5999)
+
+Server errors represent transient or systemic problems that prevent the request from being processed. Retrying the request may resolve the issue.
+
+### 5000
+An unknown internal server error occurred. Please open a [GitHub issue](https://github.com/resonatehq/resonate/issues/new) with corresponding details.
+
+### 5001
+There was a failure related the network subsystem.
+
+### 5002
+There was a failure related the store subsystem.
+
+### 5003
+There was a failure serializing or deserializing data from the store.
+
+### 5030
+The system is currently shutting down.
+
+### 5031
+The API submission queue is full. Please try again later.
+
+### 5032
+The AIO submission queue is full. Please try again later.
