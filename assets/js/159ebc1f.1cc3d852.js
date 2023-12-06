@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkresonate=self.webpackChunkresonate||[]).push([[776],{2331:t=>{t.exports=JSON.parse('{"title":"SDKs","slug":"/category/sdks","permalink":"/category/sdks","navigation":{"previous":{"title":"Quickstart","permalink":"/getting-started/quickstart"},"next":{"title":"Typescript","permalink":"/sdks/typescript"}}}')}}]);
