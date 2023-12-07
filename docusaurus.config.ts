@@ -87,7 +87,7 @@ const config: Config = {
         },
         {
           html: `
-            <a href="https://resonatehqcommunity.slack.com" target="_blank" rel="noopener noreferrer" aria-label="Resonate Slack">
+            <a href="https://join.slack.com/t/resonatehqcommunity/shared_invite/zt-22h6iu4m8-2Tl9M25IZduNU_sBcPteMg" target="_blank" rel="noopener noreferrer" aria-label="Resonate Slack">
               <i class="bx bx-sm bxl-slack"></i>
             </a>
           `,
