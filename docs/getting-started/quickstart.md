@@ -23,7 +23,7 @@ npm install express @types/express
 
 Create a file named **app.ts** and write a simple Resonate application combining durable async await with an express web server. This application simulates charging a user for a song.
 
-```tsx title="app.ts"
+```ts title="app.ts"
 import { Resonate, Context } from "@resonatehq/sdk";
 import express, { Request, Response } from "express";
 
