@@ -20,6 +20,7 @@ Use the links below to download the latest release of the Resonate server. If yo
 The following command starts the Resonate server with default configuration.
 
 ```bash
+chmod +x resonate
 ./resonate serve
 ```
 
