@@ -27,5 +27,5 @@ Resonate can be configured to use a durable promise store. See the [Resonate Ser
 
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
-const resonate = new Resonate("https://localhost:8001");
+const resonate = new Resonate({ url: "http://0.0.0.0:8001" });
 ```
