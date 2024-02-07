@@ -69,8 +69,20 @@ const config: Config = {
       },
       items: [
         {
+          to: 'https://docs.resonatehq.io',
+          label: 'Docs',
+          position: 'right',
+          target: '_self',
+        },
+        {
+          to: 'https://blog.resonatehq.io',
+          label: 'Blog',
+          position: 'right',
+          target: '_self',
+        },
+        {
           href: 'https://github.com/resonatehq/resonate',
-          html: `<i class="bx bx-md bxl-github"></i>`,
+          html: '<i class="bx bx-md bxl-github"></i>',
           position: 'right',
         },
       ],
