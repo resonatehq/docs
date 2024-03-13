@@ -4,16 +4,19 @@ sidebar_position: 1
 
 # Quickstart
 
-## Downloads
+## Install the Latest Release
 
-Use the links below to download the latest release of the Resonate server. If you do not see an applicable download you can [build from source](https://github.com/resonatehq/resonate). Please note that Resonate is currently a work in progress and the server is provided as-is.
+#### MacOS 
 
-| OS | Architecture | Download |
-| -- | ------------ | :------: |
-| MacOS | x86_64    | <a href="https://storage.googleapis.com/resonate-release/darwin-x86_64/resonate"><i class="bx bx-xs bx-download"></i></a> |
-| MacOS | aarch64   | <a href="https://storage.googleapis.com/resonate-release/darwin-aarch64/resonate"><i class="bx bx-xs bx-download"></i></a> |
-| Linux | x86_64    | <a href="https://storage.googleapis.com/resonate-release/linux-x86_64/resonate"><i class="bx bx-xs bx-download"></i></a> |
-| Linux | aarch64   | <a href="https://storage.googleapis.com/resonate-release/linux-aarch64/resonate"><i class="bx bx-xs bx-download"></i></a> |
+```shell
+brew install --build-from-source resonate-hq/resonate/installation/brew/Formula/resonate.rb
+```
+
+#### Linux
+
+```shell
+curl -fsSL https://github.com/resonatehq/resonate/blob/main/installation/linux/install.sh | sh
+```
 
 ## Start
 
