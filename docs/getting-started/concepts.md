@@ -180,4 +180,4 @@ This section is a work in progress. We have chosen to build in public, which mea
 
 ---
 
-We hope this overview of the key concepts in our system has been insightful and engaging. By understanding local and remote promises, as well as the importance of a well-designed identity naming scheme for durable executions, you're well on your way to building robust and reliable applications. Happy coding! 🚀
+We hope this overview of the key concepts in our system has been insightful and engaging. By understanding Durable promises, the importance of a well-designed identity naming scheme for durable executions, and how function versioning works, you're well on your way to building robust and reliable applications. Happy coding! 🚀
