@@ -16,8 +16,8 @@ import echo from '../../static/img/echo.png';
 
 - Resonate embraces the spirit of **open source** and **open collaboration**.
 
-- Resonate's **durable async await** builds on [durable promises](/reference/durable-promises.md), an open standard with a minimal and accessible API.
+- Resonate's **distributed async await** builds on [durable promises](/reference/durable-promises.md), an open standard with a minimal and accessible API.
 
-# Durable async await
+# Distributed async await
 
-Resonate's durable async await, that is, functions and promises that maintain progress in durable storage. With durable async await function executions have an identity that outlives the execution of the underlying function. This simple concept can be used to coordinate processes in distributed applications, implement transaction semantics across disparate systems, and much more.
+Resonate introduces distributed async await, a powerful feature that allows functions and promises to maintain progress in durable storage. With this approach, function executions have a unique identity that persists beyond the execution of the underlying function. This simple yet effective concept enables developers to coordinate processes, implement transaction semantics, and handle failures gracefully across distributed systems.

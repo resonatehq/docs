@@ -6,7 +6,7 @@ sidebar_position: 1
 
 ## Install the Latest Release
 
-#### MacOS 
+#### MacOS
 
 ```shell
 brew install --build-from-source resonate-hq/resonate/installation/brew/Formula/resonate.rb
@@ -30,6 +30,7 @@ chmod +x resonate
 ## Configuration
 
 Optionally, you can start Resonate with a configuration file.
+
 ```bash
 ./resonate serve --config resonate.yml
 ```
@@ -55,7 +56,7 @@ aio:
         workers: 1
         batchSize: 100
       config:
-        kind: sqlite  # also: postgres
+        kind: sqlite # also: postgres
         sqlite:
           path: resonate.db
           txTimeout: 250ms
@@ -84,6 +85,7 @@ metrics:
 ```
 
 Additionally, all configuration options can be specified as command line flags.
+
 ```bash
 ./resonate serve --help
 ```

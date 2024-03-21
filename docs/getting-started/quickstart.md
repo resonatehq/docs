@@ -11,17 +11,19 @@ sidebar_position: 2
 ## Steps
 
 Install ts-node.
+
 ```
 npm install -g ts-node
 ```
 
 Install the Resonate SDK and Express.
+
 ```bash
 npm install @resonatehq/sdk
 npm install express @types/express
 ```
 
-Create a file named **app.ts** and write a simple Resonate application combining durable async await with an express web server. This application simulates charging a user for a song.
+Create a file named **app.ts** and write a simple Resonate application combining distributed async await with an express web server. This application simulates charging a user for a song.
 
 ```ts title="app.ts"
 import { Resonate, Context } from "@resonatehq/sdk";
@@ -64,7 +66,7 @@ resonate.register("purchase", purchase);
 
 // Initialize Express app
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 app.post("/purchase", async (req: Request, res: Response) => {
   const user = { id: req.body?.user ?? 1 };
@@ -86,6 +88,7 @@ app.listen(3000, () => {
 ```
 
 Now we can start the application.
+
 ```bash
 ts-node app.ts
 ```

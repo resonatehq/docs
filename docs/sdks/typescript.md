@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Typescript
 
-Resonate offers a Typescript SDK for writing simple and elegant durable async await applications.
+Resonate offers a Typescript SDK for writing simple and elegant distributed async await applications.
 
 ## Install
 
