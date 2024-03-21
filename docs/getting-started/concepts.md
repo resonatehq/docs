@@ -125,6 +125,17 @@ When designing the naming scheme for your durable execution IDs, keep the follow
 
 ### 🌳 Common Naming Approaches
 
+#### 📅 Date-Based Naming Scheme
+
+One very common approach is to use the date as part of the naming scheme. This is particularly useful when the frequency of execution is based on time intervals. For example:
+
+- **Daily News Feed**: If you have a durable execution that fetches and aggregates news articles on a daily basis, you could include the date in the ID format, such as `news_feed_YYYY-MM-DD`.
+- **Monthly Data Summarization**: For a durable execution that generates a summary of data every month, you could use a naming scheme like `data_summary_YYYY-MM`.
+
+By incorporating the date into the naming scheme, you ensure uniqueness and provide a clear indication of when the execution occurred.
+
+Remember to choose a naming scheme that aligns with your specific use case and requirements, taking into account factors such as uniqueness, readability, and relevance to the purpose of the durable execution.
+
 #### 📁 Hierarchical Naming Scheme
 
 You can use a hierarchical naming scheme similar to file system paths to represent the identity of a durable execution. The naming scheme can include information such as the environment, service, and specific execution details. For example:
@@ -160,17 +171,6 @@ If you prefer to keep the durable execution ID opaque and store the associated m
 ```
 http://example.com/executions/a7b89c3d-f012-4e78-9a7d-89a3f6b2e1c7
 ```
-
-### 📅 Date-Based Naming Scheme
-
-One very common approach is to use the date as part of the naming scheme. This is particularly useful when the frequency of execution is based on time intervals. For example:
-
-- **Daily News Feed**: If you have a durable execution that fetches and aggregates news articles on a daily basis, you could include the date in the ID format, such as `news_feed_YYYY-MM-DD`.
-- **Monthly Data Summarization**: For a durable execution that generates a summary of data every month, you could use a naming scheme like `data_summary_YYYY-MM`.
-
-By incorporating the date into the naming scheme, you ensure uniqueness and provide a clear indication of when the execution occurred.
-
-Remember to choose a naming scheme that aligns with your specific use case and requirements, taking into account factors such as uniqueness, readability, and relevance to the purpose of the durable execution.
 
 ## 🔐 Versioning your Functions
 
