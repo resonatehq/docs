@@ -20,4 +20,4 @@ import echo from '../../static/img/echo.png';
 
 # Distributed async await
 
-Resonate introduces distributed async await, a powerful feature that allows functions and promises to maintain progress in durable storage. With this approach, function executions have a unique identity that persists beyond the execution of the underlying function. This simple yet effective concept enables developers to coordinate processes, implement transaction semantics, and handle failures gracefully across distributed systems.
+Resonate introduces distributed async await, a powerful feature that allows functions and promises to maintain progress in durable storage. With this approach, function executions have an unique identity that persists beyond the execution of the underlying function. This simple yet effective concept enables developers to coordinate processes, implement transaction semantics, and handle failures gracefully across distributed systems.
