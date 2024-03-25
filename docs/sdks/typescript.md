@@ -26,14 +26,18 @@ const resonate = new Resonate();
 
 ## Registering Functions
 
-To fully leverage the potential of Resonate, you must first register your function. Once registered, you can invoke it using `resonate.run`, passing the registered function's ID, a UID for the execution, and the function's arguments. `resonate.run` will execute your code until completion, even in the presence of hardware or software failure.
+To fully leverage the potential of Resonate, you must first register your function. Once registered, you can invoke it using `resonate.run`, passing the registered function's ID, a UID for the execution, and the function's arguments. `resonate.run` will execute your code until completion, even in the presence of hardware or software failure. Don't forget to actually start the resonate application by calling `resonate.start()`!
 
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
 
+const resonate = new Resonate();
+
 resonate.register("purchase", purchase);
 
 resonate.run("purchase", id, user, song);
+
+resonate.start();
 ```
 
 ## Resonate Context
@@ -102,7 +106,7 @@ resonate.register(
 
 ## Next Steps
 
-We hope this guide has provided you with a solid foundation for working with the Resonate Typescript SDK. If you have any questions or need further assistance, don't hesitate to reach out to our support team. For next steps, consider the following:
+We hope this guide has provided you with a solid foundation for working with the Resonate Typescript SDK. If you have any questions or need further assistance, don't hesitate to reach out to us. For next steps, consider the following:
 
 - Refer to our [API reference](https://resonatehq.github.io/resonate-sdk-ts/index.html) for a complete list of available methods and options.
 - Refer to our [TypeScript Quickstart Repo](https://github.com/resonatehq/quickstart-ts/tree/main) for in-depth code examples of the TypeScript SDK.
