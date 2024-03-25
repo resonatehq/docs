@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # Typescript
@@ -14,63 +14,51 @@ To get started, simply install the SDK using npm:
 npm install @resonatehq/sdk
 ```
 
-## Modes of Operation
+## Getting Started
 
-The Resonate SDK offers two modes of operation: Default and Durable. Choose the mode that best suits your application's requirements.
+It all starts with a top-level object creation:
 
-### Default Mode
+```ts
+import { Resonate } from "@resonatehq/sdk";
 
-In the default mode, Resonate uses a volatile in-memory promise store. This mode provides out-of-the-box features such as transparent retries, tracing, and logging. Here's an example of how to use the default mode:
+const resonate = new Resonate();
+```
+
+## Registering Functions
+
+To fully leverage the potential of Resonate, you must first register your function. Once registered, you can invoke it using `resonate.run`, passing the registered function's ID, a UID for the execution, and the function's arguments. `resonate.run` will execute your code until completion, even in the presence of hardware or software failure.
 
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
 
-const resonate = new Resonate();
+resonate.register("purchase", purchase);
 
-// In resonate durable functions, all interaction with the runtime occurs through the Resonate context. This context provides a set of methods that allow you to perform actions such as running durable stepr, or calling workers.
+resonate.run("purchase", id, user, song);
+```
+
+## Resonate Context
+
+All interactions with the runtime occur through the Resonate context, which provides methods like `ctx.run()`. These methods offer transparent retries, recoverability, task distribution, and more. Therefore, all top-level functions and intermediary steps must accept a Resonate context as their first argument.
+
+```ts
 async function purchase(ctx: Context, user: User, song: Song): Promise<Status> {
   const charged = await ctx.run(charge, user, song);
   const granted = await ctx.run(access, user, song);
   return { charged, granted };
 }
 
-// resonate.register() register a durable function (start with resonate.Context as first argument) and unique key.
-resonate.register("purchase", purchase);
+async function charge(ctx: Context, user: User, song: Song): Promise<boolean> {
+  console.log(`Charged user:${user.id} $${song.price}.`);
+  return true;
+}
 
-// resonate.run() will transparently retry against transient failures like network issues.
-const val = await resonate.run("purchase", id, user, song);
-
-// Starts the Resonate application.
-resonate.start();
-```
-
-You can also schedule reminders as durable promises in-memory:
-
-```ts
-resonate.schedule("everyHour", "0 * * * *", (ctx: Context) => {
-  console.log("every hour", Date.now());
-});
-```
-
-### Durable Mode
-
-For advanced use cases that require recoverability, stateful reminders, and a distributed task framework, Resonate can be configured to use a durable promise store. To use durable mode, you'll need to first run the Resonate Server locally. Refer to the [Resonate Server docs](/resonate/quickstart) for detailed setup instructions.
-
-The only difference to initialize Resonate in durable mode is passing the address of the Resonate Server:
-
-```ts
-import { Resonate, Context } from "@resonatehq/sdk";
-
-const resonate = new Resonate({
-  url: "http://localhost:8001",
-});
+async function access(ctx: Context, user: User, song: Song): Promise<boolean> {
+  console.log(`Granted user:${user.id} access to song:${song.id}.`);
+  return true;
+}
 ```
 
 ## Configurations
-
-:::info
-Timeouts are a specially important configuration to be aware of. Durable promises are attempted to be resolved and retried up until the configured promise timeout. Additionally, ensure that the operations performed by your durable functions are idempotent to prevent side effects.
-:::
 
 Resonate provides a range of configuration options to customize its behavior. If options are not provided, sensible defaults are used.
 
@@ -114,7 +102,7 @@ resonate.register(
 
 ## Testing
 
-While you may run your tests without using the server, since the SDK can run separately. We also recommend using [Test Containers](https://testcontainers.com/):
+While you can run your tests without utilizing the server, as the SDK can operate separately, we also recommend using [Test Containers](https://testcontainers.com/):
 
 ```ts
 import { GenericContainer } from "testcontainers";
