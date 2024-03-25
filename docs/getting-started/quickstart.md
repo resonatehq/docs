@@ -33,7 +33,7 @@ npm install @resonatehq/sdk express @types/express
 Create a file named **app.ts**, copy and paste the minimal distributed async/await application below. This application simulates reliably downloading and summarizing web content with a 10% chance of failure.
 
 ```ts title="app.ts"
-import { Resonate, Context } from "@guergabo-test/sdk";
+import { Resonate, Context } from "@resonatehq/sdk";
 import express, { Request, Response } from "express";
 
 async function downloadAndSummarize(ctx: Context, url: string) {
@@ -50,7 +50,7 @@ async function download(ctx: Context, url: string): Promise<string> {
       } else {
         resolve("This is the text of the page");
       }
-    }, 2500);
+    }, 1000);
   });
 }
 
@@ -62,7 +62,7 @@ async function summarize(ctx: Context, text: string): Promise<string> {
       } else {
         resolve("This is a summary of the text");
       }
-    }, 2500);
+    }, 1000);
   });
 }
 
