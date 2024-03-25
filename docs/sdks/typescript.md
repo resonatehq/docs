@@ -100,34 +100,6 @@ resonate.register(
 );
 ```
 
-## Testing
-
-While you can run your tests without utilizing the server, as the SDK can operate separately, we also recommend using [Test Containers](https://testcontainers.com/):
-
-```ts
-import { GenericContainer } from "testcontainers";
-
-describe("Resonate Integration Test", () => {
-  let resonateContainer: GenericContainer;
-
-  beforeAll(async () => {
-    // Start a Resonate test container.
-    resonateContainer = await new GenericContainer("resonate:1.0.0")
-      .withExposedPorts(8001)
-      .start();
-  });
-
-  afterAll(async () => {
-    // Stop the Resonate test container.
-    await resonateContainer.stop();
-  });
-
-  it("test", async () => {
-    // ...
-  });
-});
-```
-
 ## Next Steps
 
 We hope this guide has provided you with a solid foundation for working with the Resonate Typescript SDK. If you have any questions or need further assistance, don't hesitate to reach out to our support team. For next steps, consider the following:
