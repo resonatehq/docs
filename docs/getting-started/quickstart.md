@@ -4,81 +4,92 @@ sidebar_position: 2
 
 # Quickstart
 
+Welcome to the Resonate SDK quickstart! This quickstart is designed to give you a rapid introduction to the core concepts and syntax of the Resonate SDK. By the end, you'll have a basic understanding of how to register functions, run them with unique identifiers, and integrate Resonate with a web server.
+
 ## Prerequisites
 
 - NodeJS
 
 ## Steps
 
+Create project folder.
+
+```bash
+mkdir resonate-quickstart && cd resonate-quickstart
+```
+
 Install ts-node.
 
-```
-npm install -g ts-node
+```bash
+npm init -y && npm install typescript ts-node @types/node --save-dev
 ```
 
 Install the Resonate SDK and Express.
 
 ```bash
-npm install @resonatehq/sdk
-npm install express @types/express
+npm install @resonatehq/sdk express @types/express
 ```
 
-Create a file named **app.ts** and write a simple Resonate application combining distributed async await with an express web server. This application simulates charging a user for a song.
+Create a file named **app.ts**, copy and paste the minimal distributed async/await application below. This application simulates reliably downloading and summarizing web content with a 10% chance of failure.
 
 ```ts title="app.ts"
-import { Resonate, Context } from "@resonatehq/sdk";
+import { Resonate, Context } from "@guergabo-test/sdk";
 import express, { Request, Response } from "express";
 
-type User = {
-  id: number;
-};
-
-type Song = {
-  id: number;
-  price: number;
-};
-
-type Status = {
-  charged: boolean;
-  granted: boolean;
-};
-
-async function purchase(ctx: Context, user: User, song: Song): Promise<Status> {
-  const charged = await ctx.run(charge, user, song);
-  const granted = await ctx.run(access, user, song);
-
-  return { charged, granted };
+async function downloadAndSummarize(ctx: Context, url: string) {
+  let content = await ctx.run(download, url);
+  let summary = await ctx.run(summarize, content);
+  return summary;
 }
 
-async function charge(ctx: Context, user: User, song: Song): Promise<boolean> {
-  console.log(`Charged user:${user.id} $${song.price}.`);
-  return true;
+async function download(ctx: Context, url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() < 0.1) {
+        reject("Download failed due to a network error.");
+      } else {
+        resolve("This is the text of the page");
+      }
+    }, 2500);
+  });
 }
 
-async function access(ctx: Context, user: User, song: Song): Promise<boolean> {
-  console.log(`Granted user:${user.id} access to song:${song.id}.`);
-  return true;
+async function summarize(ctx: Context, text: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() < 0.1) {
+        reject("Download failed due to a network error.");
+      } else {
+        resolve("This is a summary of the text");
+      }
+    }, 2500);
+  });
 }
 
-// Initialize Resonate app
+// 1) Initialize a Resonate application.
 const resonate = new Resonate();
-resonate.register("purchase", purchase);
 
-// Initialize Express app
-const app = express();
-app.use(express.json());
+// 2) Register a function as a Resonate function.
+resonate.register(
+  "downloadAndSummarize",
+  downloadAndSummarize,
+  resonate.options({ timeout: 20000 })
+);
 
-app.post("/purchase", async (req: Request, res: Response) => {
-  const user = { id: req.body?.user ?? 1 };
-  const song = { id: req.body?.song ?? 1, price: 1.99 };
+// 3) Start the Resonate application.
+resonate.start();
 
-  // id uniquely identifies the purchase
-  const id = `purchase-${user.id}-${song.id}`;
+const app = express().use(express.json());
 
+app.post("/summarize", async (req: Request, res: Response) => {
+  const url = req.body?.url;
+  const uid = `summarize-${url}`;
   try {
-    res.send(await resonate.run("purchase", id, user, song));
-  } catch (err) {
-    res.status(500).send("Could not purchase song");
+    // 4) Run the registered 'downloadAndSummarize' function with the above uid and the following function arguments.
+    let summary = await resonate.run("downloadAndSummarize", uid, url);
+    res.send(summary);
+  } catch (e) {
+    res.status(500).send("An error occurred.");
   }
 });
 
@@ -93,16 +104,21 @@ Now we can start the application.
 ts-node app.ts
 ```
 
-Next, call the endpoint providing a user and song id in the payload of the request.
+Next, call the endpoint providing a url in the payload of the request.
 
 ```
 curl \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"user": 1, "song": 1}' \
-  http://localhost:3000/purchase
+  -d '{"url": "http://example.com"}' \
+  http://localhost:3000/summarize
 ```
 
-Play around with providing different values for both the user and song id. Notice that multiple requests with the same ids will not result in duplicated charges. This is because the identity of a purchase is defined by the value provided to `run` that, in contrast to a regular function call, outlives a single execution.
+## Next Steps
 
-By default, Resonate uses a volatile promise store that stores promises in memory. See [durable mode](/sdks/typescript#durable-mode) for details on how to connect to the Resonate server.
+Fantastic work! You've just created your first distributed async/await application with Resonate. What's next? It depends on your learning style:
+
+- If you're a code-first kind of learner, eager to see more examples and get your hands dirty, head over to our [Typescript Quickstart Repo](https://github.com/resonatehq/quickstart-ts/tree/main).
+- If you prefer to dive into concepts and gain a deeper understanding of how Resonate works under the hood, check out our [Concepts page](/getting-started/concepts).
+
+Happy learning, and happy building!

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Durable Promises 
+# Durable Promises
 
 :::info WORK IN PROGRESS
 
@@ -10,4 +10,5 @@ This guide is a work in progress. We have chosen to build in public, which means
 :::
 
 The Resonate Server implements the Durable Promise Specification.
+
 - https://github.com/resonatehq/durable-promise
