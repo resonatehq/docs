@@ -24,7 +24,7 @@ import { Resonate } from "@resonatehq/sdk";
 const resonate = new Resonate();
 ```
 
-## Registering and Running Functions
+### Registering and Running Functions
 
 To leverage Resonate's capabilities, first register your function with the Resonate object using `resonate.register()`. Provide a unique function ID and a function pointer to your local function. Once registered, you can invoke the registered function using `resonate.run()` by passing the function's ID, a unique identifier (UID) for the specific execution, and any required arguments.
 
