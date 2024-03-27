@@ -2,17 +2,19 @@
 sidebar_position: 1
 ---
 
-# Quickstart
+# Overview
+
+Welcome to the Overview section for the Resonate server! The Resonate server consists of a single binary that contains everything the SDKs needs for [durable mode](/sdks/typescript#durable-mode) to perform features such as recoverability, distributed locking, stateful reminders, fan-out/fan-in pattern, and more.
 
 ## Install the Latest Release
 
-#### MacOS
+### MacOS
 
 ```shell
 brew install --build-from-source resonate-hq/resonate/installation/brew/Formula/resonate.rb
 ```
 
-#### Linux
+### Linux
 
 ```shell
 curl -fsSL https://github.com/resonatehq/resonate/blob/main/installation/linux/install.sh | sh
@@ -23,8 +25,7 @@ curl -fsSL https://github.com/resonatehq/resonate/blob/main/installation/linux/i
 The following command starts the Resonate server with default configuration.
 
 ```bash
-chmod +x resonate
-./resonate serve
+resonate serve
 ```
 
 ## Configuration

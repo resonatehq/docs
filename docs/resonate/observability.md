@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Observability
@@ -12,13 +12,14 @@ This guide is a work in progress. We have chosen to build in public, which means
 ## Logs
 
 The Resonate log level can be specified by with the `--log-level` flag. The available levels are:
+
 - DEBUG
 - INFO
 - WARN
 - ERROR
 
-## Metrics 
+## Metrics
 
 Resonate comes configured by default with a metrics server that collects the following metrics:
-- https://github.com/resonatehq/resonate/blob/main/docs/metrics.md
 
+- https://github.com/resonatehq/resonate/blob/main/docs/metrics.md
