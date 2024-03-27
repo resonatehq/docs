@@ -102,15 +102,13 @@ In this case, the durable promise ID is a randomly generated unique identifier, 
 executions/a7b89c3d-f012-4e78-9a7d-89a3f6b2e1c7
 ```
 
-## 3️⃣ Versioning your Functions
-
-:::info WORK IN PROGRESS
-This section is a work in progress. We have chosen to build in public, which means that some sections may be incomplete and information may change at any time.
-:::
-
-## 4️⃣ Timeouts and Idempotency
+## 3️⃣ Timeouts and Idempotency
 
 Durable promises are attempted to be resolved and retried up until the specified timeout. It's crucial to ensure that the operations performed by your durable functions are idempotent to prevent undefined behavior.
+
+## 4️⃣ Versioning your Functions
+
+Function versioning is essential for creating durable promises. Idempotent functions can be safely retried without causing unintended side effects, enabling retry mechanisms to recover from transient issues. However, during retries, the function code must remain immutable to prevent versioning conflicts.
 
 ## The End
 

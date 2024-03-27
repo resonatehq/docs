@@ -2,6 +2,8 @@
 sidebar_position: 1
 ---
 
+import fan from '../../static/img/fan.png';
+
 # Typescript
 
 Welcome to Resonate's guide to the Resonate TypeScript SDK! This SDK makes it easy to write distributed async/await applications with TypeScript. In this guide, we will explore the minimal yet powerful API surface area the SDK offers.
@@ -95,19 +97,23 @@ async function access(ctx: Context, user: User, song: Song): Promise<boolean> {
 In-process execution enables durable execution of functions within the same process by passing a function pointer to a local function followed by its arguments.
 
 ```ts
-ctx.run(download, arg1, arg2, ...);
+const result = ctx.run(download, arg1, arg2, ...);
 ```
 
 ### Out-Process
-
-Out-process execution allows offloading tasks to dedicated workers by passing a URL to an available worker followed by its arguments.
 
 :::note
 Out-process execution requires the Resonate server and proper configuration to route tasks to workers. Refer to the [Resonate Server docs](/resonate/quickstart) for more information.
 :::
 
+Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions. Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments. This approach enables you to perform the fan-out/fan-in pattern.
+
+<center>
+<img src={fan} alt="fan" width="500" /> 
+</center>
+
 ```ts
-ctx.run(`/gpu/summarize/${url}`, arg);
+const result = await ctx.run(`/gpu/summarize/${url}`, arg);
 ```
 
 ## Configurations
@@ -119,6 +125,7 @@ Resonate offers various configuration options to customize its behavior. If opti
 Configure the SDK globally via the top-level Resonate object:
 
 ```ts
+// CONFIGURE RETRY.
 const resonate = new Resonate({
   url: "https://my-remote-store.com", // The remote promise store URL. If not provided, an in-memory promise store will be used.
   retry: myRetry, // A retry instance. Defaults to exponential backoff.
@@ -152,6 +159,13 @@ The options, such as timeout, cannot exceed the parent function. If it does, the
 ```ts
 ctx.run(download, arg1, arg2, resonate.options({}));
 ```
+
+## Versioning
+
+:::info WORK IN PROGRESS
+
+This guide is a work in progress. We have chosen to build in public, which means that some sections may be incomplete and information may change at any time.
+:::
 
 ## Next Steps
 

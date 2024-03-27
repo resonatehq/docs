@@ -20,6 +20,6 @@ import echo from '../../static/img/echo.png';
 
 - `Built on an Open Standard`: Resonate's programming model is built on top of [durable promises](/reference/durable-promises.md), an open standard with an intentionally minimal API surface area.
 
-# Distributed async await
+# Distributed Async Await
 
-Resonate introduces istributed async await, a powerful feature that allows functions and promises to maintain progress in durable storage. With this approach, function executions have an unique identity that persists beyond the execution of the underlying function. This simple yet effective concept enables developers to coordinate processes, implement transaction semantics, and handle failures gracefully across distributed systems all with a very familiar feeling programming model.
+Resonate's Distributed Async Await is a new programming model that simplifies coding for the cloud. It ensures code completion even if hardware or software failures occur during execution. The programming model does this with just functions and promises, making it trivial to build `coordinated` and `reliable` distributed applications.

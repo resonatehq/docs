@@ -2,6 +2,8 @@
 sidebar_position: 2
 ---
 
+import pipeline from '../../static/img/pipeline.png';
+
 # Quickstart
 
 Welcome to the Resonate SDK quickstart! This quickstart is designed to give you a rapid introduction to the core concepts and syntax of the Resonate SDK. By the end, you'll have a basic understanding of how to register functions, run them with unique identifiers, and integrate Resonate with a web server.
@@ -10,7 +12,7 @@ Welcome to the Resonate SDK quickstart! This quickstart is designed to give you 
 
 - NodeJS
 
-## Steps
+## Setup
 
 Create project folder.
 
@@ -30,9 +32,22 @@ Install the Resonate SDK and Express.
 npm install @resonatehq/sdk express @types/express
 ```
 
-Create a file named **app.ts**, copy and paste the minimal distributed async/await application below. This application simulates reliably downloading and summarizing web content with a 10% chance of failure.
+## Start
 
-```ts title="app.ts"
+The following application forms a pipeline, where the result of a function is used to execute the next one. The pipeline in this example consists of two steps:
+
+- The `download` function retrieves the content from a web page.
+- The `summarize` function generates a summary of the downloaded content.
+
+<center>
+<img src={pipeline} alt="pipeline" width="1200" /> 
+</center>
+
+Resonate manages the execution of these functions, ensuring that the result of the download function is passed as input to the summarize function. In case of failure at any step, Resonate will automatically retry the execution, providing reliability to the process.
+
+To see this in action, create a file named **index.ts** and copy and paste the minimal distributed async/await application below:
+
+```ts title="index.ts"
 import { Resonate, Context } from "@resonatehq/sdk";
 import express, { Request, Response } from "express";
 
