@@ -60,7 +60,7 @@ const resonate = new Resonate();
 
 #### Durable Mode
 
-For advanced use cases requiring recoverability, stateful reminders, and a distributed task framework, configure Resonate to use a durable promise store. To enable durable mode, run the Resonate Server locally (refer to the [Resonate Server docs](/resonate/quickstart) for setup instructions) and pass the server's address when initializing Resonate:
+For advanced use cases requiring recoverability, stateful reminders, and a distributed task framework, configure Resonate to use a durable promise store. To enable durable mode, run the Resonate Server locally (refer to the [Resonate Server docs](/resonate/overview) for setup instructions) and pass the server's address when initializing Resonate:
 
 ```ts
 import { Resonate } from "@resonatehq/sdk";
@@ -103,7 +103,7 @@ const result = ctx.run(download, arg1, arg2, ...);
 ### Out-Process
 
 :::note
-Out-process execution requires the Resonate server and proper configuration to route tasks to workers. Refer to the [Resonate Server docs](/resonate/quickstart) for more information.
+Out-process execution requires the Resonate server and proper configuration to route tasks to workers. Refer to the [Resonate Server docs](/resonate/overview) for more information.
 :::
 
 Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions. Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments. This approach enables you to perform the fan-out/fan-in pattern.
