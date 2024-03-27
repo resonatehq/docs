@@ -12,7 +12,7 @@ import echo from '../../static/img/echo.png';
 
 # Why Resonate?
 
-- `Cloud Computing Made Simple`: Resonate offers a programming model simplifies coding for the cloud using an intuitive paradigm you already know — async await.
+- `Cloud Computing Made Dead Simple`: Resonate offers a dead simple programming model that simplifies coding for the cloud using an intuitive paradigm you already know — async await.
 
 - `Single Binary`: Resonate simplifies your deployment and operations with a single binary.
 
