@@ -12,7 +12,7 @@ import echo from '../../static/img/echo.png';
 
 # Why Resonate?
 
-- `Intuitive Programming Model`: Resonate offers a programming model that enables you to build fault-tolerant distributed applications using an intuitive paradigm you already know — async await.
+- `Cloud Computing Made Simple`: Resonate offers a programming model simplifies coding for the cloud using an intuitive paradigm you already know — async await.
 
 - `Single Binary`: Resonate simplifies your deployment and operations with a single binary.
 
@@ -22,4 +22,4 @@ import echo from '../../static/img/echo.png';
 
 # Distributed Async Await
 
-Resonate's Distributed Async Await is a new programming model that simplifies coding for the cloud. It ensures code completion even if hardware or software failures occur during execution. The programming model does this with just functions and promises, making it trivial to build `coordinated` and `reliable` distributed applications.
+Resonate's Distributed Async Await is a new programming model for the cloud. It ensures code completion even if hardware or software failures occur during execution. The programming model does this with just functions and promises, making it trivial to build `coordinated` and `reliable` distributed applications.
