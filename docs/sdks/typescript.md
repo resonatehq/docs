@@ -162,10 +162,34 @@ ctx.run(download, arg1, arg2, resonate.options({}));
 
 ## Versioning
 
-:::info WORK IN PROGRESS
+You can register multiple versions of a function with `resonate.register()`:
 
-This guide is a work in progress. We have chosen to build in public, which means that some sections may be incomplete and information may change at any time.
-:::
+```ts
+// Register `downloadAndSummarize` function with a version number of 2,
+// a function pointer to a local function,
+// and optionals configurations.
+resonate.register(
+  "downloadAndSummarize",
+  2,
+  downloadAndSummarize,
+  resonate.options({
+    timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
+  })
+);
+```
+
+Additionally, your function has access to `context.version`, telling it the version this execution was started with.
+
+```ts
+async function charge(ctx: Context, user: User, song: Song): Promise<boolean> {
+  if (ctx.version == 1) {
+    console.log(`Charged user:${user.id} $${song.price} with version 1`);
+  } else {
+    console.log(`Charged user:${user.id} $${song.price} with version 2`);
+  }
+  return true;
+}
+```
 
 ## Next Steps
 

@@ -106,9 +106,33 @@ executions/a7b89c3d-f012-4e78-9a7d-89a3f6b2e1c7
 
 Durable promises are attempted to be resolved and retried up until the specified timeout. It's crucial to ensure that the operations performed by your durable functions are idempotent to prevent undefined behavior.
 
+```ts
+const resonate = new Resonate({
+  // Configures the default durable promise
+  // timeout in ms, used for every function
+  // executed by calling resonate.run.
+  // Defaults to 1000.
+  timeout: 5000,
+});
+```
+
 ## 4️⃣ Versioning your Functions
 
 Function versioning is essential for creating durable promises. Idempotent functions can be safely retried without causing unintended side effects, enabling retry mechanisms to recover from transient issues. However, during retries, the function code must remain immutable to prevent versioning conflicts.
+
+```ts
+// Register `payments` function with a version number of 2,
+// a function pointer to a local function,
+// and optionals configurations.
+resonate.register(
+  "payments",
+  2,
+  payments,
+  resonate.options({
+    timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
+  })
+);
+```
 
 ## The End
 
