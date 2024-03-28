@@ -22,12 +22,24 @@ brew install --build-from-source resonate-hq/resonate/installation/brew/Formula/
 curl -fsSL https://github.com/resonatehq/resonate/blob/main/installation/linux/install.sh | sh
 ```
 
+### GitHub
+
+You may also download the GitHub artifacts directly from our [repo](https://github.com/resonatehq/resonate/releases).
+
 ## Starting the Server
 
 The following command starts the Resonate server with default configuration.
 
 ```bash
 resonate serve
+```
+
+Once running, you'll see log output like:
+
+```bash
+time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting http server" addr=0.0.0.0:8001
+time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting grpc server" addr=0.0.0.0:50051
+time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting metrics server" addr=:9090
 ```
 
 ## Resonate API

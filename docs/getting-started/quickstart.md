@@ -11,6 +11,7 @@ Welcome to the Resonate SDK quickstart! This quickstart is designed to give you 
 ## Prerequisites
 
 - NodeJS
+- npm
 
 ## Setup
 
@@ -43,7 +44,7 @@ The following application forms a pipeline, where the result of a function is us
 <img src={pipeline} alt="pipeline" width="1200" /> 
 </center>
 
-Resonate manages the execution of these functions, ensuring that the result of the download function is passed as input to the summarize function. In case of failure at any step, Resonate will automatically retry the execution, providing reliability to the process.
+Resonate manages the execution of these functions, ensuring that the result of `download` is passed as input to `summarize`. In case of failure at any step, Resonate will automatically retry the execution, providing reliability to the process.
 
 To see this in action, create a file named **index.ts** and copy and paste the minimal distributed async/await application below:
 

@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-import architecture from '../../static/img/architecture.jpg';
+import architecture from '../../static/img/architecture.png';
 
 # Architecture
 
