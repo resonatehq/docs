@@ -12,7 +12,7 @@ Welcome to the Concepts section! Let's explore the `4 fundamental concepts` that
 
 ## 1️⃣ Durable Promises
 
-Durable promises are like regular promises but maintain progress in durable storage as a REST resource. They have a unique identity that persists beyond the execution of the underlying function. By doing this, if something goes wrong (like a power outage or network hiccup), the application can look back at the saved results, quickly skip to where it left off, and keeps going as if nothing ever happened, making your application resilient to unexpected failures and can recover gracefully.
+Durable promises are like regular promises but maintain progress in durable storage as a [REST](https://www.w3schools.in/restful-web-services/rest-resources#:~:text=What%20is%20The%20REST%20Resources,Text%20Files%2C%20Videos%2C%20etc.) resource. They have a unique identity that persists beyond the execution of the underlying function. By doing this, if something goes wrong (like a power outage or network hiccup), the application can look back at the saved results, quickly skip to where it left off, and keeps going as if nothing ever happened, making your application resilient to unexpected failures and gracefully recovering.
 
 ### Key Use Cases
 
@@ -104,7 +104,7 @@ executions/a7b89c3d-f012-4e78-9a7d-89a3f6b2e1c7
 
 ## 3️⃣ Timeouts and Idempotency
 
-Durable promises are attempted to be resolved and retried up until the specified timeout. It's crucial to ensure that the operations performed by your durable functions are idempotent to prevent undefined behavior.
+Durable promises are attempted to be resolved and retried up until the specified timeout. It's crucial to ensure that the operations performed by your durable functions are [idempotent](https://blog.bitsrc.io/design-an-idempotent-api-in-2024-d4a3cf8d8bf2) to prevent undefined behavior.
 
 ```ts
 const resonate = new Resonate({

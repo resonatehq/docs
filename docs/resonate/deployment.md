@@ -11,7 +11,7 @@ This guide is a work in progress. We have chosen to build in public, which means
 
 This page describes how to deploy Resonate on Kubernetes.
 
-## Deploying Resonate on K8s
+## Deploying Resonate on Kubernetes
 
 The recommended Kubernetes deployment strategy is a deployment. The easiest way to do this is with the yaml manifest below:
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 5
 ---
 
 # Error Codes
@@ -56,98 +56,35 @@ The `details` provide structured diagnostic data such as the originating subsyst
 
 Request errors signify problems with the request. Generally, retrying the request will not resolve the issue.
 
-### 4000
-
-There was a validation error affecting one or more fields.
-
-### 4030
-
-The promise has already been resolved. Once a promise is resolved it can no longer be modified.
-
-### 4031
-
-The promise has already been rejected. Once a promise is rejected it can no longer be modified.
-
-### 4032
-
-The promise has already been canceled. Once a promise is canceled it can no longer be modified.
-
-### 4033
-
-The promise has already timed out. Once a promise is timed out it can no longer be modified.
-
-### 4034
-
-The lock has already been acquire. Once a lock is acquired it can no longer be acquired.
-
-### 4035
-
-The Task has already timed out. Once a task is timed out it can no longer be worked on.
-
-### 4036
-
-The Task has already been acquire. Once a task is acquired it can no longer be acquired.
-
-### 4037
-
-A task was attempted to be claimed with the wrong counter.
-
-### 4040
-
-A promise with the provided identifier could not be found.
-
-### 4041
-
-A subscription with the provided identifier could not be found.
-
-### 4042
-
-A Schedule with the provided identifier could not be found.
-
-### 4043
-
-A lock with the provided identifier could not be found.
-
-### 4043
-
-A Task with the provided identifier could not be found.
-
-### 4090
-
-A promise with the provided identifier already exists.
-
-### 4091
-
-A Schedule with the provided identifier already exists.
+| Error Code | Description                                                                                     |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| 4000       | There was a validation error affecting one or more fields.                                      |
+| 4030       | The promise has already been resolved. Once a promise is resolved it can no longer be modified. |
+| 4031       | The promise has already been rejected. Once a promise is rejected it can no longer be modified. |
+| 4032       | The promise has already been canceled. Once a promise is canceled it can no longer be modified. |
+| 4033       | The promise has already timed out. Once a promise is timed out it can no longer be modified.    |
+| 4034       | The lock has already been acquire. Once a lock is acquired it can no longer be acquired.        |
+| 4035       | The Task has already timed out. Once a task is timed out it can no longer be worked on.         |
+| 4036       | The Task has already been acquire. Once a task is acquired it can no longer be acquired.        |
+| 4037       | A task was attempted to be claimed with the wrong counter.                                      |
+| 4040       | A promise with the provided identifier could not be found.                                      |
+| 4041       | A subscription with the provided identifier could not be found.                                 |
+| 4042       | A Schedule with the provided identifier could not be found.                                     |
+| 4043       | A lock with the provided identifier could not be found.                                         |
+| 4043       | A Task with the provided identifier could not be found.                                         |
+| 4090       | A promise with the provided identifier already exists.                                          |
+| 4091       | A Schedule with the provided identifier already exists.                                         |
 
 ## Server Errors (5000-5999)
 
 Server errors represent transient or systemic problems that prevent the request from being processed. Retrying the request may resolve the issue.
 
-### 5000
-
-An unknown internal server error occurred. Please open a [GitHub issue](https://github.com/resonatehq/resonate/issues/new) with corresponding details.
-
-### 5001
-
-There was a failure related the network subsystem.
-
-### 5002
-
-There was a failure related the store subsystem.
-
-### 5003
-
-There was a failure serializing or deserializing data from the store.
-
-### 5030
-
-The system is currently shutting down.
-
-### 5031
-
-The API submission queue is full. Please try again later.
-
-### 5032
-
-The AIO submission queue is full. Please try again later.
+| Error Code | Description                                                                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 5000       | An unknown internal server error occurred. Please open a [GitHub issue](https://github.com/resonatehq/resonate/issues/new) with corresponding details. |
+| 5001       | There was a failure related the network subsystem.                                                                                                     |
+| 5002       | There was a failure related the store subsystem.                                                                                                       |
+| 5003       | There was a failure serializing or deserializing data from the store.                                                                                  |
+| 5030       | The system is currently shutting down.                                                                                                                 |
+| 5031       | The API submission queue is full. Please try again later.                                                                                              |
+| 5032       | The AIO submission queue is full. Please try again later.                                                                                              |
