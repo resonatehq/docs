@@ -62,7 +62,7 @@ const config: Config = {
       title: 'Resonate',
       logo: {
         alt: 'Resonate Logo',
-        src: 'img/logo.svg',
+        src: 'img/echo-logo.svg',
         href: 'https://www.resonatehq.io',
         target: '_self',
         width: 40,
@@ -79,6 +79,11 @@ const config: Config = {
           label: 'Blog',
           position: 'right',
           target: '_self',
+        },
+        {
+          href: 'https://resonatehq.io/subscribe',
+          html: '<button class="button button--secondary" style="border-radius: 20px">Subscribe</button>',
+          position: 'right',
         },
         {
           href: 'https://github.com/resonatehq/resonate',
