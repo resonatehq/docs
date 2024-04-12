@@ -125,12 +125,13 @@ Resonate offers various configuration options to customize its behavior. If opti
 Configure the SDK globally via the top-level Resonate object:
 
 ```ts
-// CONFIGURE RETRY.
+import { Resonate, Retry } from "@resonatehq/sdk";
+
 const resonate = new Resonate({
   url: "https://my-remote-store.com", // The remote promise store URL. If not provided, an in-memory promise store will be used.
-  retry: myRetry, // A retry instance. Defaults to exponential backoff.
+  retry: Retry.exponential(), // A retry instance. Defaults to exponential backoff.
   timeout: 5000, // The default promise timeout in ms, used for every function executed by calling run. Defaults to 1000.
-  tags: Record<string, string>, // Tags to add to all durable promises.
+  tags: { "foo": "bar" }, // Tags to add to all durable promises.
 });
 ```
 
@@ -144,8 +145,8 @@ resonate.register(
   downloadAndSummarize,
   resonate.options({
     timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
-    retry: IRetry, // Overrides the default retry policy.
-    tags: Record<string, string>, // Additional tags to add to the durable promise.
+    retry: Retry.linear(), // Overrides the default retry policy.
+    tags: { "bar": "baz" }, // Additional tags to add to the durable promise.
   })
 );
 ```
@@ -157,7 +158,7 @@ The options, such as timeout, cannot exceed the parent function. If it does, the
 :::
 
 ```ts
-ctx.run(download, arg1, arg2, resonate.options({}));
+ctx.run(download, arg1, arg2, resonate.options({ ... }));
 ```
 
 ## Versioning
@@ -170,12 +171,16 @@ You can register multiple versions of a function with `resonate.register()`:
 // and optionals configurations.
 resonate.register(
   "downloadAndSummarize",
-  2,
   downloadAndSummarize,
   resonate.options({
-    timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
+    version: 2,
   })
 );
+```
+
+You can specify which version to run as an option on run. By default the function registered with the greatest (latest) version will be chosen.
+```ts
+resonate.run("downloadAndSummarize", "uid", resonate.options({ version: 2 }));
 ```
 
 Additionally, your function has access to `context.version`, telling it the version this execution was started with.
