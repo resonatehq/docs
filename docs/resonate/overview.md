@@ -10,16 +10,10 @@ Welcome to the Overview section for the Resonate server! The Resonate server con
 
 To get started, simply install the Resonate CLI using either of the following options:
 
-### MacOS
+### MacOS and Linux
 
 ```shell
-brew install --build-from-source resonate-hq/resonate/installation/brew/Formula/resonate.rb
-```
-
-### Linux
-
-```shell
-curl -fsSL https://github.com/resonatehq/resonate/blob/main/installation/linux/install.sh | sh
+brew install resonatehq/tap/resonate
 ```
 
 ### GitHub
