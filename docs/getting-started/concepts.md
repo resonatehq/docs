@@ -26,11 +26,11 @@ There are two common use cases for durable promises: local and remote.
 
 The local use case involves a durable promise that is both created and completed by the same process. The primary focus is reliability, forming the bedrock for several powerful features:
 
-- `Retries`: If a process fails while executing a durable promise due to a transient issue, such as network connectivity problems, it can be transparently retried, minimizing the impact of temporary failures.
+- `Retries`: If a process fails while executing a durable promise due to a transient or intermittent issue, such as network connectivity problems, it can be transparently retried, minimizing the impact of temporary failures.
 
 - `Recoverability`: If a process crashes while executing a durable promise, it can recover and continue from where it left off, ensuring your application remains resilient.
 
-- `Schedules`: Durable promises can be used to schedule statefule reminders using a simple HTTP/gRPC call.
+- `Schedules`: Durable promises can be used to schedule stateful reminders to run operations periodically.
 
 #### Remote
 
@@ -40,7 +40,7 @@ The local use case involves a durable promise that is both created and completed
 
 The remote use case involves a durable promise that is created by one process and completed by another distinct process. The primary purpose is to facilitate coordination between different processes or services, serving as the foundation for features like:
 
-- `Task Framework`: Durable promises allow you to fan out tasks across multiple processes or machines, enabling parallel execution and load balancing, making your application more scalable.
+- `Task Framework`: Durable promises allow you to distribute tasks across multiple machines for parallel execution and collect the operations’ results.
 
 - `Notifications`: When a durable promise is created or completed, it can trigger notifications to other processes or services that are interested in the result, enabling efficient communication and coordination.
 
@@ -126,9 +126,9 @@ Function versioning is essential for creating durable promises. Idempotent funct
 // and optionals configurations.
 resonate.register(
   "payments",
-  2,
   payments,
   resonate.options({
+    version: 2,
     timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
   })
 );

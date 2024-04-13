@@ -15,22 +15,22 @@ Welcome to the Resonate SDK quickstart! This quickstart is designed to give you 
 
 ## Setup
 
-Create project folder.
+Create a project folder.
 
 ```bash
 mkdir resonate-quickstart && cd resonate-quickstart
 ```
 
-Install ts-node.
+Install the dev dependencies.
 
 ```bash
 npm init -y && npm install typescript ts-node @types/node --save-dev
 ```
 
-Install the Resonate SDK and Express.
+Install the the app dependencies.
 
 ```bash
-npm install @resonatehq/sdk express @types/express
+npm install @resonatehq/sdk@0.5.0 express @types/express
 ```
 
 ## Start
@@ -44,7 +44,7 @@ The following application forms a pipeline, where the result of a function is us
 <img src={pipeline} alt="pipeline" width="1200" /> 
 </center>
 
-Resonate manages the execution of these functions, ensuring that the result of `download` is passed as input to `summarize`. In case of failure at any step, Resonate will automatically retry the execution, providing reliability to the process.
+Resonate manages the execution of these functions, ensuring that the result of `download` is passed as input to `summarize`. In cases of transient or intermittent failures at any step, Resonate will automatically retry the execution, providing reliability to the process.
 
 To see this in action, create a file named **index.ts** and copy and paste the minimal distributed async/await application below:
 
@@ -117,7 +117,7 @@ app.listen(3000, () => {
 Now we can start the application.
 
 ```bash
-ts-node app.ts
+ts-node index.ts
 ```
 
 Next, call the endpoint providing a url in the payload of the request.
@@ -129,6 +129,10 @@ curl \
   -d '{"url": "http://example.com"}' \
   http://localhost:3000/summarize
 ```
+
+:::note
+Notice how subsequent requests with the same URL respond much quicker. This is because when you run a function with Resonate, you give it a unique ID. Resonate remembers this ID and saves the function's progress. If you make another request with the same ID, Resonate quickly continues from where it stopped before, instead of starting over. This is called "replaying" the function.
+:::
 
 ## Next Steps
 
