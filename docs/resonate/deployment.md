@@ -42,10 +42,12 @@ spec:
           image: ghcr.io/resonatehq/resonate:v0.5.0
           args:
             - "serve"
+            - "--aio-store=postgres"
             - "--aio-store-postgres-host=HOST"
             - "--aio-store-postgres-port=PORT"
             - "--aio-store-postgres-username=USERNAME"
             - "--aio-store-postgres-password=SECRET"
+            - "--aio-store-postgres-database=DBNAME"
           ports:
             - name: api
               containerPort: 8001
@@ -55,4 +57,10 @@ Create a file named resonate.yml and apply the above YAML manifest.
 
 ```console
 kubectl apply -f resonate.yml
+```
+
+Finally, cleanup and remove resonate from your Kubernetes cluster.
+
+```console
+kubectl delete -f resonate.yml
 ```
