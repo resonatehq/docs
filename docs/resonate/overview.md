@@ -55,7 +55,7 @@ If you don't see the database you are looking for, we are highly composable and 
 
 [OpenAPI Specification](https://github.com/resonatehq/resonate/blob/main/api/tasks-openapi.yml)
 
-The Tasks API allows users to route durable promises to a set of workers. This is very useful for implementing the `Fan-out/Fan-in pattern`. Unlike the other APIs, this requires a small amount of server configuration to set up the routing rules.
+The Tasks API allows users to route durable promises to a set of workers. This is very useful for implementing the `Fan-out/Fan-in pattern`. Unlike the other APIs, this requires a small amount of [server configuration](https://github.com/resonatehq/quickstart-ts/tree/main/Step3) to set up the routing rules.
 
 ### Schedules API
 
@@ -81,6 +81,7 @@ The following example file lists all default settings.
 
 ```yaml title="resonate.yml"
 api:
+  baseUrl: http://localhost:8001
   size: 100
   subsystems:
     http:
@@ -116,6 +117,10 @@ aio:
         batchSize: 100
       config:
         timeout: 10s
+    queuing:
+      config:
+        connections:
+        routes:
 
 system:
   notificationCacheSize: 100

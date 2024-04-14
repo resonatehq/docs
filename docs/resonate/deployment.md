@@ -1,13 +1,8 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Deployment
-
-:::info WORK IN PROGRESS
-
-This guide is a work in progress. We have chosen to build in public, which means that some sections may be incomplete and information may change at any time.
-:::
 
 This page describes how to deploy Resonate on Kubernetes.
 
@@ -44,8 +39,9 @@ spec:
     spec:
       containers:
         - name: resonate
-          image: ghcr.io/resonatehq/resonate:latest
+          image: ghcr.io/resonatehq/resonate:v0.5.0
           args:
+            - "serve"
             - "--aio-store-postgres-host=HOST"
             - "--aio-store-postgres-port=PORT"
             - "--aio-store-postgres-username=USERNAME"
@@ -53,4 +49,10 @@ spec:
           ports:
             - name: api
               containerPort: 8001
+```
+
+Create a file named resonate.yml and apply the above YAML manifest.
+
+```console
+kubectl apply -f resonate.yml
 ```
