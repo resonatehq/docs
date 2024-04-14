@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 3
 ---
 
 # Observability
@@ -30,6 +30,4 @@ Resonate comes configured by default with a metrics server that emits the follow
 
 ## Traces
 
-:::info WORK IN PROGRESS
-This guide is a work in progress. We have chosen to build in public, which means that some sections may be incomplete and information may change at any time.
-:::
+All requests may include a `request-id` header that can be used to trace a request through the system.

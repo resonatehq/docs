@@ -12,7 +12,7 @@ Welcome to the Concepts section! Let's explore the `4 fundamental concepts` that
 
 ## 1️⃣ Durable Promises
 
-Durable promises are like regular promises but maintain progress in durable storage as a [REST](https://www.w3schools.in/restful-web-services/rest-resources#:~:text=What%20is%20The%20REST%20Resources,Text%20Files%2C%20Videos%2C%20etc.) resource. They have a unique identity that persists beyond the execution of the underlying function. By doing this, if something goes wrong (like a power outage or network hiccup), the application can look back at the saved results, quickly skip to where it left off, and keeps going as if nothing ever happened, making your application resilient to unexpected failures and gracefully recovering.
+Durable promises are like regular promises but maintain progress in durable storage as a [REST resource](https://www.w3schools.in/restful-web-services/rest-resources#:~:text=What%20is%20The%20REST%20Resources,Text%20Files%2C%20Videos%2C%20etc.). They have a unique identity that persists beyond the execution of the underlying function. By doing this, if something goes wrong (like a power outage or network hiccup), the application can look back at the saved results, quickly skip to where it left off, and keeps going as if nothing ever happened, making your application resilient to unexpected failures and gracefully recovering.
 
 ### Key Use Cases
 
@@ -123,13 +123,13 @@ Function versioning is essential for creating durable promises. Idempotent funct
 ```ts
 // Register `payments` function with a version number of 2,
 // a function pointer to a local function,
-// and optionals configurations.
+// and other optionals configurations.
 resonate.register(
   "payments",
   payments,
   resonate.options({
     version: 2,
-    timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
+    timeout: Number.MAX_SAFE_INTEGER,
   })
 );
 ```

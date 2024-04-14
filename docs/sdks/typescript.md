@@ -13,7 +13,7 @@ Welcome to Resonate's guide to the Resonate TypeScript SDK! This SDK makes it ea
 To get started, simply install the SDK using npm:
 
 ```bash
-npm install @resonatehq/sdk
+npm install @resonatehq/sdk@0.5.0
 ```
 
 ## Initializing Resonate
@@ -129,9 +129,14 @@ import { Resonate, Retry } from "@resonatehq/sdk";
 
 const resonate = new Resonate({
   url: "https://my-remote-store.com", // The remote promise store URL. If not provided, an in-memory promise store will be used.
-  retry: Retry.exponential(), // A retry instance. Defaults to exponential backoff.
+  retry: Retry.exponential(
+    100, // initial delay (in ms)
+    2, // backoff factor
+    Infinity, // max attempts
+    60000 // max delay (in ms, 1 minute)
+  ),
   timeout: 5000, // The default promise timeout in ms, used for every function executed by calling run. Defaults to 1000.
-  tags: { "foo": "bar" }, // Tags to add to all durable promises.
+  tags: { foo: "bar" }, // Tags to add to all durable promises.
 });
 ```
 
@@ -146,7 +151,7 @@ resonate.register(
   resonate.options({
     timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
     retry: Retry.linear(), // Overrides the default retry policy.
-    tags: { "bar": "baz" }, // Additional tags to add to the durable promise.
+    tags: { bar: "baz" }, // Additional tags to add to the durable promise.
   })
 );
 ```
@@ -179,6 +184,7 @@ resonate.register(
 ```
 
 You can specify which version to run as an option on run. By default the function registered with the greatest (latest) version will be chosen.
+
 ```ts
 resonate.run("downloadAndSummarize", "uid", resonate.options({ version: 2 }));
 ```
