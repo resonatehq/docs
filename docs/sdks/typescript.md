@@ -13,7 +13,7 @@ Welcome to Resonate's guide to the Resonate TypeScript SDK! This SDK makes it ea
 To get started, simply install the SDK using npm:
 
 ```bash
-npm install @resonatehq/sdk@0.5.0
+npm install @resonatehq/sdk@0.5.2
 ```
 
 ## Initializing Resonate
@@ -28,7 +28,10 @@ const resonate = new Resonate();
 
 ### Registering and Running Functions
 
-To leverage Resonate's capabilities, first register your function with the Resonate object using `resonate.register()`. Provide a unique function ID and a function pointer to your local function. Once registered, you can invoke the registered function using `resonate.run()` by passing the function's ID, a unique identifier (UID) for the specific execution, and any required arguments.
+To leverage Resonate's capabilities:
+
+1. Register your function with the Resonate object using `resonate.register()`. Provide a function unique identifier (UID) and a function pointer to your local function.
+2. Once registered, you can invoke the registered function using `resonate.run()` by passing the function's UID, a UID for the specific execution, and any required arguments.
 
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
@@ -42,7 +45,23 @@ resonate.run("purchase", uid, user, song);
 resonate.start();
 ```
 
-`resonate.run()` ensures your code executes to completion, even in the presence of hardware or software failures. Remember to start the Resonate application by calling `resonate.start()`!
+With `resonate.run()`, your code executes will complete even in the presence of hardware or software failures. Remember to start the Resonate application by calling `resonate.start()`!
+
+### Running Functions Periodically
+
+You can also execute your function periodically with a cron expression.
+
+```ts
+resonate.register("purchase", purchase);
+
+// Schedule a resonate function that is already registered.
+resonate.schedule("everyMinute", "* * * * *", "purchase");
+
+// Schedule and register a resonate function in one.
+resonate.schedule("everyMinute", "* * * * *", (ctx: Context) => {
+  console.log("every minute", Date.now());
+});
+```
 
 ### Execution Modes
 
@@ -50,7 +69,7 @@ Resonate offers two execution modes: Default and Durable.
 
 #### Default Mode
 
-In the default mode, Resonate utilizes a volatile in-memory promise store. This mode provides out-of-the-box features like transparent retries, tracing, and logging without requiring `any` additional infrastructure.
+In the default mode, Resonate utilizes a volatile in-memory promise store. This mode provides out-of-the-box features like automatic retries, tracing, and logging without requiring any additional infrastructure.
 
 ```ts
 import { Resonate } from "@resonatehq/sdk";
@@ -72,7 +91,7 @@ const resonate = new Resonate({
 
 ## Resonate Context
 
-Interactions with the runtime occur through the `Resonate Context`, which provides methods like `ctx.run()`. These methods offer transparent retries, recoverability, task distribution, and more. All top-level functions (invoked by `resonate.run()`) and intermediary functions (invoked by `ctx.run()`) must accept a Resonate context as their first argument.
+Interactions with the runtime occur through the `Resonate Context`, which provides methods like `ctx.run()` and `ctx.sleep()`. These methods offer automatic retries, recoverability, task distribution, and more. All top-level functions (invoked by `resonate.run()`) and intermediary functions (invoked by `ctx.run()`) must accept a Resonate context as their first argument.
 
 ```ts
 async function purchase(ctx: Context, user: User, song: Song): Promise<Status> {
@@ -114,6 +133,14 @@ Out-of-process execution allows you to dispatch the execution of multiple tasks 
 
 ```ts
 const result = await ctx.run(`/gpu/summarize/${url}`, arg);
+```
+
+### Sleeping
+
+Resonate keeps track of timers and executes them, even across failures and restarts. To sleep in a Resonate application for a whole day, do the following:
+
+```ts
+await ctx.sleep(86_400_000);
 ```
 
 ## Configurations

@@ -69,6 +69,10 @@ The Schedules API allows users to schedule the creation of durable promises with
 
 The Distributed Locks API is used to provide `mutually exclusive access` to a resource. This is primarily used as an internal API for the SDKs and Workers, but can also be used as a standalone API by the user.
 
+:::note
+One unique feature is the `processId` parameter, which uniquely identifies a process and allows for optimized updates of all locks associated with that process. By including the processId in the lock acquisition and heartbeat requests, the SDK can easily update the expiration time for all locks held by a specific process in a single API call.
+:::
+
 ## Configuration
 
 Optionally, you can start Resonate with a configuration file.
