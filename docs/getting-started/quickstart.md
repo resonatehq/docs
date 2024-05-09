@@ -30,7 +30,7 @@ npm init -y && npm install typescript ts-node @types/node --save-dev
 Install the app dependencies.
 
 ```bash
-npm install @resonatehq/sdk@0.5.0 express @types/express
+npm install @resonatehq/sdk@0.5.2 express @types/express
 ```
 
 ## Start
