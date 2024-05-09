@@ -193,7 +193,7 @@ The options, such as timeout, cannot exceed the parent function. If it does, the
 ctx.run(download, arg1, arg2, resonate.options({ ... }));
 ```
 
-## Versioning
+### Versioning
 
 You can register multiple versions of a function with `resonate.register()`:
 
