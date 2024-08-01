@@ -12,20 +12,39 @@ To get started, simply install the Resonate CLI using either of the following op
 
 ### MacOS and Linux
 
+**How to run the Resonate Server on your Mac OS or Linux machine?**
+
+You can use Brew, or if you have Golang installed, you can build it from source.
+
+To install it with Brew and run it as a single binary, run the following commands:
+
 ```shell
 brew install resonatehq/tap/resonate
+resonate serve
 ```
 
-### GitHub
+The above command installs and starts the Resonate server using a default configuration.
 
-You may also download the GitHub artifacts directly from our [repo](https://github.com/resonatehq/resonate/releases).
+Alternatively, you can build and run it from source.
+Make sure you have the Go programming language installed.
+Then, run the following commands to download the repository and build the server:
 
-## Starting the Server
+```
+git clone https://github.com/resonatehq/resonate
+cd resonate
+go build -o resonate
+```
 
-The following command starts the Resonate server with default configuration.
+After it is built, you can compile and run it as a Go program using the following command:
 
-```bash
-resonate serve
+```
+go run main.go serve
+```
+
+Or, you can run it as an executable using the following command:
+
+```
+./resonate server
 ```
 
 Once running, you'll see log output like:
@@ -35,6 +54,9 @@ time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting http server" addr=0.
 time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting grpc server" addr=0.0.0.0:50051
 time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting metrics server" addr=:9090
 ```
+### GitHub
+
+You may also download the GitHub artifacts directly from our [repo](https://github.com/resonatehq/resonate/releases).
 
 ## Resonate API
 
