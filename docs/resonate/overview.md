@@ -27,13 +27,24 @@ The above command installs and starts the Resonate server using a default config
 
 Alternatively, you can build and run it from source.
 Make sure you have the Go programming language installed.
-Then, run the following commands:
+Then, run the following commands to download the repository and build the server:
 
 ```
 git clone https://github.com/resonatehq/resonate
 cd resonate
 go build -o resonate
+```
+
+After it is built, you can compile and run it as a Go program using the following command:
+
+```
 go run main.go serve
+```
+
+Or, you can run it as an executable using the following command:
+
+```
+./resonate server
 ```
 
 Once running, you'll see log output like:
