@@ -46,6 +46,10 @@ const config: Config = {
             './static/css/boxicons.min.css'
           ],
         },
+        gtag: {
+          trackingID: 'G-0660YY8LZF',
+          anonymizeIP: true,
+        }
       } satisfies Preset.Options,
     ],
   ],
