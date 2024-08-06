@@ -53,6 +53,12 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+  scripts: [
+    {
+      src: '/scripts/fullstory.js',
+      async: true,
+    },
+  ],
 
   themeConfig: {
     image: 'img/echo.png', // used for link previews
