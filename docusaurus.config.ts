@@ -76,6 +76,7 @@ const config: Config = {
       "data-modal-open-on-command-k": "true",
       "data-modal-example-questions": ["What is Resonate HQ?", "How do I get started with Resonate?", "What is DST?", "Example application code in TypeScript?"],
       "data-modal-example-questions-title": "For example...",
+      "data-search-mode-enabled": "true",
       "data-switch-show-icons": "true",
       "data-switch-color": "#1b1b1b",
       "data-button-height": "7.5rem", 
