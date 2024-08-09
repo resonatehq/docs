@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Function to get the root domain
+    function getRootDomain() {
+        const hostParts = window.location.hostname.split('.');
+        return hostParts.slice(-2).join('.');
+    }
+
     // Check if the consent cookie exists
     if (!document.cookie.split(';').some((item) => item.trim().startsWith('resonatehq_cookie_banner_consent='))) {
         // Create modal element
@@ -28,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add event listener to accept button
         document.getElementById('acceptCookies').addEventListener('click', function() {
-            // Set cookie
-            document.cookie = "resonatehq_cookie_banner_consent=true; path=/; max-age=31536000"; // Cookie expires in 1 year
+            // Set cookie for the root domain
+            const rootDomain = getRootDomain();
+            document.cookie = `resonatehq_cookie_banner_consent=true; path=/; domain=${rootDomain}; max-age=31536000; SameSite=Lax`;
             // Remove modal
             modal.remove();
         });
