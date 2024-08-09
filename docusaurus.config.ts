@@ -100,7 +100,7 @@ const config: Config = {
       async: true
     },
     {
-      src: '//cdn.iubenda.com/cs/iubenda_cs.js',
+      src: 'https://cdn.iubenda.com/cs/iubenda_cs.js',
       async: true
     }
   ],
