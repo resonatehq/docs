@@ -89,24 +89,7 @@ const config: Config = {
     },
     {
       src: '/scripts/cookiebanner.js',
-      async: true
-    },
-    {
-      src: 'https://cs.iubenda.com/autoblocking/3729059.js',
-      async: true
-    },
-    {
-      src: 'https://cdn.iubenda.com/cs/gpp/stable/stub.js',
-      async: true
-    },
-    {
-      src: 'https://cdn.iubenda.com/cs/stable/iubenda_cs.js',
-      charset: 'UTF-8',
-      async: true
-    },
-    {
-      src: '/scripts/fxfloat.js',
-      async: true
+      async: true,
     }
   ],
 
