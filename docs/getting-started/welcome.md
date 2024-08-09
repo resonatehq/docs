@@ -2,13 +2,19 @@
 slug: /
 title: Welcome
 sidebar_position: 1
+pagination_next: null
+pagination_prev: null
 ---
+
+import InputField from '@site/src/components/InputField/InputField';
 
 import echo from '../../static/img/echo.png';
 
 <center>
 <img src={echo} alt="echo" width="250" /> 
 </center>
+
+<InputField />
 
 # Distributed Async Await
 
