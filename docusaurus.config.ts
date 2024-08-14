@@ -153,8 +153,8 @@ const config: Config = {
         },
         {
           html: `
-            <a href="https://join.slack.com/t/resonatehqcommunity/shared_invite/zt-22h6iu4m8-2Tl9M25IZduNU_sBcPteMg" target="_blank" rel="noopener noreferrer" aria-label="Resonate Slack">
-              <i class="bx bx-sm bxl-slack"></i>
+            <a href="https://discord.gg/rkRbrDsp" target="_blank" rel="noopener noreferrer" aria-label="Resonate HQ Discord">
+              <i class="bx bx-sm bxl-discord"></i>
             </a>
           `,
         },
