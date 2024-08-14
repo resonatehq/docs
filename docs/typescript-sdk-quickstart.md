@@ -1,12 +1,14 @@
 ---
-sidebar_position: 2
+id: typescript-sdk-quickstart
+title: Resonate HQ TypeScript SDK quickstart
+sidebar_label: TypeScript SDK quickstart
 ---
 
-import pipeline from '../../static/img/pipeline.png';
+import pipeline from '/img/pipeline.png';
 
-# Quickstart
-
-Welcome to the Resonate SDK quickstart! This quickstart is designed to give you a rapid introduction to the core concepts and syntax of the Resonate SDK. By the end, you'll have a basic understanding of how to register functions, run them with unique identifiers, and integrate Resonate with a web server.
+Welcome to the Resonate HQ TypeScript SDK quickstart!
+This quickstart is designed to give you a rapid introduction to the core concepts and syntax of the Resonate SDK.
+By the end, you'll have a basic understanding of how to register functions, run them with unique identifiers, and integrate Resonate with a web server.
 
 ## Prerequisites
 

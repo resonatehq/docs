@@ -1,0 +1,19 @@
+{
+  "redirects": [
+    {
+      "source": "/getting-started/quickstart",
+      "destination": "/typescript-sdk-quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/another-old-path",
+      "destination": "/another-new-path",
+      "permanent": false
+    },
+    {
+      "source": "/external-redirect",
+      "destination": "https://external-site.com",
+      "permanent": true
+    }
+  ]
+}
