@@ -1,10 +1,10 @@
 ---
-id: typescript-sdk-quickstart
+id: typescript-sdk
 title: Resonate HQ TypeScript SDK quickstart
 sidebar_label: TypeScript SDK quickstart
 ---
 
-import pipeline from '/img/pipeline.png';
+import pipeline from "/img/pipeline.png";
 
 Welcome to the Resonate HQ TypeScript SDK quickstart!
 This quickstart is designed to give you a rapid introduction to the core concepts and syntax of the Resonate SDK.
@@ -43,7 +43,7 @@ The following application forms a pipeline, where the result of a function is us
 - The `summarize` function generates a summary of the downloaded content.
 
 <center>
-<img src={pipeline} alt="pipeline" width="1200" /> 
+  <img src={pipeline} alt="pipeline" width="1200" />
 </center>
 
 Resonate manages the execution of these functions, ensuring that the result of `download` is passed as input to `summarize`. In cases of transient or intermittent failures at any step, Resonate will automatically retry the execution, providing reliability to the process.

@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-import fan from '../../static/img/fan.png';
+import fan from '/img/fan.png';
 
 # Typescript
 

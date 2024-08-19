@@ -1,5 +1,7 @@
 ---
-sidebar_position: 2
+id: deployment
+pagination_next: null
+pagination_prev: null
 ---
 
 # Deployment

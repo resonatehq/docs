@@ -54,6 +54,7 @@ time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting http server" addr=0.
 time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting grpc server" addr=0.0.0.0:50051
 time=2023-01-01T00:00:00.000-00:00 level=INFO msg="starting metrics server" addr=:9090
 ```
+
 ### GitHub
 
 You may also download the GitHub artifacts directly from our [repo](https://github.com/resonatehq/resonate/releases).

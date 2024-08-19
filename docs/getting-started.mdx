@@ -1,0 +1,45 @@
+---
+id: getting-started
+title: Getting started with Resonate HQ
+sidebar_label: Getting started w/ Resonate
+last_update:
+  date: "08-14-2024"
+collapsible: false
+pagination_next: null
+pagination_prev: null
+tags:
+  - getting-started
+---
+
+How to get started using Resonate?
+
+The answer can be a little bit use case specific, however generically you would follow these steps.
+
+### Choose your SDK
+
+Resonate HQ currently has a TypeScript SDK and a Python SDK.
+
+However, the SDKs are currently at different stages of development and do not yet offer the same set of capabilities and features.
+
+You may consider which SDK to use based on your use case.
+
+### Install the SDK
+
+Next, install the SDK with your language's dependency manager.
+
+For TypeScript this would be `npm` or `yarn`.
+For Python this could be `pip`, `pipenv`, or `poetry` for example.
+
+### Start building your application
+
+Generically speaking, to use a Resonate HQ SDK in your application you will do the following:
+
+1. Import the SDK package into your project.
+2. Register the functions that you want to have Durable Promises.
+3. Start and run functions using the handle provided by the SDK.
+
+Just by using the SDK, your application will have access to automatic and configurable failure detection and mitigation through timeouts and retries as well as a few other features.
+
+### Connect to a Resonate HQ Server
+
+To make your promises and functions durable even in the face of complete hardware crashes, then start a Resonate Server and provide the connection URL to the handle provided by the SDK.

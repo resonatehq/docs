@@ -1,22 +1,39 @@
 ---
 id: evaluate-resonate
-title: Evaluate Resonate HQ
+title: Why Resonate HQ?
 description: Evaluate Resonate for your distributed system.
-sidebar_position: 2
+last_update:
+  date: "08-14-2024"
 pagination_next: null
 pagination_prev: null
 ---
 
-# Distributed Async Await
+Curious to know what Resonate can do for your cloud application?
 
-Resonate's Distributed Async Await is a new programming model that simplifies coding for the cloud. It ensures code completion even if hardware or software failures occur during execution. The programming model does this with just functions and promises, making it trivial to build `coordinated` and `reliable` distributed applications.
+### Resonate HQ provides Distributed Async Await
 
-# Why Resonate?
+Distributed Async Await is extends your traditional Async Await.
+Traditional Aysnc Await enables concurrent execution on a single physical location using just functions and promises.
+Distributed Async Await provides the same level of concurrency, but for distributed locations, making it an incredibly effective cloud programming model.
+To make this possible Distributed Async Await's functions and promises are durable, meaning that it also provides Durable Execution.
+Durable Execution ensures code completion even if the face of hardware or software failures.
 
-- **Cloud Computing Made Dead Simple**: Resonate simplifies coding for the cloud using an intuitive paradigm you already know — async await.
+### Our philosophy is Dead Simple
 
-- **Single Binary**: Resonate simplifies your deployment and operations with a single binary.
+The Distributed Async Await model strives to be Dead Simple.
+It is based on an intuitive paradigm that you already know, and we strive to make every aspect of the product simple to use and simple to understand.
 
-- **Incremental Adoption and No Vendor Lock-In**: Resonate was designed to allow for incremental adoption without vendor lock-in ever.
+### You don't need the Server to get started
+
+You don't need the Resonate HQ Server to get started.
+The Server is provides supervision and orchestration of your promises and functions.
+However, many of the SDK features, such as automatic failure detection and migitation, are provided out-of-the-box, and don't require heavy communication with the Server to work.
+
+And if you do want to add that extra layer of durability to your application, the Server comes as a single binary without heavy dependency requirements.
+
+### Resonate promotes incremental adoption
+
+Resonate is designed to allow for incremental adoption without vendor lock-in.
+If you need to, you can convert just 1 function at a time.
 
 - **Built on an Open Standard**: Resonate's programming model is built on top of [durable promises](https://github.com/resonatehq/durable-promise-specification), an open standard with an intentionally minimal API surface area.

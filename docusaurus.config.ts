@@ -34,10 +34,12 @@ const config: Config = {
       {
         docs: {
           routeBasePath: "/", // Serve the docs at the site's root (ref: https://docusaurus.io/docs/next/docs-introduction#home-page-docs)
-          // sidebarPath: '',
+          sidebarPath: "./sidebar.js",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          // editUrl: '',
+          editUrl: "https://github.com/resonatehq/docs/tree/main/",
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: true,
         },
         blog: false,
         theme: {

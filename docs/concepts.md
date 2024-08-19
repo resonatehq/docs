@@ -1,10 +1,11 @@
 ---
-sidebar_position: 3
+pagination_next: null
+pagination_prev: null
 ---
 
-import local from '../../static/img/local.png';
+import local from '/img/local.png';
 
-import remote from '../../static/img/remote.png';
+import remote from '/img/remote.png';
 
 # Concepts
 
