@@ -160,7 +160,7 @@ const config: Config = {
         },
         {
           html: `
-            <a href="https://github.com/resonatehq/resonate" target="_blank" rel="noopener noreferrer" aria-label="Resonate GitHub">
+            <a href="https://github.com/resonatehq" target="_blank" rel="noopener noreferrer" aria-label="Resonate GitHub">
               <i class="bx bx-sm bxl-github"></i>
             </a>
           `,
