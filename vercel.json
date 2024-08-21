@@ -1,8 +1,8 @@
 {
   "redirects": [
     {
-      "source": "/getting-started/quickstart",
-      "destination": "/typescript-sdk-quickstart",
+      "source": "/getting-started",
+      "destination": "/get-started",
       "permanent": true
     },
     {

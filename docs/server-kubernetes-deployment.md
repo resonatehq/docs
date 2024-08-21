@@ -1,5 +1,9 @@
 ---
-id: deployment
+id: server-kubernetes-deployment
+slug: /server/kubernetes-deployment
+title: Deploy the Resonate HQ server to Kubernetes
+last_update:
+  date: "08-19-2024"
 pagination_next: null
 pagination_prev: null
 ---

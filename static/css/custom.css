@@ -8,7 +8,7 @@
 :root {
   --ifm-color-primary: #3f4965;
 
-  --ifm-color-primary-dark: #373f56; 
+  --ifm-color-primary-dark: #373f56;
   --ifm-color-primary-darker: #313749;
   --ifm-color-primary-darkest: #212430;
 
@@ -20,7 +20,7 @@
 }
 
 .footer__link-separator {
-  visibility: hidden; 
+  visibility: hidden;
 }
 
 .footer__link-item a:hover {
