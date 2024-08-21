@@ -153,7 +153,7 @@ const config: Config = {
         },
         {
           html: `
-            <a href="https://discord.gg/rkRbrDsp" target="_blank" rel="noopener noreferrer" aria-label="Resonate HQ Discord">
+            <a href="https://resonatehq.io/discord" target="_blank" rel="noopener noreferrer" aria-label="Resonate HQ Discord">
               <i class="bx bx-sm bxl-discord"></i>
             </a>
           `,
