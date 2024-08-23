@@ -1,18 +1,58 @@
 {
   "redirects": [
     {
-      "source": "/getting-started",
+      "source": "/category/getting-started",
       "destination": "/get-started",
       "permanent": true
     },
     {
-      "source": "/another-old-path",
-      "destination": "/another-new-path",
-      "permanent": false
+      "source": "/getting-started/quickstart",
+      "destination": "/get-started",
+      "permanent": true
     },
     {
-      "source": "/external-redirect",
-      "destination": "https://external-site.com",
+      "source": "/getting-started/concepts",
+      "destination": "/concepts",
+      "permanent": true
+    },
+    {
+      "source": "/category/sdks",
+      "destination": "/develop",
+      "permanent": true
+    },
+    {
+      "source": "/sdks/typescript",
+      "destination": "/develop/typescript",
+      "permanent": true
+    },
+    {
+      "source": "/category/resonate-server",
+      "destination": "/operate",
+      "permanent": true
+    },
+    {
+      "source": "/resonate/overview",
+      "destination": "/get-started",
+      "permanent": true
+    },
+    {
+      "source": "/resonate/deployment",
+      "destination": "/operate/kubernetes-server-deployment",
+      "permanent": true
+    },
+    {
+      "source": "/resonate/observability",
+      "destination": "/operate/server-observability",
+      "permanent": true
+    },
+    {
+      "source": "/resonate/architecture",
+      "destination": "/operate/server-architecture",
+      "permanent": true
+    },
+    {
+      "source": "/resonate/error-codes",
+      "destination": "/operate/server-errors",
       "permanent": true
     }
   ]

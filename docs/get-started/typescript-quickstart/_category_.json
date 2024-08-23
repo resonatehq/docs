@@ -1,0 +1,10 @@
+{
+  "label": "TypeScript SDK quickstart",
+  "position": 1,
+  "collapsed": true,
+  "collapsible": true,
+  "link": {
+    "type": "doc",
+    "id": "get-started/typescript-quickstart/index"
+  }
+}

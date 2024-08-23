@@ -1,17 +1,19 @@
 ---
-id: explanation-durable-promise
-slug: /concepts/durable-promises
-title: What is a Durable Promise?
-sidebar_label: Durable Promises explained
+id: durable-promise
+title: Durable Promises
+sidebar_label: Durable Promises
 last_update:
-  date: "08-14-2024"
-pagination_next: null
-pagination_prev: null
+  date: "08-23-2024"
+tags:
+  - concepts
+  - durable-promises
 ---
 
-Durable promises are like regular promises but maintain progress in durable storage as a [REST resource](https://www.w3schools.in/restful-web-services/rest-resources#:~:text=What%20is%20The%20REST%20Resources,Text%20Files%2C%20Videos%2C%20etc.).
-They have a unique identity that persists beyond the execution of the underlying function.
-By doing this, if something goes wrong (like a power outage or network hiccup), the application can look back at the saved results, quickly skip to where it left off, and keep going as if nothing ever happened, making your application resilient to unexpected failures and gracefully recovering.
+**What is a Durable Promise?**
+
+Durable promises are like regular promises but they persist in storage as a [REST resource](https://www.w3schools.in/restful-web-services/rest-resources#:~:text=What%20is%20The%20REST%20Resources,Text%20Files%2C%20Videos%2C%20etc.).
+They have a unique identity that lives beyond the execution of the underlying function.
+By doing this, if something goes wrong (like a power outage or network hiccup), the application can look back at the saved results, quickly skip to where it left off, and keep going as if nothing ever happened, making your application resilient to unexpected failures and gracefully recover.
 
 ## Storage
 

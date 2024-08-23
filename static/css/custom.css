@@ -19,7 +19,12 @@
   --ifm-link-color: #617196;
 }
 
-.footer__link-separator {
+body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300; /* Regular weight */
+}
+
+√ß .footer__link-separator {
   visibility: hidden;
 }
 

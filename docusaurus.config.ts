@@ -34,12 +34,13 @@ const config: Config = {
       {
         docs: {
           routeBasePath: "/", // Serve the docs at the site's root (ref: https://docusaurus.io/docs/next/docs-introduction#home-page-docs)
-          sidebarPath: "./sidebar.js",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/resonatehq/docs/tree/main/",
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
+          breadcrumbs: true,
+          exclude: ["**/code/**"],
         },
         blog: false,
         theme: {
@@ -98,6 +99,16 @@ const config: Config = {
     {
       src: "/scripts/cookiebanner.js",
       async: true,
+    },
+  ],
+  stylesheets: [
+    {
+      href: "https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap",
+      rel: "stylesheet",
+    },
+    {
+      href: "https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Open+Sans:wght@400&display=swap",
+      rel: "stylesheet",
     },
   ],
 
