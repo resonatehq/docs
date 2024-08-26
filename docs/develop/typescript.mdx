@@ -1,24 +1,49 @@
 ---
-sidebar_position: 1
+id: typescript
+title: Resonate HQ TypeScript SDK
+sidebar_label: TypeScript SDK
+description: Get started with the Resonate HQ TypeScript SDK.
+last_update:
+  date: "08-22-2024"
+pagination_next: null
+pagination_prev: null
+tags:
+  - get-started
+  - typescript
+  - sdk-guidance
 ---
 
-import fan from '../../static/img/fan.png';
+import fan from "/img/fan.png";
 
-# Typescript
+Welcome to Resonate HQ TypeScript SDK guide!
+This SDK makes it possible to write distributed async/await applications with TypeScript.
+This guide covers installation and features that the SDK offers.
 
-Welcome to Resonate's guide to the Resonate TypeScript SDK! This SDK makes it easy to write distributed async/await applications with TypeScript. In this guide, we will explore the minimal yet powerful API surface area the SDK offers.
+:::tip
+
+If you are new to Resonate, we recommend following the **[Resonate HQ TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart)** to get started learning how to use Resonate.
+
+:::
 
 ## Installation
 
-To get started, simply install the SDK using npm:
+**How to install and use the TypeScript SDK in your project.**
 
-```bash
-npm install @resonatehq/sdk@0.5.2
+To install the SDK in your project you can use npm or yarn.
+
+**npm**
+
+```shell
+npm install @resonatehq/sdk
 ```
 
-## Initializing Resonate
+**yarn**
 
-Begin by creating a top-level Resonate object:
+```shell
+yarn add @resonatehq/sdk
+```
+
+Then, create a top-level Resonate object in your project file.
 
 ```ts
 import { Resonate } from "@resonatehq/sdk";
@@ -26,12 +51,8 @@ import { Resonate } from "@resonatehq/sdk";
 const resonate = new Resonate();
 ```
 
-### Registering and Running Functions
-
-To leverage Resonate's capabilities:
-
-1. Register your function with the Resonate object using `resonate.register()`. Provide a function unique identifier (UID) and a function pointer to your local function.
-2. Once registered, you can invoke the registered function using `resonate.run()` by passing the function's UID, a UID for the specific execution, and any required arguments.
+After that, register your top-level function with the Resonate object using `resonate.register()`, provide a function unique identifier (UID) and a function pointer and then call `resonate.start()`.
+You can then invoke the registered function using `resonate.run()` by passing the function's UID, a UID for corresponding promise, and any required arguments.
 
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
@@ -40,14 +61,17 @@ const resonate = new Resonate();
 
 resonate.register("purchase", purchase);
 
-resonate.run("purchase", uid, user, song);
-
 resonate.start();
+
+resonate.run("purchase", uid, user, song);
 ```
 
-With `resonate.run()`, your code executes will complete even in the presence of hardware or software failures. Remember to start the Resonate application by calling `resonate.start()`!
+With `resonate.run()`, your code execution will complete even in the presence of hardware or software failures.
+Any part of your application that calls `resonate.run()` is considered a Resonate Application Node, and maintans its own call graph.
 
-### Running Functions Periodically
+## Schedules
+
+**How to schedule function executions with the Resonate TypeScript SDK.**
 
 You can also execute your function periodically with a cron expression.
 
@@ -63,7 +87,7 @@ resonate.schedule("everyMinute", "* * * * *", (ctx: Context) => {
 });
 ```
 
-### Execution Modes
+## Execution Modes
 
 Resonate offers two execution modes: Default and Durable.
 
@@ -79,7 +103,8 @@ const resonate = new Resonate();
 
 #### Durable Mode
 
-For advanced use cases requiring recoverability, stateful reminders, and a distributed task framework, configure Resonate to use a durable promise store. To enable durable mode, run the Resonate Server locally (refer to the [Resonate Server docs](/resonate/overview) for setup instructions) and pass the server's address when initializing Resonate:
+For advanced use cases requiring recoverability, stateful reminders, and a distributed task framework, configure Resonate to use a durable promise store.
+To enable durable mode, [run the Resonate Server locally](/get-started/server-installation) and pass the server's address when initializing Resonate:
 
 ```ts
 import { Resonate } from "@resonatehq/sdk";
@@ -122,13 +147,14 @@ const result = ctx.run(download, arg1, arg2, ...);
 ### Out-Process
 
 :::note
-Out-process execution requires the Resonate server and proper configuration to route tasks to workers. Refer to the [Resonate Server docs](/resonate/overview) for more information.
+Out-process execution requires the Resonate server and proper configuration to route tasks to workers.
+Refer to the [Operate docs](/operate) for more information.
 :::
 
 Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions. Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments. This approach enables you to perform the fan-out/fan-in pattern.
 
 <center>
-<img src={fan} alt="fan" width="500" /> 
+  <img src={fan} alt="fan" width="500" />
 </center>
 
 ```ts

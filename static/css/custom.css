@@ -8,7 +8,7 @@
 :root {
   --ifm-color-primary: #3f4965;
 
-  --ifm-color-primary-dark: #373f56; 
+  --ifm-color-primary-dark: #373f56;
   --ifm-color-primary-darker: #313749;
   --ifm-color-primary-darkest: #212430;
 
@@ -19,8 +19,13 @@
   --ifm-link-color: #617196;
 }
 
-.footer__link-separator {
-  visibility: hidden; 
+body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300; /* Regular weight */
+}
+
+√ß .footer__link-separator {
+  visibility: hidden;
 }
 
 .footer__link-item a:hover {
