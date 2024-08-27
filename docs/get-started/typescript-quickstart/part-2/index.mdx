@@ -2,18 +2,20 @@
 id: part-2
 sidebar_label: Part 2
 title: Resonate HQ TypeScript quickstart tutorial • Part 2 🏴‍☠️
-description: Build a reliable summarization service using the Resonate TypeScript SDK. This step-by-step tutorial demonstrates how to leverage Durable Execution to handle application-level failures with local promise storage, automatic retries, and transparent execution management.
+description: Connect your application to a Resonate HQ Server in Part 2 enabling recovery from platform-level failures.
+last_update:
+  date: "08-27-2024"
 keywords:
-  - Resonate TypeScript SDK
-  - Distributed async await
-  - Durable Execution
-  - Application-level failures
-  - Promise storage
-  - Resonate HQ tutorial
-  - Function execution retries
-  - Summarization service
-  - NodeJS Express tutorial
-  - TypeScript distributed systems
+  - Resonate HQ Server tutorial
+  - Distributed async-await
+  - Platform-level failure recovery
+  - Resonate SDK
+  - Promise resolution timeout
+  - Durable promises
+  - NodeJS server crash recovery
+  - Resonate Server installation
+  - TypeScript service update
+  - Inspect promises Resonate CLI
 tags:
   - typescript
   - sdk-guidance
@@ -21,8 +23,6 @@ tags:
   - getting-started
   - tutorial
 ---
-
-# Resonate HQ TypeScript quickstart tutorial • Part 2 🏴‍☠️
 
 In Part 2 of the tutorial, you will connect your service to a Resonate HQ Server to enable recovery from platform-level failures.
 To simulate a platform-level failure, you will kill the HTTP server process in the middle of the execution of the `downloadAndSummarize()` function.
