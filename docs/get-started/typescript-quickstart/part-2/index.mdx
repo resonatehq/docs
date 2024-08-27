@@ -1,0 +1,181 @@
+---
+id: part-2
+sidebar_label: Part 2
+title: Resonate HQ TypeScript quickstart tutorial • Part 2 🏴‍☠️
+description: Connect your application to a Resonate HQ Server in Part 2 enabling recovery from platform-level failures.
+last_update:
+  date: "08-27-2024"
+keywords:
+  - Resonate HQ Server tutorial
+  - Distributed async-await
+  - Platform-level failure recovery
+  - Resonate SDK
+  - Promise resolution timeout
+  - Durable promises
+  - NodeJS server crash recovery
+  - Resonate Server installation
+  - TypeScript service update
+  - Inspect promises Resonate CLI
+tags:
+  - typescript
+  - sdk-guidance
+  - quickstart
+  - getting-started
+  - tutorial
+---
+
+In Part 2 of the tutorial, you will connect your service to a Resonate HQ Server to enable recovery from platform-level failures.
+To simulate a platform-level failure, you will kill the HTTP server process in the middle of the execution of the `downloadAndSummarize()` function.
+
+### Prerequisites
+
+This part of the tutorial assumes you have [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/) installed and that you have completed [Part 1](/get-started/typescript-quickstart/part-1) and already have the service built.
+
+## Install the Resonate HQ Server
+
+Follow the steps in the [Resonate HQ Server install guide](/get-started/server-installation) to install and run the server on your machine.
+
+By default, the Server runs on localhost port 8001.
+
+After the server is running, you can update your service code.
+
+## Update your code
+
+There are three places where you need to update your code for this nex part of the tutorial.
+
+First, in your `gateway.ts` file, update the `new Resonate()` call and provide it with the URL of the server, in this case `http://localhost:8001`.
+
+<!--SNIPSTART quickstart-ts-part-2-server-url-->
+
+[docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts)
+
+```ts
+// Initialize a Resonate application.
+const resonate = new Resonate({ url: "http://localhost:8001" });
+```
+
+<!--SNIPEND-->
+
+Then, extend the top-level promise resolution timeout to a full minute.
+
+<!--SNIPSTART quickstart-ts-part-2-register-timeout-->
+
+[docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts)
+
+```ts
+// Register a function as a Resonate function
+resonate.register(
+  "downloadAndSummarize", // function name
+  downloadAndSummarize, // function pointer
+  resonate.options({ timeout: 60000 }) // set a total execution timeout of 1 minute
+);
+```
+
+<!--SNIPEND-->
+
+You are increasing the top-level promise resolution timeout to a full minute so that you have time to kill the service and bring it back up again.
+
+And finally, in your `app.ts` file add a 10 second sleep to the `downloadAndSummarize()` function between `download()` and `summarize()`.
+
+<!--SNIPSTART quickstart-ts-part-2-add-sleep-->
+
+[docs/get-started/typescript-quickstart/part-2/code/src/app.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/app.ts)
+
+```ts
+export async function downloadAndSummarize(ctx: Context, url: string) {
+  console.log("Downloading and summarizing content from", url);
+
+  // Download the content from the provided URL
+  let content = await ctx.run(download, url);
+
+  // Sleep for 10 seconds
+  await ctx.sleep(10000);
+
+  // Summarize the downloaded content
+  let summary = await ctx.run(summarize, content);
+
+  // Return the summary of the content
+  return summary;
+}
+```
+
+<!--SNIPEND-->
+
+You are adding a 10 second sleep so that you have time between the `download()` step and the `summarize()` step so that you have time to kill the service before the `summarize()` step starts.
+
+Now that you have your code updated, it is time to simulate a service outage.
+
+## Simulate a crash
+
+If you haven't already, restart your HTTP service with the updated code.
+
+```shell
+npm start
+```
+
+After your service is running with the updated code, send the `POST` request to your service.
+
+```shell
+curl -X POST http://localhost:3000/summarize -H "Content-Type: application/json" -d '{"url": "http://example.com"}'
+```
+
+Let it run it until you see that the log "download successful", then kill (Ctrl-c) the service.
+
+:::note
+
+Because you are using cURL from another terminal, you will receive "received"
+In Part 1 of the tutorial, killing the HTTP service would have resulted in the loss of the state of the executions.
+However, because the service was connected to the Resonate HQ Server, when you bring the service back up, the execution sequence will continue where it left off.
+
+Start the service again.
+Assuming that you stopped the service after the `download()` function ran, you should now see the `summarize()` function logs and the application complete its execution.
+
+Next, you will inspect the promise in the Resonate Server to see that it resolved successfully.
+
+## Inspect promises
+
+You can inspect the promises stored in the Resonate Server via the Resonate CLI.
+
+```bash
+resonate promise get summarize-http://example.com
+```
+
+You should see output similar to the following:
+
+```
+Id:       summarize-http://example.com
+State:    RESOLVED
+Timeout:  9008909898871320
+
+Idempotency Key (create):    summarize-http://example.com
+Idempotency Key (complete):  summarize-http://example.com
+
+Param:
+  Headers:
+  Data:
+    {"func":"downloadAndSummarize","args":["http://example.com"]}
+
+Value:
+  Headers:
+  Data:
+    "This is a summary of the text"
+
+Tags:
+  resonate:invocation:  true
+```
+
+:::tip
+
+Try out your app again with another url (to create a new promise with a different ID).
+Then, kill the HTTP service halfway through execution.
+Query for the promise in the Resonate Server and check out the status.
+
+You should see that the promise is marked `PENDING`.
+
+Bring your HTTP service back up and and then query for the promise again.
+
+It should be marked `RESOLVED`.
+
+:::
+
+So, now you should have a good understanding of how to use the Resonate SDK and the Resonate Server to build a distributed async await applications!
