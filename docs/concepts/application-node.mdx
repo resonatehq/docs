@@ -1,0 +1,50 @@
+---
+id: application-node
+title: What is a Resonate HQ Application Node?
+sidebar_label: Application Node
+description: Resonate HQ Application Node definition
+last_update:
+  date: "08-27-2024"
+tags:
+  - concepts
+---
+
+A Resonate HQ Application Node can be described as a deployed bundle of code that has a top-level function registered with and run by `resonate.run()`.
+
+![Application Node Call Graph Local Process](/img/application-node-call-graph-local-process.svg)
+
+The call to `resonate.run()` creates a top-level promise in the call graph.
+
+To handle throughput and availability, you can have many Application Nodes, each running the same bundle of code.
+
+If we take the [TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart/) as an example, the "bundle of code" is the three functions `downloadAndSummarize()`, `download()` and `summarize()`.
+
+```typescript
+import { Context } from "@resonatehq/sdk";
+
+// downloadAndSummarize is the top level function that awaits on the download and summarize functions.
+export async function downloadAndSummarize(ctx: Context, url: string) {
+  // Download the content from the provided URL
+  let content = await ctx.run(download, url);
+  // Summarize the downloaded content
+  let summary = await ctx.run(summarize, content);
+  // Return the summary of the content
+  return summary;
+}
+
+async function download(ctx: Context, url: string): Promise<string> {
+  // ...
+  return new Promise((resolve, reject) => {
+    resolve("download complete");
+  });
+}
+
+async function summarize(ctx: Context, text: string): Promise<string> {
+  // ...
+  return new Promise((resolve, reject) => {
+    resolve("summary of text");
+  });
+}
+```
+
+This code could be deployed to many hosts, each considered an Application Node.

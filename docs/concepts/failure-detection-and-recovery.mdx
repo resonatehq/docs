@@ -9,9 +9,61 @@ tags:
   - concepts
 ---
 
-**Timeouts and Idempotency**
+When we talk about failure detection and recovery, first we need to define what a failure is.
 
-Durable promises are attempted to be resolved and retried up until the specified timeout. It's crucial to ensure that the operations performed by your durable functions are [idempotent](https://blog.bitsrc.io/design-an-idempotent-api-in-2024-d4a3cf8d8bf2) to prevent undefined behavior.
+## Failure
+
+A failure occurs when any condition prevents a function from running to completion.
+
+At the application level, a failure happens when a function throws an exception, returns an error, or rejects a promise.
+
+At the platform level, a failure happens when the host executing the function crashes or becomes unresponsive.
+
+## Failure detection
+
+Each [Application Node](/concepts/application-node) written with a Resonate SDK has the ability to react to application level failures.
+The Resonate SDK listens for exceptions, errors, and rejected promises.
+
+When your Application Node is configured with a Resonate Server as a supervisor, then the supervisor has the ability to detect and react to platform level failures.
+
+## Recovery
+
+At the application level, if a failure is detected often the desired behavior is to retry as a means of recovery.
+
+For example, in TypeScript, if you want a function to retry when it fails at its objective, then just throw an error from within the function:
+
+```typescript
+async function download(ctx: Context, url: string): Promise<string> {
+  // ...
+  throw new Error("download failed");
+  // ...
+}
+```
+
+Or, you can reject a promise:
+
+```typescript
+async function download(ctx: Context, url: string): Promise<string> {
+  // ...
+  return new Promise((resolve, reject) => {
+    reject("download failed");
+  });
+  // ...
+}
+```
+
+At the platform level, if a failure is detected, often the desired behavior is to start a new function execution on a different Application Node.
+
+However, thanks to Durable Processes, the new function execution effectively resumes from the point of failure instead of restarting from the beginning.
+
+## Timeouts
+
+Functions await on other functions through [Durable Promises](/concepts/durable-promise).
+
+In Resonate HQ, timeouts are associated with promise resolution.
+
+Resonate HQ attempts to resolve and retry durable promises until the specified timeout.
+If the timeout is reached, Resonate HQ marks the promise as failed.”
 
 ```ts
 const resonate = new Resonate({
@@ -22,3 +74,5 @@ const resonate = new Resonate({
   timeout: 5000,
 });
 ```
+
+It's crucial to ensure that the operations performed by your durable functions are [idempotent](https://blog.bitsrc.io/design-an-idempotent-api-in-2024-d4a3cf8d8bf2) to prevent undefined behavior.
