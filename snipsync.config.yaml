@@ -4,9 +4,15 @@ origins:
       owner: resonatehq
       repo: docs
       ref: main
+  - files:
+      pattern: ./docs/get-started/typescript-quickstart/part-2/code/src/**.ts
+      owner: resonatehq
+      repo: docs
+      ref: main
 
 targets:
   - docs/get-started/typescript-quickstart/part-1
+  - docs/get-started/typescript-quickstart/part-2
 
 allowed_target_extensions: [.md]
 enable_code_dedenting: false

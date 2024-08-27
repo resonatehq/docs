@@ -1,8 +1,8 @@
 {
-  "name": "step1",
+  "name": "step2",
   "version": "1.0.0",
   "description": "Explore **Distributed Async Await** with the Resonate SDK. This guide walks you throught the basics to create an application showcasing features like transparent retries, rate limits, and tracing—no additional infrastructure needed.",
-  "main": "src/gateway.ts",
+  "main": "index.js",
   "scripts": {
     "dev": "npx tsx src/gateway.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "tsx": "^4.17.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
