@@ -142,8 +142,8 @@ const config: Config = {
           target: "_self",
         },
         {
-          href: "https://resonatehq.io/subscribe",
-          html: '<button class="button button--secondary" style="border-radius: 20px">Subscribe</button>',
+          href: "https://resonatehq.io/discord",
+          html: '<i class="bx bx-md bxl-discord"></i>',
           position: "right",
         },
         {
@@ -175,6 +175,13 @@ const config: Config = {
           html: `
             <a href="https://github.com/resonatehq" target="_blank" rel="noopener noreferrer" aria-label="Resonate GitHub">
               <i class="bx bx-sm bxl-github"></i>
+            </a>
+          `,
+        },
+        {
+          html: `
+            <a href="https://www.linkedin.com/company/resonatehqio" target="_blank" rel="noopener noreferrer" aria-label="Resonate HQ LinkedIn">
+              <i class="bx bx-sm bxl-linkedin"></i>
             </a>
           `,
         },
