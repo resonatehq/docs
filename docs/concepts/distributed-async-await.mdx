@@ -1,0 +1,87 @@
+---
+id: distributed-async-await
+title: Distributed Async Await
+description: Explore the emerging concept of Distributed Async Await, which goes beyond reliability and failure tolerance to provide a more robust and scalable programming model for distributed systems.
+sidebar_label: Distributed Async Await
+sidebar_position: 1
+last_update:
+  date: "08-29-2024"
+keywords:
+  - Async Await
+  - Cooperative Multitasking
+  - Functions and Promises
+  - Coroutines
+tags:
+  - concepts
+---
+
+The concept of **Distributed Async Await** a.k.a **Durable Executions** is an emerging concept.
+However, an accurate and concise definition or description or articulation is not yet available.
+
+**💀 Warning 💀**
+
+Do **not** fall for the trap of reasoning only in terms of reliability, failure tolerance, or failure transparency.
+While enhanced reliability, failure tolerance, or failure transparency are attractive attributed and enhanced reliability, failure tolerance, or failure transparency are an enabling mechanism, **they are not the essence of Distributed Async Await**
+
+## Programming Model
+
+Here is an example of the programming model:
+
+```typescript
+function foo(n : number) Promise<void>{
+
+  console.log("span 1");
+
+  await bar(n);
+
+  console.log("span 2");
+
+}
+```
+
+![Function Promise Relationship](/img/function-promise-function.png)
+
+Async Await is based on functions and promises:
+
+**Functions**: Represent the fundamental unit of computation.
+
+**Promises**: Representations of future values, represent the fundamental unit of coordination.
+
+![Function and promise state machine](/img/function-promise-state-machine.png)
+
+We can conceptualize a function execution as a sequence of steps delineated by await statements:
+
+- When an execution starts, the execution runs until reaching an await expression.
+- When reaching an await expression, the execution is suspended until the associated promise completes.
+  - If the promise is resolved, the execution resumes with the value of the promise.
+  - If the promise is rejected, an error is thrown.
+
+There are two key relationships between downstream function executions, promises, and upstream function executions:
+
+**Invocation** introduces a relationship between a downstream execution, a promise, and an upstream execution, so that the downstream execution creates the promise and the promise creates the upstream execution.
+
+**Await** introduces a relationship between a downstream execution, a promise, and an upstream execution, so that the downstream execution can only resume after the upstream execution completes the promise.
+
+![Invocation and Await Relationship](/img/invocation-await-relationship.svg)
+
+Durable Async Await is based on Durable Functions and Durable Promises, that is, functions and promises that persist their identity and their state in durable storage.
+
+TBD (including Continuation, Serializable Continuation)
+
+![Sync vs Async Await vs Async Promise Await](/img/sync-vs-async-await-vs-async-promise.svg)
+
+## How does Durable Async Await work?
+
+Describing how Durable Async Await works is much easier than describing what Durable Async Await is or what Durable Async Await does.
+
+**Mechanics**
+
+Interleave a function execution with save points, enabling the execution to resume its latest save point in case the execution terminates prematurely before returning.
+
+**Restart**
+
+In the event of premature termination, the runtime restarts the execution and deduplicates on previously completed Durable Promises to continue
+
+**Restore**
+
+In the event of premature termination, the runtime restores the execution to continue
