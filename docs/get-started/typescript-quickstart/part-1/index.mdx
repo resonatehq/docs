@@ -30,10 +30,11 @@ Durable Execution for application-level failures means that you get promise reso
 
 You will create an HTTP service with a single route handler.
 The handler will use `resonate.run()` to run the `downloadAndSummarize()` function.
+Resonate will manage the execution of these functions, ensuring that the result of `download()` is passed as input to `summarize()`.
 
-![downloadAndSummarize application flow](/img/downloadAndSummarize.svg)
+![downloadAndSummarize application flow](/img/downloadAndSummarizeLocal.svg)
 
-Resonate will manage the execution of these functions, ensuring that the result of `download()` is passed as input to `summarize()`. In cases of transient or intermittent failures at any step, Resonate will automatically retry the execution, providing reliability to the process.
+In cases of transient or intermittent failures at any step, Resonate will automatically retry the execution, providing reliability to the process.
 
 ### Prerequisites
 
