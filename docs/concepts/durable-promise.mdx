@@ -4,7 +4,7 @@ title: Durable Promises
 sidebar_label: Durable Promises
 sidebar_position: 2
 last_update:
-  date: "08-23-2024"
+  date: "09-04-2024"
 tags:
   - concepts
   - durable-promises
@@ -24,13 +24,12 @@ There are two places where a Durable Promise may be stored, locally or remotely.
 
 ### Local storage
 
-import local from "/img/local.png";
-
-<center>
-  <img src={local} alt="local" width="500" />
-</center>
-
 The local use case involves a durable promise that is both created and completed by the same process.
+
+<div style={{ maxWidth: "800px", margin: "0 auto" }}>
+  <img src="/img/local-storage-promise.svg" alt="Local storage promise" />
+</div>
+
 The primary focus is reliability, forming the bedrock for several powerful features:
 
 - **Retries**: If a process fails while executing a durable promise due to a transient or intermittent issue, such as network connectivity problems, it can be transparently retried, minimizing the impact of temporary failures.
@@ -43,9 +42,9 @@ The primary focus is reliability, forming the bedrock for several powerful featu
 
 import remote from "/img/remote.png";
 
-<center>
-  <img src={remote} alt="remote" width="500" />
-</center>
+<div style={{ maxWidth: "800px", margin: "0 auto" }}>
+  <img src="/img/remote-storage-promise.svg" alt="Local storage promise" />
+</div>
 
 The remote use case involves a durable promise that is created by one process and completed by another distinct process. The primary purpose is to facilitate coordination between different processes or services, serving as the foundation for features like:
 

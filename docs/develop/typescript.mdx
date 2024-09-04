@@ -4,7 +4,7 @@ title: Resonate HQ TypeScript SDK
 sidebar_label: TypeScript SDK
 description: Get started with the Resonate HQ TypeScript SDK.
 last_update:
-  date: "08-22-2024"
+  date: "09-04-2024"
 pagination_next: null
 pagination_prev: null
 tags:
@@ -19,9 +19,11 @@ Welcome to Resonate HQ TypeScript SDK guide!
 This SDK makes it possible to write distributed async/await applications with TypeScript.
 This guide covers installation and features that the SDK offers.
 
+➡️ [Resonate HQ TypeScript SDK API reference](https://resonatehq.github.io/resonate-sdk-ts/index.html)
+
 :::tip
 
-If you are new to Resonate, we recommend following the **[Resonate HQ TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart)** to get started learning how to use Resonate.
+If you are new to Resonate, we recommend following the **[Resonate HQ TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart)** to get started learning how to use Resonate. 🚀
 
 :::
 
@@ -59,15 +61,103 @@ import { Resonate, Context } from "@resonatehq/sdk";
 
 const resonate = new Resonate();
 
-resonate.register("purchase", purchase);
+resonate.register("your-function-name", yourFunctionPointer);
 
 resonate.start();
 
-resonate.run("purchase", uid, user, song);
+resonate.run("your-function-name", "unique-promise-id", args);
 ```
 
 With `resonate.run()`, your code execution will complete even in the presence of hardware or software failures.
 Any part of your application that calls `resonate.run()` is considered a Resonate Application Node, and maintans its own call graph.
+
+## Promise storage modes
+
+Resonate offers two promise storage modes: Local and Remote.
+
+### Local storage
+
+Using [Local storage](/concepts/durable-promise#local-storage), which is the default, Resonate utilizes a volatile in-memory promise store.
+
+```ts
+import { Resonate } from "@resonatehq/sdk";
+
+const resonate = new Resonate();
+```
+
+Promises are stored in memory and are not durable to hard crashes.
+This mode provides out-of-the-box features like automatic retries, tracing, and logging without requiring any additional infrastructure.
+
+The following code is an example using local storage that has a main function (`f1()`) that sequentially awaits on two other functions (`f2()` and `f3()`).
+
+```ts
+import { Resonate, Context } from "@resonatehq/sdk";
+
+// Initialize a Resonate application.
+const resonate = new Resonate();
+
+// Register a function as a Resonate function
+resonate.register(
+  "f1", // function name
+  f1, // function pointer
+  resonate.options({ timeout: 1000 }) // set a total execution timeout of 1 seconds
+);
+
+// Start the Resonate application
+resonate.start();
+
+// Call the function1
+await resonate.run("f1", `your-proimise-id`);
+
+// Function 1 is the top level function that awaits on function 2 and function 3.
+export async function f1(ctx: Context) {
+  // Call function 2
+  await ctx.run(f2);
+  // Call function 3
+  await ctx.run(f3);
+  return;
+}
+
+async function f2() {
+  // ...
+  return;
+}
+async function f3() {
+  // ...
+  return;
+}
+```
+
+This call graph could be visualized like the following:
+
+<div style={{ maxWidth: "800px", margin: "0 auto" }}>
+  <img src="/img/local-storage-call-graph.svg" alt="Local call graph" />
+</div>
+
+This call graph does not require the Resonate Server (supervisor).
+This can be run in Local mode since all the functions execute locally within the same process.
+However, if you want `f1()`, `f2()`, or `f3()` to be resumable if the process crashes, then use [Remote mode](#remote-storage).
+
+### Remote storage
+
+[Remote storage](/concepts/durable-promise#remote-storage) ensures promises get stored in the Resonate Server.
+To enable Remote storage, pass the Resonate Server's address when initializing Resonate:
+
+```ts
+import { Resonate } from "@resonatehq/sdk";
+
+const resonate = new Resonate({
+  url: "http://localhost:8001",
+});
+```
+
+Using the same code example as above, but with Remote storage, the call graph would look like the following:
+
+<div style={{ maxWidth: "800px", margin: "0 auto" }}>
+  <img src="/img/remote-storage-call-graph.svg" alt="Remote call graph" />
+</div>
+
+This call graph requires the Resonate Server (supervisor).
 
 ## Schedules
 
@@ -87,31 +177,57 @@ resonate.schedule("everyMinute", "* * * * *", (ctx: Context) => {
 });
 ```
 
-## Execution Modes
+## Error handling
 
-Resonate offers two execution modes: Default and Durable.
+If you want to retry afunction in an attempt to [recover from an application-level](/concepts/failure-detection-and-recovery#application-level) issue, you need to either throw an error, or return a rejected promise.
+You cannot return a custom object that contains error information.
 
-#### Default Mode
-
-In the default mode, Resonate utilizes a volatile in-memory promise store. This mode provides out-of-the-box features like automatic retries, tracing, and logging without requiring any additional infrastructure.
+**✅ Throw an error:**
 
 ```ts
-import { Resonate } from "@resonatehq/sdk";
-
-const resonate = new Resonate();
+try {
+  return "success";
+} catch (e) {
+  let errorMessage = "An unknown error occurred";
+  if (e instanceof Error) {
+    errorMessage = e.message;
+  }
+  // highlight-next-line
+  throw errorMessage;
+}
 ```
 
-#### Durable Mode
-
-For advanced use cases requiring recoverability, stateful reminders, and a distributed task framework, configure Resonate to use a durable promise store.
-To enable durable mode, [run the Resonate Server locally](/get-started/server-installation) and pass the server's address when initializing Resonate:
+**✅ Reject a promise:**
 
 ```ts
-import { Resonate } from "@resonatehq/sdk";
-
-const resonate = new Resonate({
-  url: "http://localhost:8001",
+return new Promise((resolve, reject) => {
+  try {
+    resolve("success");
+  } catch (e) {
+    let errorMessage = "An unknown error occurred";
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+    // highlight-next-line
+    reject(errorMessage);
+  }
 });
+```
+
+**❌ Don't return a custom object:**
+
+```ts
+try {
+    return { success: true };
+  } catch (e) {
+    let errorMessage = "An unknown error occurred";
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+    // highlight-next-line
+    return { success: false, error: errorMessage };
+  }
+}
 ```
 
 ## Resonate Context
@@ -146,12 +262,15 @@ const result = ctx.run(download, arg1, arg2, ...);
 
 ### Out-Process
 
+<!--
 :::note
 Out-process execution requires the Resonate server and proper configuration to route tasks to workers.
 Refer to the [Operate docs](/operate) for more information.
 :::
 
-Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions. Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments. This approach enables you to perform the fan-out/fan-in pattern.
+Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions.
+Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments.
+This approach enables you to perform the fan-out/fan-in pattern.
 
 <center>
   <img src={fan} alt="fan" width="500" />
@@ -160,6 +279,7 @@ Out-of-process execution allows you to dispatch the execution of multiple tasks 
 ```ts
 const result = await ctx.run(`/gpu/summarize/${url}`, arg);
 ```
+-->
 
 ### Sleeping
 
