@@ -4,7 +4,7 @@ sidebar_label: Part 1
 title: Resonate HQ TypeScript quickstart tutorial • Part 1 🏴‍☠️
 description: Build a reliable summarization service using the Resonate TypeScript SDK. This step-by-step tutorial demonstrates how to leverage Durable Execution to handle application-level failures with local promise storage, automatic retries, and transparent execution management.
 last_update:
-  date: "09-04-2024"
+  date: "09-09-2024"
 keywords:
   - Resonate TypeScript SDK
   - Distributed async await
@@ -32,10 +32,7 @@ You will create an HTTP service with a single route handler.
 The handler will use `resonate.run()` to run the `downloadAndSummarize()` function.
 Resonate will manage the execution of these functions, ensuring that the result of `download()` is passed as input to `summarize()`.
 
-In the following diagram, **f1** is `downloadAndSummarize()`, **f2** is `download()`, and **f3** is `summarize()`.
-Promises are represented by **p1**, **p2**, and **p3** respectively.
-
-![downloadAndSummarize application flow](/img/local-downloadAndSummarize.svg)
+![downloadAndSummarize application flow](/img/d&l-callgraph.gif)
 
 If any of the functions throw an error or reject a promise, Resonate will automatically retry the function execution.
 

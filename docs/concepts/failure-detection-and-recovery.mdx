@@ -38,9 +38,7 @@ There are two levels of recovery:
 
 At the application level, if a failure is detected often the desired behavior is to retry as a means of recovery.
 
-<div style={{ maxWidth: "800px", margin: "0 auto" }}>
-  <img src="/img/throw-error-for-retries.svg" alt="Throw error for retries" />
-</div>
+![Local in memory promise storage with a retry](/img/local-storage-promise-with-retry.svg)
 
 For example, in TypeScript, if you want a function to retry when it fails at its objective, then just throw an error from within the function:
 
@@ -66,9 +64,12 @@ async function download(ctx: Context, url: string): Promise<string> {
 
 ### Platform level
 
-At the platform level, if a failure is detected, often the desired behavior is to start a new function execution on a different Application Node.
+At the platform level, if a failure is detected, often the desired behavior is to resume the function execution when the process comes back up, or have it resume on a different Application Node entirely.
+Thanks to Resonate's remote Durable Promise storage (Resonate Server), you can choose to do either.
 
-However, thanks to Durable Promises, the new function execution effectively resumes from the point of failure instead of restarting from the beginning.
+![Remote promise storage diagram with retries](/img/remote-storage-promise-with-retries.svg)
+
+The new function execution effectively resumes from the point of failure instead of restarting from the beginning.
 
 ## Timeouts
 

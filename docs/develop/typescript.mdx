@@ -4,7 +4,7 @@ title: Resonate HQ TypeScript SDK
 sidebar_label: TypeScript SDK
 description: Get started with the Resonate HQ TypeScript SDK.
 last_update:
-  date: "09-04-2024"
+  date: "09-09-2024"
 pagination_next: null
 pagination_prev: null
 tags:
@@ -77,7 +77,7 @@ Resonate offers two promise storage modes: Local and Remote.
 
 ### Local storage
 
-Using [Local storage](/concepts/durable-promise#local-storage), which is the default, Resonate utilizes a volatile in-memory promise store.
+Using [Local storage](/concepts/durable-promise#local-storage) (Local mode), which is the default, Resonate utilizes a volatile in-memory promise store.
 
 ```ts
 import { Resonate } from "@resonatehq/sdk";
@@ -128,15 +128,18 @@ async function f3() {
 }
 ```
 
-This call graph could be visualized like the following:
+This sequence graph could be visualized like the following:
 
-<div style={{ maxWidth: "800px", margin: "0 auto" }}>
-  <img src="/img/local-storage-call-graph.svg" alt="Local call graph" />
-</div>
+![Local storage swim lane sequence functions only](/img/local-storage-swim-lane-sequence-func-only.svg)
 
-This call graph does not require the Resonate Server (supervisor).
-This can be run in Local mode since all the functions execute locally within the same process.
-However, if you want `f1()`, `f2()`, or `f3()` to be resumable if the process crashes, then use [Remote mode](#remote-storage).
+The next level of detail could include the promises, which might look like this:
+
+![Local storage swim lane sequence](/img/local-storage-swim-lane-sequence.svg)
+
+Notice that this sequence graphs above do not include the Resonate Server (supervisor).
+If all the functions are meant to execute locally, within the same process, an Application Node may chose to rely soley on a local promise store.
+Again, this is called Local mode.
+However, if you want `f1()`, `f2()`, or `f3()` to be resumable even if the process crashes, then use [Remote mode](#remote-storage).
 
 ### Remote storage
 
@@ -151,13 +154,11 @@ const resonate = new Resonate({
 });
 ```
 
-Using the same code example as above, but with Remote storage, the call graph would look like the following:
+Using the same code example as above, but with Remote storage, the sequence would look like the following:
 
-<div style={{ maxWidth: "800px", margin: "0 auto" }}>
-  <img src="/img/remote-storage-call-graph.svg" alt="Remote call graph" />
-</div>
+![Remote storage swim lane sequence](/img/remote-storage-swim-lane-sequence.svg)
 
-This call graph requires the Resonate Server (supervisor).
+This sequence shows what happens "under the hood" when a Resonate Server (supervisor) is used.
 
 ## Schedules
 
@@ -179,7 +180,7 @@ resonate.schedule("everyMinute", "* * * * *", (ctx: Context) => {
 
 ## Error handling
 
-If you want to retry afunction in an attempt to [recover from an application-level](/concepts/failure-detection-and-recovery#application-level) issue, you need to either throw an error, or return a rejected promise.
+If you want to retry a function in an attempt to [recover from an application-level](/concepts/failure-detection-and-recovery#application-level) issue, you need to either throw an error, or return a rejected promise.
 You cannot return a custom object that contains error information.
 
 **✅ Throw an error:**
