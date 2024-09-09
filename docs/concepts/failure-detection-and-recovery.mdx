@@ -5,7 +5,7 @@ sidebar_label: Failure detection and recovery
 sidebar_position: 4
 description: Learn how Resonate HQ detects and recovers from failures.
 last_update:
-  date: "08-23-2024"
+  date: "09-04-2024"
 tags:
   - concepts
 ---
@@ -29,7 +29,16 @@ When your Application Node is configured with a Resonate Server as a supervisor,
 
 ## Recovery
 
+There are two levels of recovery:
+
+- Application level, where a function throws an error or rejects a promise.
+- Platform level, where the Application Node crashes or becomes unresponsive.
+
+### Application level
+
 At the application level, if a failure is detected often the desired behavior is to retry as a means of recovery.
+
+![Local in memory promise storage with a retry](/img/local-storage-promise-with-retry.svg)
 
 For example, in TypeScript, if you want a function to retry when it fails at its objective, then just throw an error from within the function:
 
@@ -53,9 +62,14 @@ async function download(ctx: Context, url: string): Promise<string> {
 }
 ```
 
-At the platform level, if a failure is detected, often the desired behavior is to start a new function execution on a different Application Node.
+### Platform level
 
-However, thanks to Durable Promises, the new function execution effectively resumes from the point of failure instead of restarting from the beginning.
+At the platform level, if a failure is detected, often the desired behavior is to resume the function execution when the process comes back up, or have it resume on a different Application Node entirely.
+Thanks to Resonate's remote Durable Promise storage (Resonate Server), you can choose to do either.
+
+![Remote promise storage diagram with retries](/img/remote-storage-promise-with-retries.svg)
+
+The new function execution effectively resumes from the point of failure instead of restarting from the beginning.
 
 ## Timeouts
 

@@ -4,7 +4,7 @@ title: Durable Promises
 sidebar_label: Durable Promises
 sidebar_position: 2
 last_update:
-  date: "08-23-2024"
+  date: "09-09-2024"
 tags:
   - concepts
   - durable-promises
@@ -24,30 +24,48 @@ There are two places where a Durable Promise may be stored, locally or remotely.
 
 ### Local storage
 
-import local from "/img/local.png";
+Local storage, sometimes referred to as "Local mode" is when the promise is stored in local memory.
 
-<center>
-  <img src={local} alt="local" width="500" />
-</center>
+![Local in memory promise storage diagram](/img/local-storage-promise.svg)
 
-The local use case involves a durable promise that is both created and completed by the same process.
-The primary focus is reliability, forming the bedrock for several powerful features:
+This is in contrast to [Remote storage (Remote mode)](#remote-storage), and provides function level recovery.
+In other words, if a called function fails (throws an error, or rejects a promise) in local mode then it is retried within the bounds of the timeout budget.
 
-- **Retries**: If a process fails while executing a durable promise due to a transient or intermittent issue, such as network connectivity problems, it can be transparently retried, minimizing the impact of temporary failures.
+![Local in memory promise storage with a retry](/img/local-storage-promise-with-retry.svg)
 
-- **Recoverability**: If a process crashes while executing a durable promise, it can recover and continue from where it left off, ensuring your application remains resilient.
+Use local storage when you require very low latency and are not concerned with the Application Node restarting the execution from scratch should it crash but you still want individual functions to be transparently retried if they fail.
 
-- **Schedules**: Durable promises can be used to schedule stateful reminders to run operations periodically.
+Part 1 of the quickstart tutorials showcases this functionality:
+
+- [TypeScript SDK](/get-started/typescript-quickstart/part-1)
 
 ### Remote storage
 
-import remote from "/img/remote.png";
+Remote storage, sometimes referred to as "Remote mode", is when the promise is stored in the Resonate Server (the supervisor service).
 
-<center>
-  <img src={remote} alt="remote" width="500" />
-</center>
+![Remote promise storage diagram](/img/remote-storage-promise.svg)
 
-The remote use case involves a durable promise that is created by one process and completed by another distinct process. The primary purpose is to facilitate coordination between different processes or services, serving as the foundation for features like:
+Using Remote storage enables the "distribution" aspect of Distributed Async Await and provides application-level (also known as "process-level") recovery.
+
+First, let's look at application-level recovery, for example when your (Application Node) crashes.
+Remote storage can ensure that when your process comes back up, any "in-progress" executions continue from where they left off.
+
+Part 2 of the quickstart tutorials showcases this functionality:
+
+- [TypeScript SDK](/get-started/typescript-quickstart/part-2)
+
+Using the same sequential function execution from the quickstart tutorial a sequential execution diagram might look this:
+
+![Remote promise storage diagram with retries](/img/remote-storage-promise-with-retries.svg)
+
+In the diagram above, notice how function 1 gets the result of function 2 from the Durable Promise after the process is restarted.
+That is because the result of function 2 was stored in promise 2 before the process crashed.
+This effectively resumes the execution of function 1 from where it left off.
+
+Now let's look at the distribution aspect that is enabled by Remote storage.
+
+The remote use case involves a durable promise that is created by one process and completed by another distinct process.
+The primary purpose is to facilitate coordination between different processes or services, serving as the foundation for features like:
 
 - **Task framework**: Durable promises allow you to distribute tasks across multiple machines for parallel execution and collect the operations’ results.
 
