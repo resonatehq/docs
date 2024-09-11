@@ -4,7 +4,7 @@ title: Resonate HQ TypeScript SDK
 sidebar_label: TypeScript SDK
 description: Get started with the Resonate HQ TypeScript SDK.
 last_update:
-  date: "09-09-2024"
+  date: "09-11-2024"
 pagination_next: null
 pagination_prev: null
 tags:
@@ -164,7 +164,7 @@ This sequence shows what happens "under the hood" when a Resonate Server (superv
 
 **How to schedule function executions with the Resonate TypeScript SDK.**
 
-You can also execute your function periodically with a cron expression.
+You can execute your function periodically with a cron expression.
 
 ```ts
 resonate.register("purchase", purchase);
@@ -177,6 +177,140 @@ resonate.schedule("everyMinute", "* * * * *", (ctx: Context) => {
   console.log("every minute", Date.now());
 });
 ```
+
+## Resolving promises
+
+Promises and executions always come in pairs.
+However an execution could be any "step".
+Often the "step" is a function execution but it could be a human completing a task for example.
+
+Let's say you have a multi step flow defined in a function like this:
+
+```typescript
+import { Resonate, Context } from "@resonatehq/sdk";
+
+// Initialize a Resonate application.
+// Connect to a Resonate Server for coordination
+const resonate = new Resonate({ url: "http://localhost:8001" });
+
+// Register a function as a Resonate function
+resonate.register(
+  "flow", // function name
+  flow, // function pointer
+  resonate.options({ timeout: 1200000 }) // Timeout of 60 seconds
+);
+
+// Start the Resonate application
+resonate.start();
+
+// Call the function1
+await resonate.run("flow", `flow-promise-2`);
+console.log("Complete");
+
+// foo blocks on the resolution of "bar"
+export async function flow(ctx: Context) {
+  // Await on step 1
+  // step 1 resolves when the function completes
+  await ctx.run(step1);
+  // Await on step2
+  // step2 gets resolved from another process
+  console.log("awaiting on step 2 completion");
+  await ctx.run("step2");
+  // Await on step 3
+  // step 3 resolves when the function completes
+  await ctx.run(step3);
+  return;
+}
+
+async function step1() {
+  console.log("executing step 1");
+  // ...
+  return;
+}
+async function step3() {
+  console.log("executing step 3");
+  // ...
+  return;
+}
+```
+
+In the previous code example, the line `await ctx.run("step2");` blocks the rest of the function execution on promise id "step2".
+In the other await steps a function is called instead, i.e. `await ctx.run(step1);` and `await ctx.run(step2);`, and promises are created that are directly paired with those function exeuctions.
+In the case of `await ctx.run("step2");` a promise is created that is not directly associated with an execution.
+
+Now we must resolve that function "manually" and we can do this from any process that is connected to the Resonate Server.
+For example:
+
+```typescript
+import { Resonate, Context, ResonatePromises } from "@resonatehq/sdk";
+
+// Initialize a Resonate application.
+const resonate = new Resonate({ url: "http://localhost:8001" });
+
+// ...
+// Unblock flow by resolving step 2
+console.log("executing step 2");
+resonate.promises.resolve("step2", "description of resolution");
+// ...
+```
+
+**What's happening under the hood?**
+
+Here is a sequence diagram that attempts to show how the code above plays out.
+The diagram assumes that the flow function starts first and blocks on "step2", then while the flow function awaits on the "step2" promise the unblocking process runs and "completes" whatever happened in step2 using `resonate.promises.resolve()`.
+
+![Unblocking sequence diagram](/img/unblocking-sequence.svg)
+
+## Resonate Context
+
+Interactions with the runtime occur through the `Resonate Context`, which provides methods like `ctx.run()` and `ctx.sleep()`. These methods offer automatic retries, recoverability, task distribution, and more. All top-level functions (invoked by `resonate.run()`) and intermediary functions (invoked by `ctx.run()`) must accept a Resonate context as their first argument.
+
+```ts
+async function purchase(ctx: Context, user: User, song: Song): Promise<Status> {
+  const charged = await ctx.run(charge, user, song);
+  const granted = await ctx.run(access, user, song);
+  return { charged, granted };
+}
+
+async function charge(ctx: Context, user: User, song: Song): Promise<boolean> {
+  console.log(`Charged user:${user.id} $${song.price}.`);
+  return true;
+}
+
+async function access(ctx: Context, user: User, song: Song): Promise<boolean> {
+  console.log(`Granted user:${user.id} access to song:${song.id}.`);
+  return true;
+}
+```
+
+### In-Process
+
+In-process execution enables durable execution of functions within the same process by passing a function pointer to a local function followed by its arguments.
+
+```ts
+const result = ctx.run(download, arg1, arg2, ...);
+```
+
+### Out-Process
+
+<!--
+:::note
+Out-process execution requires the Resonate server and proper configuration to route tasks to workers.
+Refer to the [Operate docs](/operate) for more information.
+:::
+
+Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions.
+Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments.
+This approach enables you to perform the fan-out/fan-in pattern.
+
+<center>
+  <img src={fan} alt="fan" width="500" />
+</center>
+
+```ts
+const result = await ctx.run(`/gpu/summarize/${url}`, arg);
+```
+-->
 
 ## Error handling
 
@@ -230,57 +364,6 @@ try {
   }
 }
 ```
-
-## Resonate Context
-
-Interactions with the runtime occur through the `Resonate Context`, which provides methods like `ctx.run()` and `ctx.sleep()`. These methods offer automatic retries, recoverability, task distribution, and more. All top-level functions (invoked by `resonate.run()`) and intermediary functions (invoked by `ctx.run()`) must accept a Resonate context as their first argument.
-
-```ts
-async function purchase(ctx: Context, user: User, song: Song): Promise<Status> {
-  const charged = await ctx.run(charge, user, song);
-  const granted = await ctx.run(access, user, song);
-  return { charged, granted };
-}
-
-async function charge(ctx: Context, user: User, song: Song): Promise<boolean> {
-  console.log(`Charged user:${user.id} $${song.price}.`);
-  return true;
-}
-
-async function access(ctx: Context, user: User, song: Song): Promise<boolean> {
-  console.log(`Granted user:${user.id} access to song:${song.id}.`);
-  return true;
-}
-```
-
-### In-Process
-
-In-process execution enables durable execution of functions within the same process by passing a function pointer to a local function followed by its arguments.
-
-```ts
-const result = ctx.run(download, arg1, arg2, ...);
-```
-
-### Out-Process
-
-<!--
-:::note
-Out-process execution requires the Resonate server and proper configuration to route tasks to workers.
-Refer to the [Operate docs](/operate) for more information.
-:::
-
-Out-of-process execution allows you to dispatch the execution of multiple tasks and collect the results of those executions.
-Offloading tasks to dedicated workers occurs by passing a URL to an available worker along with its arguments.
-This approach enables you to perform the fan-out/fan-in pattern.
-
-<center>
-  <img src={fan} alt="fan" width="500" />
-</center>
-
-```ts
-const result = await ctx.run(`/gpu/summarize/${url}`, arg);
-```
--->
 
 ### Sleeping
 
