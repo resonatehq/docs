@@ -1,7 +1,7 @@
 ---
 id: part-1
 sidebar_label: Part 1
-title: Resonate HQ TypeScript quickstart tutorial • Part 1 🏴‍☠️
+title: Resonate TypeScript quickstart tutorial • Part 1 🏴‍☠️
 description: Build a reliable summarization service using the Resonate TypeScript SDK. This step-by-step tutorial demonstrates how to leverage Durable Execution to handle application-level failures with local promise storage, automatic retries, and transparent execution management.
 last_update:
   date: "09-09-2024"
@@ -11,7 +11,7 @@ keywords:
   - Durable Execution
   - Application-level failures
   - Promise storage
-  - Resonate HQ tutorial
+  - tutorial
   - Function execution retries
   - Summarization service
   - NodeJS Express tutorial
@@ -24,7 +24,8 @@ tags:
   - tutorial
 ---
 
-In the first part of this tutorial you will build a mock summarization service using Resonate HQ. This part of the tutorial showcases how Resonate provides Durable Execution for application-level failures using the SDK's local promise storage.
+In the first part of this tutorial you will build a mock summarization service using Resonate.
+This part of the tutorial showcases how Resonate provides Durable Execution for application-level failures using the SDK's local promise storage.
 
 Durable Execution for application-level failures means that you get promise resolution timeouts, transparent function execution retries, and retry rate limits without adding an additional supervisor service.
 
@@ -63,9 +64,7 @@ npm install @resonatehq/sdk express @types/express
 Create a file named **app.ts** and copy and paste the minimal distributed async/await application below:
 
 <!--SNIPSTART quickstart-ts-part-1-app-->
-
 [docs/get-started/typescript-quickstart/part-1/code/src/app.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-1/code/src/app.ts)
-
 ```ts
 import { Context } from "@resonatehq/sdk";
 
@@ -116,7 +115,6 @@ async function summarize(ctx: Context, text: string): Promise<string> {
   });
 }
 ```
-
 <!--SNIPEND-->
 
 The code that makes up `app.ts` is a simple mock application that simulates downloading a page from the internet and then summarizing the content of that page.
@@ -132,9 +130,7 @@ When they return a “rejected” promise, Resonate automatically retries them u
 Next, create a file named `gateway.ts` and paste in the following express server code that uses Resonate:
 
 <!--SNIPSTART quickstart-ts-part-1-gateway-->
-
 [docs/get-started/typescript-quickstart/part-1/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-1/code/src/gateway.ts)
-
 ```ts
 import express, { Request, Response } from "express";
 import { Resonate, Context } from "@resonatehq/sdk";
@@ -177,7 +173,6 @@ app.listen(3000, () => {
   console.log("Listening on port 3000");
 });
 ```
-
 <!--SNIPEND-->
 
 The `gateway.ts` file contains an Express server that listens on port 3000 and includes a single route handler that leverages Resonate to run the `downloadAndSummarize()` function.

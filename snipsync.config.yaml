@@ -1,4 +1,7 @@
 origins:
+  - owner: resonatehq
+    repo: examples-ts
+    ref: main
   - files:
       pattern: ./docs/get-started/typescript-quickstart/part-1/code/src/**.ts
       owner: resonatehq
@@ -13,6 +16,7 @@ origins:
 targets:
   - docs/get-started/typescript-quickstart/part-1
   - docs/get-started/typescript-quickstart/part-2
+  - docs/develop
 
 allowed_target_extensions: [.md]
 enable_code_dedenting: false

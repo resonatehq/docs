@@ -1,8 +1,8 @@
 ---
 id: typescript
-title: Resonate HQ TypeScript SDK
+title: Resonate TypeScript SDK
 sidebar_label: TypeScript SDK
-description: Get started with the Resonate HQ TypeScript SDK.
+description: Get started with the Resonate TypeScript SDK.
 last_update:
   date: "09-11-2024"
 pagination_next: null
@@ -15,15 +15,15 @@ tags:
 
 import fan from "/img/fan.png";
 
-Welcome to Resonate HQ TypeScript SDK guide!
+Welcome to the Resonate TypeScript SDK guide!
 This SDK makes it possible to write distributed async/await applications with TypeScript.
 This guide covers installation and features that the SDK offers.
 
-➡️ [Resonate HQ TypeScript SDK API reference](https://resonatehq.github.io/resonate-sdk-ts/index.html)
+➡️ [Resonate TypeScript SDK API reference](https://resonatehq.github.io/resonate-sdk-ts/index.html)
 
 :::tip
 
-If you are new to Resonate, we recommend following the **[Resonate HQ TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart)** to get started learning how to use Resonate. 🚀
+If you are new to Resonate, we recommend following the **[Resonate TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart)** to get started learning how to use Resonate. 🚀
 
 :::
 
@@ -77,7 +77,9 @@ Resonate offers two promise storage modes: Local and Remote.
 
 ### Local storage
 
-Using [Local storage](/concepts/durable-promise#local-storage) (Local mode), which is the default, Resonate utilizes a volatile in-memory promise store.
+**How to use local storage for Durable Promises.**
+
+When using [Local storage](/concepts/durable-promise#local-storage) (Local mode), which is the default, Resonate utilizes a volatile in-memory promise store.
 
 ```ts
 import { Resonate } from "@resonatehq/sdk";
@@ -92,22 +94,6 @@ The following code is an example using local storage that has a main function (`
 
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
-
-// Initialize a Resonate application.
-const resonate = new Resonate();
-
-// Register a function as a Resonate function
-resonate.register(
-  "f1", // function name
-  f1, // function pointer
-  resonate.options({ timeout: 1000 }) // set a total execution timeout of 1 seconds
-);
-
-// Start the Resonate application
-resonate.start();
-
-// Call the function1
-await resonate.run("f1", `your-proimise-id`);
 
 // Function 1 is the top level function that awaits on function 2 and function 3.
 export async function f1(ctx: Context) {
@@ -126,6 +112,22 @@ async function f3() {
   // ...
   return;
 }
+
+// Initialize a Resonate application.
+const resonate = new Resonate();
+
+// Register a f1 as a Resonate function
+resonate.register(
+  "f1", // function name
+  f1, // function pointer
+  resonate.options({ timeout: 1000 }) // set a total execution timeout of 1 seconds
+);
+
+// Start the Resonate application
+resonate.start();
+
+// Call the function1
+await resonate.run("f1", `your-proimise-id`);
 ```
 
 This sequence graph could be visualized like the following:
@@ -142,6 +144,8 @@ Again, this is called Local mode.
 However, if you want `f1()`, `f2()`, or `f3()` to be resumable even if the process crashes, then use [Remote mode](#remote-storage).
 
 ### Remote storage
+
+**How to enable remote storage for Durable Promises.**
 
 [Remote storage](/concepts/durable-promise#remote-storage) ensures promises get stored in the Resonate Server.
 To enable Remote storage, pass the Resonate Server's address when initializing Resonate:
@@ -162,20 +166,100 @@ This sequence shows what happens "under the hood" when a Resonate Server (superv
 
 ## Schedules
 
+The Resonate TypeScript SDK enables you to schedule function executions.
+Instead of calling `resonate.run()`, use `resonate.schedule()` to schedule the function execution on a repeating basis.
+
+You can create a Schedule that is stored in [local memory](#local-storage), or you can create a Schedule that is [stored in the Resonate Server](#remote-storage).
+
+If the application node connects to a Resonate Server, then the Schedule will automatically be stored there.
+Otherwise, the Schedule will persist in local memory and disappear when the process does.
+
+### Create a Schedule
+
 **How to schedule function executions with the Resonate TypeScript SDK.**
 
 You can execute your function periodically with a cron expression.
 
+<!--SNIPSTART examples-ts-schedule-flow-function-example-->
+[schedules/index.ts](https://github.com/resonatehq/examples-ts/blob/main/schedules/index.ts)
 ```ts
-resonate.register("purchase", purchase);
+import { Resonate, Context } from "@resonatehq/sdk";
 
-// Schedule a resonate function that is already registered.
-resonate.schedule("everyMinute", "* * * * *", "purchase");
+// flow is the top-level function that awaits on step1 and step 2
+export async function flow(ctx: Context) {
+  console.log("Starting the flow");
+  // Call function 2
+  await ctx.run(step1);
+  // Call function 3
+  await ctx.run(step2);
+  return;
+}
+// step1 function
+async function step1() {
+  console.log("Executing step 1");
+  // ...
+  return;
+}
+// step2 function
+async function step2() {
+  console.log("Executing step 2");
+  // ...
+  return;
+}
 
-// Schedule and register a resonate function in one.
-resonate.schedule("everyMinute", "* * * * *", (ctx: Context) => {
-  console.log("every minute", Date.now());
+// Initialize a Resonate application.
+const resonate = new Resonate({
+  url: "http://localhost:8001",
 });
+
+// Start the Resonate application
+resonate.start(5000);
+
+// Schedule the execution of "flow" for every minute
+// highlight-line
+const sched = await resonate.schedule("flow-schedule", "* * * * *", flow);
+console.log(sched);
+
+console.log("Running");
+```
+<!--SNIPEND-->
+
+If the above process crashes, you can restart it and the function executions will continue.
+
+:::caution Duplicate Schedule IDs are not allowed
+
+If you try to create a Schedule with an ID that already exists in the Resonate Server you will get an error.
+
+:::
+
+### Get a Schedule
+
+You can get the details for a Schedule with the Schedule ID used to create the schedule.
+
+```typescript
+const sched = await resonate.schedules.get("flow-schedule");
+```
+
+### Search for Schedules
+
+You can search for Schedules using a combination of tags and ID wildcards.
+
+Using the CLI:
+
+```
+resonate schedules search "flow-*"
+```
+
+### Delete a Schedule
+
+**How to delete a Schedule stored in the Resonate Server.**
+
+Currently there isn't an API exposed in the TypeScript SDK to delete a Schedule.
+
+Instead you can use the Server CLI.
+
+```
+resonate schedules delete <schedule-id>
 ```
 
 ## Resolving promises
@@ -189,25 +273,7 @@ Let's say you have a multi step flow defined in a function like this:
 ```typescript
 import { Resonate, Context } from "@resonatehq/sdk";
 
-// Initialize a Resonate application.
-// Connect to a Resonate Server for coordination
-const resonate = new Resonate({ url: "http://localhost:8001" });
-
-// Register a function as a Resonate function
-resonate.register(
-  "flow", // function name
-  flow, // function pointer
-  resonate.options({ timeout: 1200000 }) // Timeout of 60 seconds
-);
-
-// Start the Resonate application
-resonate.start();
-
-// Call the function1
-await resonate.run("flow", `flow-promise-2`);
-console.log("Complete");
-
-// foo blocks on the resolution of "bar"
+// flow blocks on the resolution of "step2"
 export async function flow(ctx: Context) {
   // Await on step 1
   // step 1 resolves when the function completes
@@ -232,9 +298,29 @@ async function step3() {
   // ...
   return;
 }
+
+// Initialize a Resonate application.
+// Connect to a Resonate Server for coordination
+const resonate = new Resonate({ url: "http://localhost:8001" });
+
+// Register a function as a Resonate function
+resonate.register(
+  "flow", // function name
+  flow, // function pointer
+  resonate.options({ timeout: 1200000 }) // Timeout of 60 seconds
+);
+
+// Start the Resonate application
+resonate.start();
+
+// Call the function1
+await resonate.run("flow", `flow-promise-2`);
+console.log("Complete");
 ```
 
 In the previous code example, the line `await ctx.run("step2");` blocks the rest of the function execution on promise id "step2".
+This is because we are passing a string "step2" which creates a promise with an Id of "step2" that is not directly attached to a function execution.
+
 In the other await steps a function is called instead, i.e. `await ctx.run(step1);` and `await ctx.run(step2);`, and promises are created that are directly paired with those function exeuctions.
 In the case of `await ctx.run("step2");` a promise is created that is not directly associated with an execution.
 
@@ -295,7 +381,7 @@ const result = ctx.run(download, arg1, arg2, ...);
 
 <!--
 :::note
-Out-process execution requires the Resonate server and proper configuration to route tasks to workers.
+Out-process execution requires the Resonate Server and proper configuration to route tasks to workers.
 Refer to the [Operate docs](/operate) for more information.
 :::
 
