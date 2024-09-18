@@ -184,6 +184,7 @@ You can execute your function periodically with a cron expression.
 [schedules/index.ts](https://github.com/resonatehq/examples-ts/blob/main/schedules/index.ts)
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
+import { register } from "module";
 
 // flow is the top-level function that awaits on step1 and step 2
 export async function flow(ctx: Context) {
@@ -212,23 +213,40 @@ const resonate = new Resonate({
   url: "http://localhost:8001",
 });
 
-// Start the Resonate application
-resonate.start(5000);
-
 // Schedule the execution of "flow" for every minute
-// highlight-line
+// highlight-next-line
 const sched = await resonate.schedule("flow-schedule", "* * * * *", flow);
 console.log(sched);
 
+// Start the Resonate application
+resonate.start(5000);
 console.log("Running");
 ```
 <!--SNIPEND-->
 
-If the above process crashes, you can restart it and the function executions will continue.
+If the above process crashes, you can restart it and the interval of the function executions will pick back up.
 
-:::caution Duplicate Schedule IDs are not allowed
+Another acceptable syntax is to register the function first and then refer to the function by its name:
 
-If you try to create a Schedule with an ID that already exists in the Resonate Server you will get an error.
+```typescript
+resonate.register("flow", flow);
+// ...
+const sched = await resonate.schedule("flow-schedule", "* * * * *", "flow");
+```
+
+Consider this pattern for creating schedules on one Application Node, and having the functions execute on another.
+
+:::note Unique Schedule IDs
+
+In the example above, an idempotency key is generated from the schedule ID and the function name.
+This enables you to run this Application Node in multiple places without creating a new Schedule each time.
+It also enables you to restart a process that crashes.
+
+However, if you try to create a Schedule with an ID that already exists with a different function you will get an error.
+
+```shell
+message: 'A schedule with this identifier already exists'
+```
 
 :::
 
@@ -278,10 +296,12 @@ export async function flow(ctx: Context) {
   // Await on step 1
   // step 1 resolves when the function completes
   await ctx.run(step1);
+  // highlight-start
   // Await on step2
   // step2 gets resolved from another process
   console.log("awaiting on step 2 completion");
   await ctx.run("step2");
+  // highlight-end
   // Await on step 3
   // step 3 resolves when the function completes
   await ctx.run(step3);
