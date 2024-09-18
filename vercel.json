@@ -54,6 +54,11 @@
       "source": "/resonate/error-codes",
       "destination": "/operate/server-errors",
       "permanent": true
+    },
+    {
+      "source": "/evaluate/why-resonate-hq",
+      "destination": "/evaluate/why-resonate",
+      "permanent": true
     }
   ]
 }

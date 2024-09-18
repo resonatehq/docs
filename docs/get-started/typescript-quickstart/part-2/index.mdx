@@ -1,12 +1,12 @@
 ---
 id: part-2
 sidebar_label: Part 2
-title: Resonate HQ TypeScript quickstart tutorial • Part 2 🏴‍☠️
-description: Connect your application to a Resonate HQ Server in Part 2 enabling recovery from platform-level failures.
+title: Resonate TypeScript quickstart tutorial • Part 2 🏴‍☠️
+description: Connect your application to a Resonate Server in Part 2 enabling recovery from platform-level failures.
 last_update:
   date: "08-27-2024"
 keywords:
-  - Resonate HQ Server tutorial
+  - Resonate Server tutorial
   - Distributed async-await
   - Platform-level failure recovery
   - Resonate SDK
@@ -24,16 +24,16 @@ tags:
   - tutorial
 ---
 
-In Part 2 of the tutorial, you will connect your service to a Resonate HQ Server to enable recovery from platform-level failures.
+In Part 2 of the tutorial, you will connect your service to a Resonate Server to enable recovery from platform-level failures.
 To simulate a platform-level failure, you will kill the HTTP server process in the middle of the execution of the `downloadAndSummarize()` function.
 
 ### Prerequisites
 
 This part of the tutorial assumes you have [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/) installed and that you have completed [Part 1](/get-started/typescript-quickstart/part-1) and already have the service built.
 
-## Install the Resonate HQ Server
+## Install the Resonate Server
 
-Follow the steps in the [Resonate HQ Server install guide](/get-started/server-installation) to install and run the server on your machine.
+Follow the steps in the [Resonate Server install guide](/get-started/server-installation) to install and run the server on your machine.
 
 By default, the Server runs on localhost port 8001.
 
@@ -46,22 +46,17 @@ There are three places where you need to update your code for this nex part of t
 First, in your `gateway.ts` file, update the `new Resonate()` call and provide it with the URL of the server, in this case `http://localhost:8001`.
 
 <!--SNIPSTART quickstart-ts-part-2-server-url-->
-
 [docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts)
-
 ```ts
 // Initialize a Resonate application.
 const resonate = new Resonate({ url: "http://localhost:8001" });
 ```
-
 <!--SNIPEND-->
 
 Then, extend the top-level promise resolution timeout to a full minute.
 
 <!--SNIPSTART quickstart-ts-part-2-register-timeout-->
-
 [docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts)
-
 ```ts
 // Register a function as a Resonate function
 resonate.register(
@@ -70,7 +65,6 @@ resonate.register(
   resonate.options({ timeout: 60000 }) // set a total execution timeout of 1 minute
 );
 ```
-
 <!--SNIPEND-->
 
 You are increasing the top-level promise resolution timeout to a full minute so that you have time to kill the service and bring it back up again.
@@ -78,9 +72,7 @@ You are increasing the top-level promise resolution timeout to a full minute so 
 And finally, in your `app.ts` file add a 10 second sleep to the `downloadAndSummarize()` function between `download()` and `summarize()`.
 
 <!--SNIPSTART quickstart-ts-part-2-add-sleep-->
-
 [docs/get-started/typescript-quickstart/part-2/code/src/app.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/app.ts)
-
 ```ts
 export async function downloadAndSummarize(ctx: Context, url: string) {
   console.log("Downloading and summarizing content from", url);
@@ -98,7 +90,6 @@ export async function downloadAndSummarize(ctx: Context, url: string) {
   return summary;
 }
 ```
-
 <!--SNIPEND-->
 
 You are adding a 10 second sleep so that you have time between the `download()` step and the `summarize()` step so that you have time to kill the service before the `summarize()` step starts.
@@ -125,7 +116,9 @@ Let it run it until you see that the log "download successful", then kill (Ctrl-
 
 Because you are using cURL from another terminal, you will receive "received"
 In Part 1 of the tutorial, killing the HTTP service would have resulted in the loss of the state of the executions.
-However, because the service was connected to the Resonate HQ Server, when you bring the service back up, the execution sequence will continue where it left off.
+However, because the service was connected to the Resonate Server, when you bring the service back up, the execution sequence will continue where it left off.
+
+:::
 
 Start the service again.
 Assuming that you stopped the service after the `download()` function ran, you should now see the `summarize()` function logs and the application complete its execution.
