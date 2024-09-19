@@ -181,7 +181,9 @@ Otherwise, the Schedule will persist in local memory and disappear when the proc
 You can execute your function periodically with a cron expression.
 
 <!--SNIPSTART examples-ts-schedule-flow-function-example-->
+
 [schedules/index.ts](https://github.com/resonatehq/examples-ts/blob/main/schedules/index.ts)
+
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
 
@@ -221,6 +223,7 @@ console.log(sched);
 resonate.start();
 console.log("Running");
 ```
+
 <!--SNIPEND-->
 
 If the above process crashes, you can restart it and the interval of the function executions will pick back up.
@@ -403,9 +406,9 @@ In-process execution enables durable execution of functions within the same proc
 const result = ctx.run(download, arg1, arg2, ...);
 ```
 
+<!--
 ### Out-Process
 
-<!--
 :::note
 Out-process execution requires the Resonate Server and proper configuration to route tasks to workers.
 Refer to the [Operate docs](/operate) for more information.
