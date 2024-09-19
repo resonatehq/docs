@@ -181,9 +181,12 @@ Otherwise, the Schedule will persist in local memory and disappear when the proc
 You can execute your function periodically with a cron expression.
 
 <!--SNIPSTART examples-ts-schedule-flow-function-example-->
+
 [schedules/index.ts](https://github.com/resonatehq/examples-ts/blob/main/schedules/index.ts)
+
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
+import { register } from "module";
 
 // flow is the top-level function that awaits on step1 and step 2
 export async function flow(ctx: Context) {
@@ -212,27 +215,47 @@ const resonate = new Resonate({
   url: "http://localhost:8001",
 });
 
-// Start the Resonate application
-resonate.start(5000);
-
 // Schedule the execution of "flow" for every minute
-// highlight-line
+// highlight-next-line
 const sched = await resonate.schedule("flow-schedule", "* * * * *", flow);
 console.log(sched);
 
+// Start the Resonate application
+resonate.start();
 console.log("Running");
 ```
+
 <!--SNIPEND-->
 
-If the above process crashes, you can restart it and the function executions will continue.
+If the above process crashes, you can restart it and the interval of the function executions will pick back up.
 
-:::caution Duplicate Schedule IDs are not allowed
+Another acceptable syntax is to register the function first and then refer to the function by its name:
 
-If you try to create a Schedule with an ID that already exists in the Resonate Server you will get an error.
+```typescript
+resonate.register("flow", flow);
+// ...
+const sched = await resonate.schedule("flow-schedule", "* * * * *", "flow");
+```
+
+Consider this pattern for creating schedules on one Application Node, and having the functions execute on another.
+
+:::note Unique Schedule IDs
+
+In the example above, an idempotency key is generated from the schedule ID and the function name.
+This enables you to run this Application Node in multiple places without creating a new Schedule each time.
+It also enables you to restart a process that crashes.
+
+However, if you try to create a Schedule with an ID that already exists with a different function you will get an error.
+
+```shell
+message: 'A schedule with this identifier already exists'
+```
 
 :::
 
 ### Get a Schedule
+
+**How to get Schedule details using the TypeScript SDK.**
 
 You can get the details for a Schedule with the Schedule ID used to create the schedule.
 
@@ -241,6 +264,8 @@ const sched = await resonate.schedules.get("flow-schedule");
 ```
 
 ### Search for Schedules
+
+**How to search for Schedules.**
 
 You can search for Schedules using a combination of tags and ID wildcards.
 
@@ -264,6 +289,8 @@ resonate schedules delete <schedule-id>
 
 ## Resolving promises
 
+**How to manually resolve a Durable Promise from another process.**
+
 Promises and executions always come in pairs.
 However an execution could be any "step".
 Often the "step" is a function execution but it could be a human completing a task for example.
@@ -278,10 +305,12 @@ export async function flow(ctx: Context) {
   // Await on step 1
   // step 1 resolves when the function completes
   await ctx.run(step1);
+  // highlight-start
   // Await on step2
   // step2 gets resolved from another process
   console.log("awaiting on step 2 completion");
   await ctx.run("step2");
+  // highlight-end
   // Await on step 3
   // step 3 resolves when the function completes
   await ctx.run(step3);
@@ -319,12 +348,12 @@ console.log("Complete");
 ```
 
 In the previous code example, the line `await ctx.run("step2");` blocks the rest of the function execution on promise id "step2".
-This is because we are passing a string "step2" which creates a promise with an Id of "step2" that is not directly attached to a function execution.
+This is because we are passing the string "step2" which creates a promise with an Id of "step2" that is not directly attached to a function execution.
 
 In the other await steps a function is called instead, i.e. `await ctx.run(step1);` and `await ctx.run(step2);`, and promises are created that are directly paired with those function exeuctions.
 In the case of `await ctx.run("step2");` a promise is created that is not directly associated with an execution.
 
-Now we must resolve that function "manually" and we can do this from any process that is connected to the Resonate Server.
+Now we must resolve that promise "manually" and we can do this from any process that is connected to the Resonate Server.
 For example:
 
 ```typescript
@@ -336,6 +365,7 @@ const resonate = new Resonate({ url: "http://localhost:8001" });
 // ...
 // Unblock flow by resolving step 2
 console.log("executing step 2");
+// highlight-next-line
 resonate.promises.resolve("step2", "description of resolution");
 // ...
 ```
@@ -509,7 +539,7 @@ The options, such as timeout, cannot exceed the parent function. If it does, the
 ctx.run(download, arg1, arg2, resonate.options({ ... }));
 ```
 
-### Versioning
+## Versioning
 
 You can register multiple versions of a function with `resonate.register()`:
 
@@ -544,10 +574,3 @@ async function charge(ctx: Context, user: User, song: Song): Promise<boolean> {
   return true;
 }
 ```
-
-## Next Steps
-
-We hope this guide has provided you with a solid foundation for working with the Resonate Typescript SDK. If you have any questions or need further assistance, don't hesitate to reach out to us. For next steps, consider the following:
-
-- Refer to our [API reference](https://resonatehq.github.io/resonate-sdk-ts/index.html) for a complete list of available methods and options.
-- Refer to our [TypeScript Quickstart Repo](https://github.com/resonatehq/quickstart-ts/tree/main) for in-depth code examples of the TypeScript SDK.
