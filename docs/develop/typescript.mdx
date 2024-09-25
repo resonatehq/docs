@@ -262,6 +262,10 @@ You can get the details for a Schedule with the Schedule ID used to create the s
 const sched = await resonate.schedules.get("flow-schedule");
 ```
 
+You can also use the CLI to get a Schedule.
+See the CLI reference for
+[getting a Schedule](/operate/cli-reference/commands/schedule#get) for details.
+
 ### Search for Schedules
 
 **How to search for Schedules.**
@@ -274,6 +278,8 @@ Using the CLI:
 resonate schedules search "flow-*"
 ```
 
+See the CLI reference for [searching for Schedules](/operate/cli-reference/commands/schedule#search) for details.
+
 ### Delete a Schedule
 
 **How to delete a Schedule stored in the Resonate Server.**
@@ -285,6 +291,8 @@ Instead you can use the Server CLI.
 ```
 resonate schedules delete <schedule-id>
 ```
+
+See the CLI reference for [deleting a Schedule](/operate/cli-reference/commands/schedule#delete) for details.
 
 ## Resolving promises
 
