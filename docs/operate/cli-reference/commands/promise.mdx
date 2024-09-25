@@ -1,0 +1,102 @@
+---
+id: promise
+title: CLI promise command
+sidebar_label: Promise
+description: Manage promises in the Resonate Server.
+tags:
+  - cli
+  - promise
+---
+
+The `promises` command allows you to manage promises in the Resonate system.
+
+```shell
+resonate promises <sub-command> <args> [flags]
+```
+
+## create
+
+Create a Durable Promise.
+
+```shell
+resonate promises create <id> [flags]
+```
+
+Flags:
+
+- [--timeout](/operate/cli-reference/flags#--timeout)
+- [--data](/operate/cli-reference/flags#--data)
+- [--header](/operate/cli-reference/flags#--header)
+- [--tag](/operate/cli-reference/flags#--tag)
+- [--idempotency-key](/operate/cli-reference/flags#--idempotency-key)
+- [--strict](/operate/cli-reference/flags#--strict)
+
+## cancel
+
+Cancel a Durable Promise.
+
+```bash
+resonate promises cancel <id> [flags]
+```
+
+Flags:
+
+- [--idempotency-key](/operate/cli-reference/flags#--idempotency-key)
+- [--strict](/operate/cli-reference/flags#--strict)
+
+## get
+
+Get the details of a Durable Promise.
+
+```shell
+resonate promises get <id> [flags]
+```
+
+Flags:
+
+- [--output](/operate/cli-reference/flags#--output)
+
+## reject
+
+Reject a Durable Promise.
+
+```shell
+resonate promises reject <id> [flags]
+```
+
+Flags:
+
+[--data](/operate/cli-reference/flags#--data)
+[--header](/operate/cli-reference/flags#--header)
+[--idempotency-key](/operate/cli-reference/flags#--idempotency-key)
+[--strict](/operate/cli-reference/flags#--strict)
+
+## resolve
+
+Resolve a Durable Promise.
+
+```shell
+resonate promises resolve <id> [flags]
+```
+
+Flags:
+
+- [--data](/operate/cli-reference/flags#--data)
+- [--header](/operate/cli-reference/flags#--header)
+- [--idempotency-key](/operate/cli-reference/flags#--idempotency-key)
+- [--strict](/operate/cli-reference/flags#--strict)
+
+## search
+
+Search for Durable Promises.
+
+```shell
+resonate promises search <id> [flags]
+```
+
+Flags:
+
+- [--state](/operate/cli-reference/flags#--state)
+- [--tag](/operate/cli-reference/flags#--tag)
+- [--limit](/operate/cli-reference/flags#--limit)
+- [--cursor](/operate/cli-reference/flags#--cursor)
