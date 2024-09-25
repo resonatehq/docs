@@ -1,0 +1,69 @@
+---
+id: schedule
+title: CLI schedule command
+sidebar_label: Schedule
+description: Manage schedules in the Resonate Server.
+tags:
+  - cli
+  - schedule
+---
+
+Manage schedules in the Resonate system.
+
+```shell
+resonate schedules <sub-command> [flags]
+```
+
+## create
+
+Create a new schedule.
+
+```shell
+resonate schedules create <id> [flags]
+```
+
+Flags:
+
+- [--cron](/operate/cli-reference/flags#--cron)
+- [--description](/operate/cli-reference/flags#--description)
+- [--promise-data](/operate/cli-reference/flags#--promise-data)
+- [--promise-id](/operate/cli-reference/flags#--promise-id)
+- [--promise-tag](/operate/cli-reference/flags#--promise-tag)
+- [--promise-timeout](/operate/cli-reference/flags#--promise-timeout)
+- [--promise-header](/operate/cli-reference/flags#--promise-header)
+- [--tag](/operate/cli-reference/flags#--tag)
+
+## delete
+
+Delete a schedule.
+
+```shell
+resonate schedules delete <id>
+```
+
+## get
+
+Get a durable schedule.
+
+```shell
+resonate schedules get <id> [flags]
+```
+
+Flags:
+
+- [--output](/operate/cli-reference/flags#--output)
+
+## search
+
+Search for schedules.
+
+```
+resonate schedules search <id> [flags]
+```
+
+Flags:
+
+- [--tag](/operate/cli-reference/flags#--tag)
+- [--limit](/operate/cli-reference/flags#--limit)
+- [--cursor](/operate/cli-reference/flags#--cursor)
+- [--output](/operate/cli-reference/flags#--output)
