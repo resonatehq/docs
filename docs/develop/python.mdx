@@ -5,11 +5,129 @@ description: Get started with the Resonate Python SDK.
 sidebar_label: Python SDK
 last_update:
   date: "08-22-2024"
+pagination_next: null
+pagination_prev: null
 tags:
   - python
   - sdk-guidance
 ---
 
-The Resonate Python SDK is currently in development.
+Welcome to the Resonate Python SDK guide!
+This SDK makes it possible to write Distributed Async Await applications with Python.
+This guide covers installation and features that the SDK offers.
 
-Visit the [GitHub repository](https://github.com/resonatehq/resonate-sdk-py) for the latest information.
+➡️ [Resonate Python SDK API reference](https://resonatehq.github.io/resonate-sdk-py/)
+
+## Installation
+
+**How to install the Resonate Python SDK into your project.**
+
+To install the Resonate Python SDK, you can use any of your favorite package managers.
+
+**Rye**
+
+```shell
+rye add resonate-sdk
+```
+
+**Pip**
+
+```shell
+pip install resonate-sdk
+```
+
+Then initialize the SDK in your project, register your top-level function(s) and call `.run()`:
+
+```python
+from resonate.scheduler import Scheduler
+
+# ...
+
+resonate = Scheduler(durable_promise_storage=LocalPromiseStore())
+resonate.register(your_func)
+resonate.run(your_func)
+```
+
+## Promise storage modes
+
+The Resonate Python SDK supports two storage modes: Local and Remote.
+
+### Local storage
+
+**How to use Local storage mode in the Resonate Python SDK.**
+
+[Local storage mode](/concepts/durable-promise#local-storage) is ideal for starting out with Resonate.
+
+```python
+resonate = Scheduler(durable_promise_storage=LocalPromiseStore())
+```
+
+### Remote storage
+
+**How to use Remote storage mode in the Resonate Python SDK.**
+
+Remote storage ensures promises are stored in the Resonate Server.
+To enable Remote storage, pass the Resonate Server's address when initializing Resonate:
+
+```python
+resonate = Scheduler(durable_promise_storage=RemotePromiseStore(url="http://localhost:8001"))
+```
+
+## Set a Retry Policy
+
+**How to set a Retry Policy in the Resonate Python SDK.**
+
+You can set a Retry Policy to control how a function should be retried if it fails.
+A Retry Policy can be set at the function level or when the individual function is invoked.
+
+There are several different [built in Retry Policies available](/concepts/failure-detection-and-recovery#retry-policies), and each one can be refined to your needs.
+
+### Function registration
+
+Here is an example of setting an Exponential Retry Policy when registering a function:
+
+```python
+from resonate.retry_policy import Exponential
+
+// ...
+
+resonate.register(your_func, retry_policy=Exponential())
+```
+
+### Function invocation
+
+Here is an example of setting a Constant Retry Policy when invoking a function:
+
+```python
+from resonate.retry_policy import Constant
+
+// ...
+
+ctx.lfc(another_func, retry_policy=Constant())
+```
+
+## Dependency injection
+
+**How to use Dependency injection in the Resonate Python SDK.**
+
+You can inject dependencies into your Resonate instance and use them in functions that receive the Resonate Context.
+
+```python
+from resonate.scheduler import Scheduler
+from resonate.storage import LocalPromiseStore
+
+# ...
+
+s = Scheduler(durable_promise_storage=LocalPromiseStore())
+# ...
+s._deps.set("dependency-a", dependency())
+s._deps.set("dependency-b", "some-dependency")
+```
+
+Then you can access the dependencies in your functions:
+
+```python
+def your_func(ctx: Context):
+# ...
+dep = ctx.deps.get("dependency-a")
+```

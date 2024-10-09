@@ -1,51 +1,40 @@
 ---
 id: application-node
-title: What is a Resonate Application Node?
+title: Resonate Application Node
 sidebar_label: Application Node
 sidebar_position: 3
 description: Resonate Application Node definition
 last_update:
-  date: "08-27-2024"
+  date: "10-02-2024"
 tags:
   - concepts
 ---
 
-A Resonate Application Node can be described as a deployed bundle of code that has a top-level function registered with and run by `resonate.run()`.
+**What is a Resonate Application Node?**
 
-![Application Node Call Graph Local Process](/img/application-node-call-graph-local-process.svg)
+A Resonate Application Node can be described as a deployed bundle of code that runs in a single process and has at least one top-level function registered with and run by `resonate.run()` and encapsulates all subsequent local function executions.
 
-The call to `resonate.run()` creates a top-level promise in the call graph.
+![A diagram of a single Resonate Application Node](/img/single-application-node.svg)
 
-To handle throughput and availability, you can have many Application Nodes, each running the same bundle of code.
+We recommend building Application Nodes with a Resonate SDK.
 
-If we take the [TypeScript SDK quickstart tutorial](/get-started/typescript-quickstart/) as an example, the "bundle of code" is the three functions `downloadAndSummarize()`, `download()` and `summarize()`.
+- [Develop with the Python SDK](/develop/python)
+- [Develop with the TypeScript SDK](/develop/typescript)
 
-```typescript
-import { Context } from "@resonatehq/sdk";
+An Application Node does not require a connection to a Resonate Server.
+It can run without a connection and use in-memory storage for Durable Promises and thus still benefit from automatic function execution retries.
 
-// downloadAndSummarize is the top level function that awaits on the download and summarize functions.
-export async function downloadAndSummarize(ctx: Context, url: string) {
-  // Download the content from the provided URL
-  let content = await ctx.run(download, url);
-  // Summarize the downloaded content
-  let summary = await ctx.run(summarize, content);
-  // Return the summary of the content
-  return summary;
-}
+However, for an Application Node to recover its [Call Graph](/concepts/call-graph) after a process crash, or for the Call Graph to resume on another Application Node, it needs to connect to a Resonate Server so that Durable Promises can be stored in a database.
 
-async function download(ctx: Context, url: string): Promise<string> {
-  // ...
-  return new Promise((resolve, reject) => {
-    resolve("download complete");
-  });
-}
+![A diagram of a single Resonate Application Node connected to a Resonate Server](/img/single-application-node-with-server.svg)
 
-async function summarize(ctx: Context, text: string): Promise<string> {
-  // ...
-  return new Promise((resolve, reject) => {
-    resolve("summary of text");
-  });
-}
-```
+If there is a need to have a Call Graph to recover on another Application Node, or to have fan-out fan-in execution to handle throughput, you can deploy many Application Nodes.
 
-This code could be deployed to many hosts, each considered an Application Node.
+![A diagram of the Resonate system architecture](/img/resonate-architecture.svg)
+
+Functions in a Resonate Application Node may call other functions in the same Application Node or in other Application Nodes.
+
+- When a function calls another function in the same Application Node, it is known as a Local Function Call or LFC.
+- When a function calls another function in another Application Node, it is known as a Remote Function Call or RFC.
+
+All RFCs go through the Resonate Server, which ensures that the function is executed on the correct Application Node and that the result is returned to the calling function.

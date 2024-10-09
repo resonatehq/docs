@@ -8,6 +8,11 @@ origins:
       repo: docs
       ref: main
   - files:
+      pattern: ./docs/get-started/python-quickstart/part-1/code/src/**/**.py
+      owner: resonatehq
+      repo: docs
+      ref: main
+  - files:
       pattern: ./docs/get-started/typescript-quickstart/part-2/code/src/**.ts
       owner: resonatehq
       repo: docs
@@ -16,6 +21,7 @@ origins:
 targets:
   - docs/get-started/typescript-quickstart/part-1
   - docs/get-started/typescript-quickstart/part-2
+  - docs/get-started/python-quickstart/part-1
   - docs/develop
 
 allowed_target_extensions: [.md]
