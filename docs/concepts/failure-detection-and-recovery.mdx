@@ -36,49 +36,57 @@ There are two levels of recovery:
 
 ### Application level
 
-At the application level, if a failure is detected often the desired behavior is to retry as a means of recovery.
+At the application level, if a failure is detected (a function returns an error or an exception) often the desired behavior is to retry as a means of recovery.
 
 ![Local in memory promise storage with a retry](/img/local-storage-promise-with-retry.svg)
 
-For example, in TypeScript, if you want a function to retry when it fails at its objective, then just throw an error from within the function:
+Resonate automatically retries function executions if they fail, per the specified [Retry Policy](#retry-policies), and continues to do so until the [Durable Promise Timeout](#durable-promise-timeout) is reached.
 
-```typescript
-async function download(ctx: Context, url: string): Promise<string> {
-  // ...
-  throw new Error("download failed");
-  // ...
-}
-```
+For examples of how to trigger a retry of an execution, see the following feature guidance:
 
-Or, you can reject a promise:
+- [TypeScript SDK](/develop/typescript#trigger-a-retry)
 
-```typescript
-async function download(ctx: Context, url: string): Promise<string> {
-  // ...
-  return new Promise((resolve, reject) => {
-    reject("download failed");
-  });
-  // ...
-}
-```
+See the section below, [Retry Policies](#retry-policies), for more information on how to configure retries.
 
 ### Platform level
 
 At the platform level, if a failure is detected, often the desired behavior is to resume the function execution when the process comes back up, or have it resume on a different Application Node entirely.
 Thanks to Resonate's remote Durable Promise storage (Resonate Server), you can choose to do either.
 
+The following diagram illustrates how a function execution resumes via restart on the same Application Node after the process crashes.
+
 ![Remote promise storage diagram with retries](/img/remote-storage-promise-with-retries.svg)
 
-The new function execution effectively resumes from the point of failure instead of restarting from the beginning.
+Resonate replays the function execution, using the results from already completed promises to effectively resume from the point of failure.
 
-## Timeouts
+## Retry Policies
+
+Resonate offers several types of Retry Policies that can be further refined by configuring the number of retries and the delay between retries.
+
+### Constant
+
+A Constant Retry Policy is one where the delay between retries is constant.
+This can be further refined to include a maximum number of retries.
+
+### Exponential
+
+An Exponential Retry Policy is one where the delay between retries grows exponentially.
+This can be further configured and refined by defining a base delay, the exponential factor, and a maximum number of retries.
+
+### Linear
+
+A Linear Retry Policy is one where the delay between retries grows linearly.
+This can be further configured and refined by defining the linear delay growth and a maximum number of retries.
+
+## Durable Promise Timeout
 
 Functions await on other functions through [Durable Promises](/concepts/durable-promise).
+In Resonate, a timeout is associated with the Durable Promise resolution, not individual function executions.
 
-In Resonate, timeouts are associated with promise resolution.
+Resonate attempts to resolve a Durable Promises until the specified timeout is reached.
+If the timeout is reached, Resonate marks the Durable Promise as failed.
 
-Resonate attempts to resolve and retry durable promises until the specified timeout.
-If the timeout is reached, Resonate marks the promise as failed.”
+See the following feature guidance for more information on how to set a Timeout:
 
 ```ts
 const resonate = new Resonate({

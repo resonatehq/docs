@@ -4,7 +4,7 @@ title: Resonate TypeScript SDK
 sidebar_label: TypeScript SDK
 description: Get started with the Resonate TypeScript SDK.
 last_update:
-  date: "09-11-2024"
+  date: "10-03-2024"
 pagination_next: null
 pagination_prev: null
 tags:
@@ -90,59 +90,6 @@ const resonate = new Resonate();
 Promises are stored in memory and are not durable to hard crashes.
 This mode provides out-of-the-box features like automatic retries, tracing, and logging without requiring any additional infrastructure.
 
-The following code is an example using local storage that has a main function (`f1()`) that sequentially awaits on two other functions (`f2()` and `f3()`).
-
-```ts
-import { Resonate, Context } from "@resonatehq/sdk";
-
-// Function 1 is the top level function that awaits on function 2 and function 3.
-export async function f1(ctx: Context) {
-  // Call function 2
-  await ctx.run(f2);
-  // Call function 3
-  await ctx.run(f3);
-  return;
-}
-
-async function f2() {
-  // ...
-  return;
-}
-async function f3() {
-  // ...
-  return;
-}
-
-// Initialize a Resonate application.
-const resonate = new Resonate();
-
-// Register a f1 as a Resonate function
-resonate.register(
-  "f1", // function name
-  f1, // function pointer
-  resonate.options({ timeout: 1000 }) // set a total execution timeout of 1 seconds
-);
-
-// Start the Resonate application
-resonate.start();
-
-// Call the function1
-await resonate.run("f1", `your-proimise-id`);
-```
-
-This sequence graph could be visualized like the following:
-
-![Local storage swim lane sequence functions only](/img/local-storage-swim-lane-sequence-func-only.svg)
-
-The next level of detail could include the promises, which might look like this:
-
-![Local storage swim lane sequence](/img/local-storage-swim-lane-sequence.svg)
-
-Notice that this sequence graphs above do not include the Resonate Server (supervisor).
-If all the functions are meant to execute locally, within the same process, an Application Node may chose to rely soley on a local promise store.
-Again, this is called Local mode.
-However, if you want `f1()`, `f2()`, or `f3()` to be resumable even if the process crashes, then use [Remote mode](#remote-storage).
-
 ### Remote storage
 
 **How to enable remote storage for Durable Promises.**
@@ -158,11 +105,175 @@ const resonate = new Resonate({
 });
 ```
 
-Using the same code example as above, but with Remote storage, the sequence would look like the following:
+## Durable Promise Timeout
 
-![Remote storage swim lane sequence](/img/remote-storage-swim-lane-sequence.svg)
+Set timeouts for Durable Promises to detect failures.
 
-This sequence shows what happens "under the hood" when a Resonate Server (supervisor) is used.
+### Application Node default
+
+You can configure a default Durable Promise Timeout for all function executions in the [Application Node](/concepts/application-node) via top-level Resonate object:
+
+```ts
+import { Resonate, Retry } from "@resonatehq/sdk";
+
+const resonate = new Resonate({
+  // ...
+  // The new default Durable Promise Timeout for this Application Node
+  timeout: 5000, // Set in ms. If not set, defaults to 1000 ms.
+  // ...
+});
+```
+
+### Per registered function
+
+You can override the Application Node default when you register a function with `resonate.register()`:
+
+```ts
+resonate.register(
+  "your-function-name",
+  yourFunc,
+  resonate.options({
+    timeout: 3000, // Set in ms. If not set, defaults to the Application Node default.
+    // ...
+  })
+);
+```
+
+### Per function invocation
+
+Additionally, you can set the timeout for specific functions using `ctx.run()`:
+
+```ts
+ctx.run(yourFunc, arg1, arg2, resonate.options({ timeout: 2000 }));
+```
+
+:::note Do not exceed the parent timeout
+
+A specific Durable Promise Timeout cannot be longer than the Timeout of the parent promise.
+If it is longer, the minimum will take precedence.
+
+:::
+
+## Trigger a retry
+
+If you want a function to retry in an attempt to [recover from an application-level](/concepts/failure-detection-and-recovery#application-level) issue, you need to either throw an error, or return a rejected promise.
+You cannot return a custom object that contains error information.
+
+**✅ Throw an error:**
+
+```ts
+try {
+  return "success";
+} catch (e) {
+  let errorMessage = "An unknown error occurred";
+  if (e instanceof Error) {
+    errorMessage = e.message;
+  }
+  // highlight-next-line
+  throw errorMessage;
+}
+```
+
+**✅ Reject a promise:**
+
+```ts
+return new Promise((resolve, reject) => {
+  try {
+    resolve("success");
+  } catch (e) {
+    let errorMessage = "An unknown error occurred";
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+    // highlight-next-line
+    reject(errorMessage);
+  }
+});
+```
+
+**❌ Don't return a custom object:**
+
+```ts
+try {
+    return { success: true };
+  } catch (e) {
+    let errorMessage = "An unknown error occurred";
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+    // highlight-next-line
+    return { success: false, error: errorMessage };
+  }
+}
+```
+
+## Set a Retry Policy
+
+Set Retry Policies to automatically retry function executions.
+
+### Application Node default
+
+You can configure a default Retry Policy for all function executions in the [Application Node](/concepts/application-node) via the top-level Resonate object:
+
+```ts
+import { Resonate, Retry } from "@resonatehq/sdk";
+
+const resonate = new Resonate({
+  // ...
+  retry: Retry.exponential(
+    100, // initial delay (in ms)
+    2, // backoff factor
+    Infinity, // max attempts
+    60000 // max delay (in ms, 1 minute)
+  ),
+  // ...
+});
+```
+
+### Function-specific Configuration
+
+When registering functions with `resonate.register()`, provide function-specific options:
+
+```ts
+resonate.register(
+  "your-function-name",
+  yourFunc,
+  resonate.options({
+    // ...
+    retry: Retry.linear(), // Overrides the default retry policy.
+    // ...
+  })
+);
+```
+
+### Per function invocation
+
+You can override the default Retry Policy for specific function invocations using `ctx.run()`:
+
+```ts
+ctx.run(yourFunc, args, resonate.options({ retry: Retry.linear() }));
+```
+
+## Durable Promise metadata
+
+You can add metadata to Durable Promises using the tags field in the options object.
+
+### Application Node default
+
+```ts
+resonate.register(
+  "downloadAndSummarize",
+  downloadAndSummarize,
+  resonate.options({
+    // ...
+    tags: { bar: "baz" }, // Additional tags to add to the Durable Promise.
+  })
+);
+```
+
+### Function-specific Configuration
+
+### Per function invocation
 
 ## Schedules
 
@@ -181,9 +292,7 @@ Otherwise, the Schedule will persist in local memory and disappear when the proc
 You can execute your function periodically with a cron expression.
 
 <!--SNIPSTART examples-ts-schedule-flow-function-example-->
-
 [schedules/index.ts](https://github.com/resonatehq/examples-ts/blob/main/schedules/index.ts)
-
 ```ts
 import { Resonate, Context } from "@resonatehq/sdk";
 
@@ -223,7 +332,6 @@ console.log(sched);
 resonate.start();
 console.log("Running");
 ```
-
 <!--SNIPEND-->
 
 If the above process crashes, you can restart it and the interval of the function executions will pick back up.
@@ -435,115 +543,12 @@ const result = await ctx.run(`/gpu/summarize/${url}`, arg);
 ```
 -->
 
-## Error handling
-
-If you want to retry a function in an attempt to [recover from an application-level](/concepts/failure-detection-and-recovery#application-level) issue, you need to either throw an error, or return a rejected promise.
-You cannot return a custom object that contains error information.
-
-**✅ Throw an error:**
-
-```ts
-try {
-  return "success";
-} catch (e) {
-  let errorMessage = "An unknown error occurred";
-  if (e instanceof Error) {
-    errorMessage = e.message;
-  }
-  // highlight-next-line
-  throw errorMessage;
-}
-```
-
-**✅ Reject a promise:**
-
-```ts
-return new Promise((resolve, reject) => {
-  try {
-    resolve("success");
-  } catch (e) {
-    let errorMessage = "An unknown error occurred";
-    if (e instanceof Error) {
-      errorMessage = e.message;
-    }
-    // highlight-next-line
-    reject(errorMessage);
-  }
-});
-```
-
-**❌ Don't return a custom object:**
-
-```ts
-try {
-    return { success: true };
-  } catch (e) {
-    let errorMessage = "An unknown error occurred";
-    if (e instanceof Error) {
-      errorMessage = e.message;
-    }
-    // highlight-next-line
-    return { success: false, error: errorMessage };
-  }
-}
-```
-
-### Sleeping
+## Sleeping
 
 Resonate keeps track of timers and executes them, even across failures and restarts. To sleep in a Resonate application for a whole day, do the following:
 
 ```ts
 await ctx.sleep(86_400_000);
-```
-
-## Configurations
-
-Resonate offers various configuration options to customize its behavior. If options are not provided, sensible defaults are used.
-
-### Global Configuration
-
-Configure the SDK globally via the top-level Resonate object:
-
-```ts
-import { Resonate, Retry } from "@resonatehq/sdk";
-
-const resonate = new Resonate({
-  url: "https://my-remote-store.com", // The remote promise store URL. If not provided, an in-memory promise store will be used.
-  retry: Retry.exponential(
-    100, // initial delay (in ms)
-    2, // backoff factor
-    Infinity, // max attempts
-    60000 // max delay (in ms, 1 minute)
-  ),
-  timeout: 5000, // The default promise timeout in ms, used for every function executed by calling run. Defaults to 1000.
-  tags: { foo: "bar" }, // Tags to add to all durable promises.
-});
-```
-
-### Function-specific Configuration
-
-When registering functions with `resonate.register()`, provide function-specific options:
-
-```ts
-resonate.register(
-  "downloadAndSummarize",
-  downloadAndSummarize,
-  resonate.options({
-    timeout: Number.MAX_SAFE_INTEGER, // Overrides the default timeout.
-    retry: Retry.linear(), // Overrides the default retry policy.
-    tags: { bar: "baz" }, // Additional tags to add to the durable promise.
-  })
-);
-```
-
-Additionally, override functions in `ctx.run()`:
-
-:::note
-The options, such as timeout, cannot exceed the parent function. If it does, the minimum will take precedence.
-:::
-
-```ts
-ctx.run(download, arg1, arg2, resonate.options({ ... }));
 ```
 
 ## Versioning

@@ -15,7 +15,7 @@
   --ifm-color-primary-light: #adb6cc;
   --ifm-color-primary-lighter: #d3d7e4;
   --ifm-color-primary-lightest: #f6f7f9;
-
+  --docusaurus-announcement-bar-height: 3.5rem !important;
   --ifm-link-color: #617196;
 }
 
@@ -44,4 +44,10 @@ h6 {
 article a {
   text-decoration: underline;
   color: #0066ff;
+}
+
+#waiting-list-announcement {
+  padding: 0;
+  margin: 0;
+  font-size: 1.5em;
 }

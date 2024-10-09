@@ -1,7 +1,7 @@
 ---
 id: part-2
 sidebar_label: Part 2
-title: Resonate TypeScript quickstart tutorial • Part 2 🏴‍☠️
+title: Resonate TypeScript quickstart tutorial • Part 2
 description: Connect your application to a Resonate Server in Part 2 enabling recovery from platform-level failures.
 last_update:
   date: "08-27-2024"
@@ -114,14 +114,23 @@ Let it run it until you see that the log "download successful", then kill (Ctrl-
 
 :::note
 
-Because you are using cURL from another terminal, you will receive "received"
+Because you are using cURL from another terminal, you will get "received".
 In Part 1 of the tutorial, killing the HTTP service would have resulted in the loss of the state of the executions.
-However, because the service was connected to the Resonate Server, when you bring the service back up, the execution sequence will continue where it left off.
+However, because the service is connected to the Resonate Server, when you bring the service back up, the execution sequence continues from where it left off.
 
 :::
 
 Start the service again.
 Assuming that you stopped the service after the `download()` function ran, you should now see the `summarize()` function logs and the application complete its execution.
+
+Lets, look at the sequence diagram to understand what happened.
+
+![Remote promise storage diagram with retries](/img/remote-storage-promise-with-retries.svg)
+
+In the diagram above, you can map function 1 to `downloadAndSummarize()`, function 2 to `download()`, and function 3 to `summarize()`.
+Notice how function 1 gets the result of function 2 from the Durable Promise after the process restarts.
+That is because the result of function 2 was stored in promise 2 before the process crashed.
+This effectively resumes the execution of function 1 from where it left off.
 
 Next, you will inspect the promise in the Resonate Server to see that it resolved successfully.
 

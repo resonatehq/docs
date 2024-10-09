@@ -1,0 +1,24 @@
+---
+id: recovery
+title: Call Graph recovery
+sidebar_label: Call Graph recovery
+sidebar_position: 3
+description: Learn how Resonate helps your applications recover from failure.
+last_update:
+  date: "10-02-2024"
+tags:
+  - why-resonate
+  - features
+---
+
+When you use Resonate to build applications, each [Application Node](/concepts/application-node) in the [Call Graph](/concepts/call-graph) benefits from the ability to recover after a process crash.
+
+If the process crashes, the Call Graph can resume on a completely different Application Node, or on the same Application Node once the process restarts.
+
+For examples of how to connect to a Resonate Server from an Application Node, to enable Call Graph recovery see the following feature guidance:
+
+- [TypeScript SDK](/develop/typescript#remote-storage)
+- [Python SDK](/develop/python#remote-storage)
+
+For a deep dive into the different storage modes, see [Durable Promises](/concepts/durable-promise).
+For a deep dive into the Call Graph, see [Call Graph](/concepts/call-graph).

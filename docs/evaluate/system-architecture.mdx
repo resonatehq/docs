@@ -1,0 +1,25 @@
+---
+id: system-architecture
+title: Resonate system architecture
+sidebar_label: System architecture
+sidebar_position: 2
+last_update:
+  date: "10-02-2024"
+tags:
+  - why-resonate
+  - architecture
+---
+
+Resonate facilitates the development and operation of distributed applications.
+The following diagram illustrates the system architecture of Resonate:
+
+![Resonate system architecture](/img/resonate-architecture.svg)
+
+Developers use the Resonate SDK to build applications.
+Each process where the Resonate SDK is used to call `resonate.run()` is called an [Application Node](/concepts/application-node).
+A Resonate application can have between 1 and n Application Nodes.
+The Application Nodes are responsible for executing functions.
+
+Each Application Node connects to a Resonate Server.
+the Resonate Server acts as supervisor, monitoring the status on function executions of Application Nodes.
+The Resonate Server also manages the storage of Durable Promises, which can be awaited on by functions across Application Nodes, effectively providing Distributed Async Await.
