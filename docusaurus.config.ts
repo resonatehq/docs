@@ -122,7 +122,7 @@ const config: Config = {
     announcementBar: {
       id: "python-sdk-waiting-list",
       content:
-        '<p id="waiting-list-announcement">Sign up for the <a href="https://forms.gle/BnFiDUQExseQcH8h9" target="_blank" rel="noopener noreferrer">Python SDK</a> waiting list!</p>',
+        '<div class="waiting-list-announcement"><a class="cta-link" href="https://forms.gle/BnFiDUQExseQcH8h9" target="_blank" rel="noopener noreferrer">Join the Resonate Python SDK wait list!</a> 🚀</div>',
       isCloseable: false,
       backgroundColor: "#121212",
       textColor: "#efefef",
