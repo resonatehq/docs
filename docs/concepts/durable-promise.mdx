@@ -229,3 +229,15 @@ In this case, the durable promise ID is a randomly generated unique identifier, 
 ```
 executions/a7b89c3d-f012-4e78-9a7d-89a3f6b2e1c7
 ```
+
+## Resolution Timeout
+
+Functions await on other functions through [Durable Promises](/concepts/durable-promise).
+In Resonate, a timeout is associated with the Durable Promise resolution, not individual function executions.
+
+Resonate attempts to resolve a Durable Promises until the specified timeout is reached.
+If the timeout is reached, Resonate marks the Durable Promise as failed.
+
+See the following feature guidance for more information on how to set a Timeout:
+
+- [Set a Durable Promise Timeout in TypeScript](/develop/typescript#durable-promise-timeout)

@@ -40,7 +40,7 @@ At the application level, if a failure is detected (a function returns an error 
 
 ![Local in memory promise storage with a retry](/img/local-storage-promise-with-retry.svg)
 
-Resonate automatically retries function executions if they fail, per the specified [Retry Policy](#retry-policies), and continues to do so until the [Durable Promise Timeout](#durable-promise-timeout) is reached.
+Resonate automatically retries function executions if they fail, per the specified [Retry Policy](#retry-policies), and continues to do so until the [Durable Promise Timeout](/concepts/durable-promise#resolution-timeout) is reached.
 
 For examples of how to trigger a retry of an execution, see the following feature guidance:
 
@@ -77,25 +77,3 @@ This can be further configured and refined by defining a base delay, the exponen
 
 A Linear Retry Policy is one where the delay between retries grows linearly.
 This can be further configured and refined by defining the linear delay growth and a maximum number of retries.
-
-## Durable Promise Timeout
-
-Functions await on other functions through [Durable Promises](/concepts/durable-promise).
-In Resonate, a timeout is associated with the Durable Promise resolution, not individual function executions.
-
-Resonate attempts to resolve a Durable Promises until the specified timeout is reached.
-If the timeout is reached, Resonate marks the Durable Promise as failed.
-
-See the following feature guidance for more information on how to set a Timeout:
-
-```ts
-const resonate = new Resonate({
-  // Configures the default durable promise
-  // timeout in ms, used for every function
-  // executed by calling resonate.run.
-  // Defaults to 1000.
-  timeout: 5000,
-});
-```
-
-It's crucial to ensure that the operations performed by your durable functions are [idempotent](https://blog.bitsrc.io/design-an-idempotent-api-in-2024-d4a3cf8d8bf2) to prevent undefined behavior.

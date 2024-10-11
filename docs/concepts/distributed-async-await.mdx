@@ -15,75 +15,121 @@ tags:
   - concepts
 ---
 
-Distributed Async Await is the programming model that Resonate provides through the use of its SDK and Server.
+Distributed Async Await is a powerful programming model provided by Resonate through its SDK and server infrastructure.
+This model is built on top of an Asynchronous Remote Procedure Call (RPC) system, enabling seamless distributed execution of functions and promises across different nodes in a network.
+At its core, the model focuses on resilience, coordination, and durability, ensuring that processes can persist and resume even after unexpected failures.
 
-The concept of **Distributed Async Await** a.k.a **Durable Executions** is an emerging concept.
-However, an accurate and concise definition or description or articulation is not yet available.
+## Durable Execution - beyond reliability
 
-**💀 Warning 💀**
+A key feature of Distributed Async Await is Durable Execution—the ability of computations to resume after process crashes.
+This abstraction ensures that the progress of a function can be resumed, providing a resilient environment for cloud-based applications.
 
-Do **not** fall for the trap of reasoning only in terms of reliability, failure tolerance, or failure transparency.
-While enhanced reliability, failure tolerance, or failure transparency are attractive attributed and enhanced reliability, failure tolerance, or failure transparency are an enabling mechanism, **they are not the essence of Distributed Async Await**
+However, it’s essential not to think of Distributed Async Await merely in terms of reliability, failure tolerance, or failure transparency.
+While these are valuable attributes, they are not the essence of the model.
+Instead, Distributed Async Await offers a comprehensive approach to cloud programming, designed to provide a delightful developer experience and empower developers to understand and reason about their system’s behavior.
 
-## Programming Model
+## Synchronous vs Asynchronous Execution
 
-Here is an example of the programming model:
+A key distinction in Distributed Async Await is the comparison between synchronous and asynchronous invocations.
+In a synchronous function call, the caller waits for the function to complete before moving on.
+With asynchronous invocations, the function is suspended and the execution moves forward, allowing other tasks to be processed while waiting for the promise to resolve.
 
-```typescript
-function foo(n : number) Promise<void>{
+![Sync vs Async Await vs Async Promise Await](/img/sync-vs-async-await-vs-async-promise.svg)
 
-  console.log("span 1");
+## Programming Mode - functions and promises
 
-  await bar(n);
+At the heart of the Distributed Async Await model are functions and promises.
 
-  console.log("span 2");
+![Function Promise Relationship](/img/function-promise-function.svg)
+
+**Functions** are the fundamental units of computation.
+
+![Function state machine](/img/function-state-machine.svg)
+
+**Promises** represent future values, acting as the primary coordination mechanism between different function executions.
+
+![Promise state machine](/img/promise-state-machine.svg)
+
+In this model, functions execute in sequences, with each step marked by an await statement.
+The execution continues until it reaches an await expression, where it pauses until the promise resolves.
+Once the promise is resolved, the function resumes execution with the promise’s value or throws an error if the promise is rejected.
+
+This relationship between functions and promises forms the backbone of Resonate’s programming model.
+Invocation and Await are two crucial relationships that tie downstream and upstream executions together, ensuring that one execution can only continue once its dependent executions have completed.
+
+![Invocation and Await Relationship](/img/invocation-await-relationship.svg)
+
+## Durable Promises and asynchronous invocations
+
+Distributed Async Await extends traditional function invocations with the concept of [Durable Promises](/concepts/durable-promise)—promises that persist their identity and state in storage.
+This ensures that function executions can resume, even after disruptions.
+The following types of function calls, LFCs, RFCs, and Detached, illustrate how this model works in practice.
+
+### Local Function Call
+
+A Local Function Call, also known as an LFC, is when a function is executed on the same machine or node where it was invoked.
+The promise associated with the LFC can be stored in local memory or in the Resonate Server, and the function will not return until the promise is resolved.
+LFCs are ideal for workflows that rely on resources exclusive to the local environment.
+
+An LFC can start a new [Call Graph](/concepts/call-graph), creating a top-level promise, or it can extend a Call Graph.
+`resonate.run()` is an LFC that creates a top-level promise, creating a new Call Graph.
+
+### Remote Function Call
+
+A Remote Function Call, also known as an RFC, is executed on a different machine, requiring the [Application Node](/concepts/application-node) to be connected to a Resonate Server.
+In this case, the promise is stored on the server, which also manages the routing of the function execution to the appropriate node.
+Like LFCs, RFCs ensure the parent function doesn’t return until the promise resolves, but the actual execution occurs remotely.
+
+An RFC extends the Call Graph to a different Application Node.
+
+### Detached Function Call
+
+A Detached Function Call is an LFC that creates a top-level promise, similar to `resonate.run()`, creating a new Call Graph.
+However, the distinction is that with a Detached Function Call, the parent function can return without waiting for the promise associated with the detached function to resolve.
+This behavior resembles a background job.
+
+This is useful for tasks that do not need immediate results, allowing the Application Node to continue processing without waiting.
+
+### Psuedocode example
+
+The following pseudocode illustrates the concept of distributed function invocations in this model:
+
+```
+fn foo(ctx, n) {
+
+  log("span 1");
+
+  m = await ctx.lfc(bar, n);
+
+  log("span 2");
+
+  o = await ctx.rfc(baz, m);
+
+  log("span 3");
+
+  ctx.detach(qux, o);
+
+  return
 
 }
 ```
 
-![Function Promise Relationship](/img/function-promise-function.png)
+In this example, the function foo invokes a local function bar and waits for its result (LFC).
+It then invokes a remote function baz, waiting for its resolution (RFC).
+Finally, it makes a detached call to qux without waiting for the result, effectively offloading it as a background task.
 
-Async Await is based on functions and promises:
+## How Distributed Async Await works
 
-**Functions**: Represent the fundamental unit of computation.
+Understanding how Distributed Async Await functions mechanically is simpler than grasping its broader purpose.
+Here’s an outline of how the process works:
 
-**Promises**: Representations of future values, represent the fundamental unit of coordination.
+Distributed Async Await interleaves function executions with save points.
+These save points allow the function to resume from where it left off in the event of a failure or crash.
+This ensures that no computation is lost, and the system can pick up execution without starting over.
 
-![Function and promise state machine](/img/function-promise-state-machine.png)
+The save points are the Durable Promises.
 
-We can conceptualize a function execution as a sequence of steps delineated by await statements:
+If a function execution terminates prematurely, the runtime restarts the execution using the save points (Durable Promises) to rebuild the state.
+By leveraging the persistence of Durable Promises, the system avoids repeating any already completed tasks, reducing redundancy and ensuring efficient recovery.
 
-- When an execution starts, the execution runs until reaching an await expression.
-- When reaching an await expression, the execution is suspended until the associated promise completes.
-  - If the promise is resolved, the execution resumes with the value of the promise.
-  - If the promise is rejected, an error is thrown.
-
-There are two key relationships between downstream function executions, promises, and upstream function executions:
-
-**Invocation** introduces a relationship between a downstream execution, a promise, and an upstream execution, so that the downstream execution creates the promise and the promise creates the upstream execution.
-
-**Await** introduces a relationship between a downstream execution, a promise, and an upstream execution, so that the downstream execution can only resume after the upstream execution completes the promise.
-
-![Invocation and Await Relationship](/img/invocation-await-relationship.svg)
-
-Durable Async Await is based on Durable Functions and Durable Promises, that is, functions and promises that persist their identity and their state in durable storage.
-
-TBD (including Continuation, Serializable Continuation)
-
-![Sync vs Async Await vs Async Promise Await](/img/sync-vs-async-await-vs-async-promise.svg)
-
-## How does Durable Async Await work?
-
-Describing how Durable Async Await works is much easier than describing what Durable Async Await is or what Durable Async Await does.
-
-**Mechanics**
-
-Interleave a function execution with save points, enabling the execution to resume its latest save point in case the execution terminates prematurely before returning.
-
-**Restart**
-
-In the event of premature termination, the runtime restarts the execution and deduplicates on previously completed Durable Promises to continue
-
-**Restore**
-
-In the event of premature termination, the runtime restores the execution to continue
+This behavior ensures that even in the event of system failures, long-running or critical processes can continue without losing progress.
