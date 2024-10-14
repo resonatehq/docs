@@ -106,7 +106,7 @@ Currently, to view all the promises stored in the Resonate Server, you can use t
 
 :::note `durable=false`
 
-Depending on the requirements of the application, a Local Function Call (LFC) can choose to pass `durable=false`, bypassing the creation and storage of a Durable Promise.
+Depending on the requirements of the application, a function invocation (LFI) can choose to pass `durable=false`, bypassing the creation and storage of a Durable Promise.
 This is useful when the result of the function is not needed for recovery or when the function is idempotent and can be retried without side effects and extremely low latency is required.
 
 :::
@@ -229,3 +229,15 @@ In this case, the durable promise ID is a randomly generated unique identifier, 
 ```
 executions/a7b89c3d-f012-4e78-9a7d-89a3f6b2e1c7
 ```
+
+## Resolution Timeout
+
+Functions await on other functions through [Durable Promises](/concepts/durable-promise).
+In Resonate, a timeout is associated with the Durable Promise resolution, not individual function executions.
+
+Resonate attempts to resolve a Durable Promises until the specified timeout is reached.
+If the timeout is reached, Resonate marks the Durable Promise as failed.
+
+See the following feature guidance for more information on how to set a Timeout:
+
+- [Set a Durable Promise Timeout in TypeScript](/develop/typescript#durable-promise-timeout)

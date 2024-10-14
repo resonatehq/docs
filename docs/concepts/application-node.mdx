@@ -34,7 +34,7 @@ If there is a need to have a Call Graph to recover on another Application Node, 
 
 Functions in a Resonate Application Node may call other functions in the same Application Node or in other Application Nodes.
 
-- When a function calls another function in the same Application Node, it is known as a Local Function Call or LFC.
-- When a function calls another function in another Application Node, it is known as a Remote Function Call or RFC.
+- When a function calls another function in the same Application Node, it is known as a [Local Function Invocation](/concepts/distributed-async-await#local-function-invocation) or LFI.
+- When a function calls another function in another Application Node, it is known as a [Remote Function Invocation](/concepts/distributed-async-await#remote-function-invocation) or RFI.
 
-All RFCs go through the Resonate Server, which ensures that the function is executed on the correct Application Node and that the result is returned to the calling function.
+All RFIs go through the Resonate Server, which ensures that the function is executed on the correct Application Node and that the result is returned to the calling function.

@@ -79,9 +79,9 @@ const config: Config = {
         "Ask me a question about Resonate HQ",
       "data-modal-open-on-command-k": "true",
       "data-modal-example-questions": [
-        "What is Resonate HQ?",
+        "What is Resonate?",
         "How do I get started with Resonate?",
-        "What is DST?",
+        "How to set a Retry Policy in Python?",
         "Example application code in TypeScript?",
       ],
       "data-modal-example-questions-title": "For example...",

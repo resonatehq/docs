@@ -4,7 +4,7 @@ title: Resonate Call Graph
 sidebar_label: Call Graph
 description: Understand the concept of a Resonate Call Graph and how it models your application flow.
 last_update:
-  date: "10-02-2024"
+  date: "10-14-2024"
 tags:
   - concepts
   - call-graph
@@ -22,15 +22,15 @@ With Resonate, all function executions pair with a Durable Promise.
 Each Durable Promise has a unique ID and maps to an invocation of a function.
 If the same ID is used, it is considered the same invocation.
 
-When a function calls another function within the same Application Node, it is considered a Local Function Call (LFC).
+When a function calls another function within the same Application Node, it is considered a Local Function Invocation (LFI).
 
-![Diagram of an LFC Call Graph](/img/lfc-call-graph.svg)
+![Diagram of an LFI Call Graph](/img/lfc-call-graph.svg)
 
-When a function calls another function in a different Application Node, it is considered a Remote Function Call (RFC).
+When a function calls another function in a different Application Node, it is considered a Remote Function Invocation (RFI).
 
-![Diagram of an RFC Call Graph](/img/rfc-call-graph.svg)
+![Diagram of an RFI Call Graph](/img/rfc-call-graph.svg)
 
-A Resonate Application can make use of both LFCs and RFCs, and thus a Resoante Call Graph can span just one or many Application Nodes.
+A Resonate Application can make use of both LFIs and RFIs, and thus a Resoante Call Graph can span just one or many Application Nodes.
 
 ![Diagram of a Resonate Call Graph spanning multiple Application Nodes](/img/complex-rfc-call-graph.svg)
 
