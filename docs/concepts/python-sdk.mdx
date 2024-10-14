@@ -3,6 +3,8 @@ id: python-sdk
 title: How the Resonate Python SDK works
 sidebar_label: Python SDK
 description: Learn how the Resonate Python SDK works
+last_update:
+  date: "10-14-2024"
 tags:
   - python
   - sdk
@@ -37,19 +39,19 @@ In the Resonate Python SDK, the Event Loop drives the execution flow of an Appli
 
 Developers write normal Python functions or coroutines and then use the Resonate SDK to yield one of three things:
 
-- [A Local Function Call (LFC)](/concepts/distributed-async-await#local-function-call)
-- [A Remote Function Call (RFC)](/concepts/distributed-async-await#remote-function-call)
+- [A Local Function Invocation (LFI)](/concepts/distributed-async-await#local-function-invocation)
+- [A Remote Function Invocation (RFI)](/concepts/distributed-async-await#remote-function-invocation)
 - The result of a promise
 
-Whenever you yield an LFC or RFC, the SDK returns a promise.
+Whenever you yield an LFI or RFI, the SDK returns a promise.
 The Developer can then choose where to await on the result of that promise.
 
 Interaction between Components:
 
-    1.	Application Layer: Developers enqueue coroutines via the `resonate.run()` or `ctx.lfc()` methods.
-      Both of these are considered LFCs.
+    1.	Application Layer: Developers enqueue coroutines via the `resonate.run()` or `ctx.lfi()` methods.
+      Both of these are considered LFIs.
       When adding a coroutine, a Promise[T] is immediately returned, which can be awaited later for the result.
-      For RFCs, the invocation requests are sent to the Resonate Server.
+      For RFIs, the invocation requests are sent to the Resonate Server.
       From there the Server sends the incovation to the appropriate Application Node, which then triggers the Event Loop on that Application Node.
     2.	Scheduler: The Scheduler orchestrates the concurrent execution of coroutines. It doesn’t run functions directly but forwards them to the Processor for execution.
     3.	Processor: Functions forwarded by the Scheduler are executed in parallel, thanks to the multi-threaded nature of the Processor. Results are then placed into a completion queue (CQ), which the Scheduler monitors.
@@ -60,7 +62,7 @@ Interaction between Components:
 
 From a user’s perspective, working with the SDK is simple:
 
-- You write coroutines that yield an LFC, RFC, or Promise.
+- You write coroutines that yield an LFI, rFI, or Promise.
 - When you yield a local or remote function, the SDK returns a Promise.
 - You then await the result of that Promise.
 
@@ -97,4 +99,4 @@ This ensures that the function doesn’t block other coroutines.
 For example, do not use `time.sleep()` in a coroutine, as it blocks the entire Scheduler thread.
 You can use `time.sleep()` in functions, but be aware that it will block the entire Processor thread on which it executes.
 
-Resonate recommends using `yield ctx.rfc(ctx.sleep)` instead of `time.sleep()` to avoid blocking either the Scheduler or Processor threads.
+Resonate recommends using `yield ctx.rfi(ctx.sleep)` instead of `time.sleep()` to avoid blocking either the Scheduler or Processor threads.

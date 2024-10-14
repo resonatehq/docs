@@ -106,7 +106,7 @@ Currently, to view all the promises stored in the Resonate Server, you can use t
 
 :::note `durable=false`
 
-Depending on the requirements of the application, a Local Function Call (LFC) can choose to pass `durable=false`, bypassing the creation and storage of a Durable Promise.
+Depending on the requirements of the application, a function invocation (LFI) can choose to pass `durable=false`, bypassing the creation and storage of a Durable Promise.
 This is useful when the result of the function is not needed for recovery or when the function is idempotent and can be retried without side effects and extremely low latency is required.
 
 :::

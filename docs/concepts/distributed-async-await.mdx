@@ -5,7 +5,7 @@ description: Explore the emerging concept of Distributed Async Await, which goes
 sidebar_label: Distributed Async Await
 sidebar_position: 1
 last_update:
-  date: "10-02-2024"
+  date: "10-14-2024"
 keywords:
   - Async Await
   - Cooperative Multitasking
@@ -14,6 +14,9 @@ keywords:
 tags:
   - concepts
 ---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 Distributed Async Await is a powerful programming model provided by Resonate through its SDK and server infrastructure.
 This model is built on top of an Asynchronous Remote Procedure Call (RPC) system, enabling seamless distributed execution of functions and promises across different nodes in a network.
@@ -63,60 +66,131 @@ Invocation and Await are two crucial relationships that tie downstream and upstr
 
 Distributed Async Await extends traditional function invocations with the concept of [Durable Promises](/concepts/durable-promise)—promises that persist their identity and state in storage.
 This ensures that function executions can resume, even after disruptions.
-The following types of function calls, LFCs, RFCs, and Detached, illustrate how this model works in practice.
+The following types of function calls, LFIs, RFIs, and Detached, illustrate how this model works in practice.
 
-### Local Function Call
+### Local Function Invocation
 
-A Local Function Call, also known as an LFC, is when a function is executed on the same machine or node where it was invoked.
-The promise associated with the LFC can be stored in local memory or in the Resonate Server, and the function will not return until the promise is resolved.
-LFCs are ideal for workflows that rely on resources exclusive to the local environment.
+A Local Function Invocation, also known as an LFI, is when a function executes on the same machine or node where it was invoked.
+The promise associated with the LFI stores in local memory or in the Resonate Server, and the function will not return until the promise resolves.
+LFIs are ideal for workflows that rely on resources exclusive to the local environment.
 
-An LFC can start a new [Call Graph](/concepts/call-graph), creating a top-level promise, or it can extend a Call Graph.
-`resonate.run()` is an LFC that creates a top-level promise, creating a new Call Graph.
+An LFI can start a new [Call Graph](/concepts/call-graph), creating a top-level promise, or it can extend a Call Graph.
+`resonate.run()` is an LFI that creates a top-level promise, creating a new Call Graph.
 
-### Remote Function Call
+Resonate SDKs provide both an LFI and an LFC method for invoking functions.
+The LFI method provides a promise which can be awaited on later for getting the result of the invoked function.
+The following code example demonstrates the use of the LFI method.
 
-A Remote Function Call, also known as an RFC, is executed on a different machine, requiring the [Application Node](/concepts/application-node) to be connected to a Resonate Server.
+<Tabs groupId="lang">
+  <TabItem
+    value="python"
+    label="Python"
+  >
+
+```python
+def foo(ctx : Context):
+
+  p : Promise = yield ctx.lfi(bar)
+  # Do other work
+  v : Value = yield p
+```
+
+  </TabItem>
+
+</Tabs>
+
+The LFC method is syntactic sugar for LFI and is used to invoke a function and immediately await the result.
+The following example demonstrates the use of the LFC method.
+
+<Tabs groupId="lang">
+  <TabItem
+    value="python"
+    label="Python"
+  >
+
+```python
+def foo(ctx : Context):
+
+  v : Value = yield ctx.lfc(bar)
+```
+
+  </TabItem>
+
+</Tabs>
+
+### Remote Function Invocation
+
+A Remote Function Call, also known as an RFI, is executed on a different machine, requiring the [Application Node](/concepts/application-node) to be connected to a Resonate Server.
 In this case, the promise is stored on the server, which also manages the routing of the function execution to the appropriate node.
-Like LFCs, RFCs ensure the parent function doesn’t return until the promise resolves, but the actual execution occurs remotely.
+Like LFIs, RFIs ensure the parent function doesn’t return until the promise resolves, but the actual execution occurs remotely.
 
-An RFC extends the Call Graph to a different Application Node.
+An RFI extends the Call Graph to a different Application Node.
+
+Resonate SDKs provide both an RFI and an RFC method for invoking functions.
+The RFI method provides a promise which can be awaited on later for getting the result of the invoked function.
+The following code example demonstrates the use of the RFI method.
+
+<Tabs groupId="lang">
+  <TabItem
+    value="python"
+    label="Python"
+  >
+
+```python
+def foo(ctx : Context):
+
+  p : Promise = yield ctx.rfi(bar)
+  # Do other work
+  v : Value = yield p
+```
+
+  </TabItem>
+
+</Tabs>
+
+The RFC method is syntactic sugar for RFI and is used to invoke a function and immediately await the result.
+The following example demonstrates the use of the RFC method.
+
+<Tabs groupId="lang">
+  <TabItem
+    value="python"
+    label="Python"
+  >
+
+```python
+def foo(ctx : Context):
+
+  v : Value = yield ctx.rfc(bar)
+```
+
+  </TabItem> 
+</Tabs>
 
 ### Detached Function Call
 
-A Detached Function Call is an LFC that creates a top-level promise, similar to `resonate.run()`, creating a new Call Graph.
+A Detached Function Call is an LFI that creates a top-level promise, similar to `resonate.run()`, creating a new Call Graph.
 However, the distinction is that with a Detached Function Call, the parent function can return without waiting for the promise associated with the detached function to resolve.
 This behavior resembles a background job.
 
 This is useful for tasks that do not need immediate results, allowing the Application Node to continue processing without waiting.
+The following code example demonstrates the use of the Detached Function Call.
 
-### Psuedocode example
+<Tabs groupId="lang">
+  <TabItem
+    value="python"
+    label="Python"
+  >
 
-The following pseudocode illustrates the concept of distributed function invocations in this model:
+```python
+def foo(ctx : Context):
 
-```
-fn foo(ctx, n) {
-
-  log("span 1");
-
-  m = await ctx.lfc(bar, n);
-
-  log("span 2");
-
-  o = await ctx.rfc(baz, m);
-
-  log("span 3");
-
-  ctx.detach(qux, o);
-
-  return
-
-}
+  yield ctx.detached(bar)
+  # Do other work
 ```
 
-In this example, the function foo invokes a local function bar and waits for its result (LFC).
-It then invokes a remote function baz, waiting for its resolution (RFC).
-Finally, it makes a detached call to qux without waiting for the result, effectively offloading it as a background task.
+  </TabItem>
+
+</Tabs>
 
 ## How Distributed Async Await works
 
