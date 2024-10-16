@@ -1,0 +1,30 @@
+---
+id: transparent-batching
+title: Transparent batching
+sidebar_label: Transparent batching
+---
+
+The Resonate SDK provides a way for developers to batch operations transparently.
+The developer need only define a data structure and a handler function that processes the batch.
+Resonate will then automatically handle the batching and execution of the handler function.
+
+For example, consider an application that uses S3 to store files.
+Typically a single request to the application corresponds to a single S3 operation.
+But if the application needs to process tens of thousands or hundreds of thousands of requests per second, the cost of making individual requests to S3 can become prohibitive.
+
+S3 provides a batching API that allows you to make the same change to multiple objects in a single request, potentially saving your application a significant amount of time.
+However, using the batching API would normally require you to manage the batching logic yourself.
+
+With Resonate all you need to do is define the data structure and provide a handler, and Resonate takes care of the rest, potenitally significantly reducing the amount of overhead required to use the S3 batching API.
+
+## Resonate batching vs Temporal batching
+
+There is a big difference between the "batching" functionality that Temporal provides and the "transparent batching" that Resonate provides.
+
+With Temporal, a batching action is an operation that affects multiple Workflow Executions at the same time.
+It is not a feature that actually helps you affect your system in a more efficient way.
+Instead it is a feature that is only useful when you are locked into the platform and need to affect multiple Workflow Executions at the same time.
+
+using the S3 example from above, if you wanted to use Temporal to batch S3 operations, you would still need to manage the state of the batch and logic yourself, or forgoe batching entirely and execute an Activity for each S3 operation.
+
+With Resonate you don't need to work on top of proprietary primitives, but instead get right to the heart of your application's needs.
