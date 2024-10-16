@@ -159,6 +159,11 @@ const config: Config = {
           html: '<i class="bx bx-md bxl-github"></i>',
           position: "right",
         },
+        {
+          to: "http://eepurl.com/iNagDk",
+          html: '<a href="http://eepurl.com/iNagDk" target="_blank" class="subscribe-button">Subscribe</a>',
+          position: "right",
+        },
       ],
     },
 
