@@ -17,14 +17,8 @@ However, using the batching API would normally require you to manage the batchin
 
 With Resonate all you need to do is define the data structure and provide a handler, and Resonate takes care of the rest, potenitally significantly reducing the amount of overhead required to use the S3 batching API.
 
-## Resonate batching vs Temporal batching
+For a deeper dive into transparent batching, check out the [Transparent batching with the Resonate Python SDK](https://blog.resonatehq.io/transparent-batching-with-the-resonate-python-sdk) blog post.
 
-There is a big difference between the "batching" functionality that Temporal provides and the "transparent batching" that Resonate provides.
+Or visit the developer documentation for more information:
 
-With Temporal, a batching action is an operation that affects multiple Workflow Executions at the same time.
-It is not a feature that actually helps you affect your system in a more efficient way.
-Instead it is a feature that is only useful when you are locked into the platform and need to affect multiple Workflow Executions at the same time.
-
-using the S3 example from above, if you wanted to use Temporal to batch S3 operations, you would still need to manage the state of the batch and logic yourself, or forgoe batching entirely and execute an Activity for each S3 operation.
-
-With Resonate you don't need to work on top of proprietary primitives, but instead get right to the heart of your application's needs.
+- [Batch operations with the Python SDK](/develop/python#batch-operations)
