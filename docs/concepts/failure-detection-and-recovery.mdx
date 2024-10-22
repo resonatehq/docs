@@ -10,6 +10,8 @@ tags:
   - concepts
 ---
 
+**What is failure in the context of Resonate?**
+
 When we talk about failure detection and recovery, first we need to define what a failure is.
 
 ## Failure
@@ -20,7 +22,7 @@ At the application level, a failure happens when a function throws an exception,
 
 At the platform level, a failure happens when the host executing the function crashes or becomes unresponsive.
 
-## Failure detection
+### Failure detection
 
 Each [Application Node](/concepts/application-node) written with a Resonate SDK has the ability to react to application level failures.
 The Resonate SDK listens for exceptions, errors, and rejected promises.
@@ -28,6 +30,8 @@ The Resonate SDK listens for exceptions, errors, and rejected promises.
 When your Application Node is configured with a Resonate Server as a supervisor, then the supervisor has the ability to detect and react to platform level failures.
 
 ## Recovery
+
+**What is recovery in the context of Resonate?**
 
 There are two levels of recovery:
 
@@ -60,6 +64,10 @@ The following diagram illustrates how a function execution resumes via restart o
 Resonate replays the function execution, using the results from already completed promises to effectively resume from the point of failure.
 
 ## Retry Policies
+
+**What is a Retry Policy?**
+
+A Retry Policy is a configuration that determines how a function should be retried if it fails.
 
 Resonate offers several types of Retry Policies that can be further refined by configuring the number of retries and the delay between retries.
 
