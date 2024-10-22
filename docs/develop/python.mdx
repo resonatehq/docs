@@ -142,10 +142,6 @@ First, create a data structure that inherits what Resonate calls a Command inter
 The data structure must include the data to be inserted into the database.
 The Command data structure stands in for a function execution invocation so that you still get a Durable Promise and await on result.
 
-<!--SNIPSTART examples-py-features-batching-init {"selectedLines":["1","6","16-19"]}-->
-
-[features/batching/src/batching/**init**.py](https://github.com/resonatehq/examples-py/blob/branching-updates/features/batching/src/batching/__init__.py)
-
 ```py
 from dataclasses import dataclass
 # ...
@@ -157,13 +153,7 @@ class InsertUser(Command):
     id: int
 ```
 
-<!--SNIPEND-->
-
 Then, create a handler that can process a batch of operations.
-
-<!--SNIPSTART examples-py-features-batching-init {"selectedLines":["2", "21-28"]}-->
-
-[features/batching/src/batching/**init**.py](https://github.com/resonatehq/examples-py/blob/branching-updates/features/batching/src/batching/__init__.py)
 
 ```py
 # ...
@@ -179,13 +169,7 @@ def _batch_handler(_: Context, users: list[InsertUser]):
     print(f"{len(users)} users have been inserted to database.")
 ```
 
-<!--SNIPEND-->
-
 Next, register the data structure and the handler with the Resonate Scheduler.
-
-<!--SNIPSTART examples-py-features-batching-init {"selectedLines":["3-5","13-14", "38-39"]}-->
-
-[features/batching/src/batching/**init**.py](https://github.com/resonatehq/examples-py/blob/branching-updates/features/batching/src/batching/__init__.py)
 
 ```py
 # ...
@@ -200,14 +184,8 @@ resonate = Scheduler(LocalPromiseStore(), processor_threads=1)
 resonate.register_command_handler(InsertUser, _batch_handler, retry_policy=never())
 ```
 
-<!--SNIPEND-->
-
 Finally, create a function that can be invoked over and over again and passes the data to Resonate to manage.
 Register it with the Resonate Scheduler, and then call that function with Resonate's `run()` method.
-
-<!--SNIPSTART examples-py-features-batching-init {"selectedLines":["30-33", "35-36","41", "48-56"]}-->
-
-[features/batching/src/batching/**init**.py](https://github.com/resonatehq/examples-py/blob/branching-updates/features/batching/src/batching/__init__.py)
 
 ```py
 # ...
