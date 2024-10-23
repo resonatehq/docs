@@ -131,3 +131,81 @@ def your_func(ctx: Context):
 # ...
 dep = ctx.deps.get("dependency-a")
 ```
+
+## Batch operations
+
+Resonate's transparent batching feature handles the coordination of otherwise concurrent executions to create batches, enabling you to write concurrent, non-coordinated code.
+For a deeper dive into transparent batching, check out the [Transparent batching with the Resonate Python SDK](https://blog.resonatehq.io/transparent-batching-with-the-resonate-python-sdk) blog post.
+To use transparent batching, follow these steps.
+
+First, create a data structure that inherits what Resonate calls a Command interface.
+The data structure must include the data to be inserted into the database.
+The Command data structure stands in for a function execution invocation so that you still get a Durable Promise and await on result.
+
+```py
+from dataclasses import dataclass
+# ...
+from resonate.commands import Command
+# ...
+# Define a data structure for the Resonate SDK to track and create batches of
+@dataclass
+class InsertUser(Command):
+    id: int
+```
+
+Then, create a handler that can process a batch of operations.
+
+```py
+# ...
+from resonate.context import Context
+# ...
+# Define a function that inserts a batch of rows into the database
+# The main difference is that commit() is only called after all the Insert statements are executed
+def _batch_handler(_: Context, users: list[InsertUser]):
+    # error handling ommitted for this example
+    for user in users:
+        conn.execute("INSERT INTO users (value) VALUES (?)", (user.id,))
+    conn.commit()
+    print(f"{len(users)} users have been inserted to database.")
+```
+
+Next, register the data structure and the handler with the Resonate Scheduler.
+
+```py
+# ...
+from resonate.scheduler import Scheduler
+from resonate.storage import LocalPromiseStore
+from resonate.retry_policy import never
+# ...
+# Create a Resonate Scheduler
+resonate = Scheduler(LocalPromiseStore(), processor_threads=1)
+# ...
+# Register the batch handler and data structure with the Resonate Scheduler
+resonate.register_command_handler(InsertUser, _batch_handler, retry_policy=never())
+```
+
+Finally, create a function that can be invoked over and over again and passes the data to Resonate to manage.
+Register it with the Resonate Scheduler, and then call that function with Resonate's `run()` method.
+
+```py
+# ...
+# Definte the top level function that uses batching
+def create_user_batching(ctx: Context, u: int):
+    p = yield ctx.lfi(InsertUser(u))
+    yield p
+# ...
+# Register the top level functions with the Resonate Scheduler
+resonate.register(create_user_batching, retry_policy=never())
+# ...
+def main() -> None:
+# ...
+    # Create an array to hold the promises
+    promises = []
+
+    for u in range(10000):
+        p = resonate.run(f"insert-value-{u}", create_user_batching, u)
+        promises.append(p)
+
+    for p in promises:
+        p.result()
+```
