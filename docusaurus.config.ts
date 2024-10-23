@@ -160,8 +160,8 @@ const config: Config = {
           position: "right",
         },
         {
-          to: "http://eepurl.com/iNagDk",
-          html: '<a href="http://eepurl.com/iNagDk" target="_blank" class="subscribe-button">Subscribe</a>',
+          to: "https://resonatehq.io/subscribe",
+          html: '<a href="https://resonatehq.io/subscribe" target="_blank" class="subscribe-button">Subscribe</a>',
           position: "right",
         },
       ],
