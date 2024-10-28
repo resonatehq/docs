@@ -1,0 +1,36 @@
+[project]
+name = "summarize"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Cully Wakelin", email = "cully.wakelin@resonatehq.io" }
+]
+dependencies = [
+    "resonate-sdk>=0.1.31",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.31.0",
+]
+readme = "README.md"
+requires-python = ">= 3.12"
+
+[project.scripts]
+    "app-node" = "summarize.gateway:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "mypy>=1.11.2",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/summarize"]
+
+[tool.rye.scripts]
+check-types = "dmypy run --timeout 60 -- src"

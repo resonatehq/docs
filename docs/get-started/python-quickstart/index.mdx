@@ -10,14 +10,367 @@ tags:
   - getting-started
 ---
 
-This quickstart tutorial introduces you to the Resonate Python SDK.
+In the first part of this tutorial you will build a mock summarization service using the Resonate Python SDK and the FastAPI library.
+This part of the tutorial showcases how Resonate provides Durable Execution for application-level failures using the SDK's local promise storage.
 
-## Part 1
+Durable Execution for application-level failures means that you get Durable Promise resolution timeouts, transparent function execution retries, and retry rate limits without adding an additional supervisor service.
 
-In [Part 1](/get-started/python-quickstart/part-1), you develop your first _Distributed Async Await_ application with the Resonate SDK, a summarization service.
-This part illustrates features such as transparent function retries and retry rate limits, simply through the integration of the Resonate SDK, without the need for any additional infrastructure.
+You will create an HTTP service with a single route handler.
+The handler will use `resonate.run()` to run the `downloadAndSummarize()` function.
+Resonate will supervise the executions of these functions, ensuring they execute to completion.
 
-import DocCardList from "@theme/DocCardList";
-import { useCurrentSidebarCategory } from "@docusaurus/theme-common";
+![downloadAndSummarize application flow](/img/d&l-callgraph.gif)
 
-<DocCardList items={useCurrentSidebarCategory().items} />
+If any of the functions throw an error or reject a promise, Resonate will automatically retry the function execution.
+
+### Prerequisites
+
+This tutorial assumes that you have [Python 3](https://nodejs.org/en) and a package managere installed.
+This tutorial recommends using [Rye](https://rye.astral.sh/) as the package manager.
+
+## Set up the project
+
+Create a project folder.
+
+```shell
+mkdir resonate-quickstart && cd resonate-quickstart
+```
+
+Initialize a new Rye project:
+
+```shell
+rye init summary --script
+```
+
+Sync the project:
+
+```shell
+rye sync
+```
+
+Install the dependencies:
+
+```shell
+rye add resonate-sdk fastapi uvicorn pydantic
+```
+
+Rye will automatically generate an **init**.py file and **main**.py file in the `src/summarize` directory.
+Delete the **main**.py file and remove all the lines from the **init**.py file.
+
+Next, create an **app.py** file in the `src/summarize` directory and then copy and paste the minimal distributed async/await application below:
+
+<!--SNIPSTART quickstart-py-part-1-app-->
+
+[docs/get-started/python-quickstart/part-1/code/src/summarize/app.py](https://github.com/resonatehq/docs/blob/main/docs/get-started/python-quickstart/part-1/code/src/summarize/app.py)
+
+```py
+import random
+import time
+
+def downloadAndSummarize(ctx, url):
+    print("Downloading and summarizing content from", url)
+    # Download the content from the provided URL
+    content = yield ctx.lfc(download, url)
+    # Summarize the downloaded content
+    summary = yield ctx.lfc(summarize, content).with_options(promise_id="asdfsda")
+    # Return the summary
+    return summary
+
+def download(_, url):
+    print(f"Downloading data from {url}")
+    time.sleep(2.5)
+    # Simulate a failure to download data 50% of the time
+    if random.randint(0, 100) > 50:
+        print("Download failed")
+        raise Exception("Failed to download data")
+    print("Download successful")
+    return "This is the text of the page that was downloaded"
+
+def summarize(_, content):
+    print("Summarizing content...")
+    time.sleep(2.5)
+    if random.randint(0, 100) > 50:
+        print("Summarization failed")
+        raise Exception("Failed to summarize content")
+    print("Summarization successful")
+    return "This is the summary of the page that was downloaded"
+```
+
+<!--SNIPEND-->
+
+The code that makes up `app.py` is a simple mock application that simulates downloading a page from the internet and then summarizing the content of that page.
+It represents the "business logic" of the service.
+You have your `downloadAndSummarize()` main function that orchestrates the steps of your application (`download()` then `summarize()`).
+
+Both the `download()` and `summarize()` functions include a 2.5-second timeout to simulate the time required for downloading and summarizing content from a URL.
+These functions are invoked using `ctx.lfc`, which wraps the function call in a promise, adds it to the call graph, and introduces durability.
+
+In this example, `download()` and `summarize()` are mock functions designed to “fail” 50% of the time.
+When they return a an error, Resonate automatically retries them until they succeed.
+
+Next, create a file named `gateway.ts` and paste in the following FastAPI code that uses Resonate:
+
+<!--SNIPSTART quickstart-py-part-1-gateway-->
+
+[docs/get-started/python-quickstart/part-1/code/src/summarize/gateway.py](https://github.com/resonatehq/docs/blob/main/docs/get-started/python-quickstart/part-1/code/src/summarize/gateway.py)
+
+```py
+from resonate.scheduler import Scheduler
+from resonate.storage import LocalPromiseStore
+from resonate.retry_policy import Constant
+from fastapi import FastAPI
+from pydantic import BaseModel
+from summarize.app import downloadAndSummarize
+import uvicorn
+
+
+app = FastAPI()
+
+class SummarizeRequest(BaseModel):
+    url: str
+
+class SummarizeResponse(BaseModel):
+    summary: str
+    error: str = None
+
+# Define a route handler for the /summarize endpoint
+@app.post('/summarize')
+def summarize_route_handler(request: SummarizeRequest) -> SummarizeResponse:
+    try:
+        # Extract the URL from the request
+        url = request.url
+        # Summarize the text
+        promise =  resonate.run(f"summarize-{url}", downloadAndSummarize, url=url)
+        return {'summary': promise.result()}
+    except Exception as e:
+        return {'error': str(e)}
+
+# Create a Resonate Scheduler
+resonate = Scheduler(durable_promise_storage=LocalPromiseStore())
+# Register the downloadAndSummarize function with the Resonate scheduler
+resonate.register(downloadAndSummarize)
+
+# Define a main function to start the FastAPI app
+def main():
+    uvicorn.run(app, host="127.0.0.1", port=5000)
+    print("Serving HTTP on port 5000...")
+
+# Run the main function when the script is executed
+if __name__ == '__main__':
+    main()
+```
+
+<!--SNIPEND-->
+
+The `gateway.ts` file contains a FastAPI server that listens on port 5000 and includes a single route handler that leverages Resonate to run the `downloadAndSummarize()` function.
+To set it up, you instantiate a Resonate Scheduler, register the top-level function and start a FastAPI server.
+
+When calling `resonate.run()`, you must provide the function name, a unique identifier, and the function’s arguments.
+The identifier serves as the Durable Promise ID for the function invocation.
+If you use the same identifier for multiple calls to `resonate.run()`, you will receive the result from the initial execution without re-running the function.
+To get a new result on each call, you need to supply a different promise ID.
+
+Lastly, make sure to update your `pyproject.toml` file to includes the following scripts:
+
+```toml
+[project.scripts]
+    "app-node" = "summarize.gateway:main"
+```
+
+## Run the application
+
+To start your summarization service run `rye run app-node`.
+
+```shell
+rye run app-node
+```
+
+Then, from another terminal send a `POST` request to the `/summarize` endpoint.
+
+```shell
+curl -X POST http://localhost:5000/summarize -H "Content-Type: application/json" -d '{"url": "http://example.com"}'
+```
+
+Watch the log output of your service.
+There is a good chance that you will see either "download failed" or "summarization failed" or both one or more times.
+
+However, even if you see those failures logged, eventually you should get the text response, "This is a summary of the text", back to where you made POST request.
+
+After the request for example.com succeeds, try running it again.
+Notice how on subsequent requests with the same URL, Resonate does not start the executions again but returns the same root-level promise results immediately.
+
+This is because the url makes up part of the root-level promise ID.
+The Resonate TypeScript SDK stores that promise locally and ensures that if the same ID is used in subsequent calls, the result of the execution associated with that promise is returned.
+
+However, if you restart the service or provide a different url, the service will execute the functions again.
+
+## Up next
+
+In the next part of the tutorial, you will connect to a Resonate Server which stores the promise remotely, so that even if your HTTP server crashes, the function executions will be able to eventually complete.
+
+In Part 2 of the tutorial, you will connect your service to a Resonate Server to enable recovery from platform-level failures.
+To simulate a platform-level failure, you will kill the HTTP server process in the middle of the execution of the `downloadAndSummarize()` function.
+
+### Prerequisites
+
+This part of the tutorial assumes you have [NodeJS](https://nodejs.org/en) and [npm](https://www.npmjs.com/) installed and that you have completed [Part 1](/get-started/typescript-quickstart/part-1) and already have the service built.
+
+## Install the Resonate Server
+
+Follow the steps in the [Resonate Server install guide](/get-started/server-installation) to install and run the server on your machine.
+
+By default, the Server runs on localhost port 8001.
+
+After the server is running, you can update your service code.
+
+## Update your code
+
+There are three places where you need to update your code for this nex part of the tutorial.
+
+First, in your `gateway.ts` file, update the `new Resonate()` call and provide it with the URL of the server, in this case `http://localhost:8001`.
+
+<!--SNIPSTART quickstart-ts-part-2-server-url-->
+
+[docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts)
+
+```ts
+// Initialize a Resonate application.
+const resonate = new Resonate({ url: "http://localhost:8001" });
+```
+
+<!--SNIPEND-->
+
+Then, extend the top-level promise resolution timeout to a full minute.
+
+<!--SNIPSTART quickstart-ts-part-2-register-timeout-->
+
+[docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/gateway.ts)
+
+```ts
+// Register a function as a Resonate function
+resonate.register(
+  "downloadAndSummarize", // function name
+  downloadAndSummarize, // function pointer
+  resonate.options({ timeout: 60000 }) // set a total execution timeout of 1 minute
+);
+```
+
+<!--SNIPEND-->
+
+You are increasing the top-level promise resolution timeout to a full minute so that you have time to kill the service and bring it back up again.
+
+And finally, in your `app.ts` file add a 10 second sleep to the `downloadAndSummarize()` function between `download()` and `summarize()`.
+
+<!--SNIPSTART quickstart-ts-part-2-add-sleep-->
+
+[docs/get-started/typescript-quickstart/part-2/code/src/app.ts](https://github.com/resonatehq/docs/blob/main/docs/get-started/typescript-quickstart/part-2/code/src/app.ts)
+
+```ts
+export async function downloadAndSummarize(ctx: Context, url: string) {
+  console.log("Downloading and summarizing content from", url);
+
+  // Download the content from the provided URL
+  let content = await ctx.run(download, url);
+
+  // Sleep for 10 seconds
+  await ctx.sleep(10000);
+
+  // Summarize the downloaded content
+  let summary = await ctx.run(summarize, content);
+
+  // Return the summary of the content
+  return summary;
+}
+```
+
+<!--SNIPEND-->
+
+You are adding a 10 second sleep so that you have time between the `download()` step and the `summarize()` step so that you have time to kill the service before the `summarize()` step starts.
+
+Now that you have your code updated, it is time to simulate a service outage.
+
+## Simulate a crash
+
+If you haven't already, restart your HTTP service with the updated code.
+
+```shell
+npm start
+```
+
+After your service is running with the updated code, send the `POST` request to your service.
+
+```shell
+curl -X POST http://localhost:3000/summarize -H "Content-Type: application/json" -d '{"url": "http://example.com"}'
+```
+
+Let it run it until you see that the log "download successful", then kill (Ctrl-c) the service.
+
+:::note
+
+Because you are using cURL from another terminal, you will get "received".
+In Part 1 of the tutorial, killing the HTTP service would have resulted in the loss of the state of the executions.
+However, because the service is connected to the Resonate Server, when you bring the service back up, the execution sequence continues from where it left off.
+
+:::
+
+Start the service again.
+Assuming that you stopped the service after the `download()` function ran, you should now see the `summarize()` function logs and the application complete its execution.
+
+Lets, look at the sequence diagram to understand what happened.
+
+![Remote promise storage diagram with retries](/img/remote-storage-promise-with-retries.svg)
+
+In the diagram above, you can map function 1 to `downloadAndSummarize()`, function 2 to `download()`, and function 3 to `summarize()`.
+Notice how function 1 gets the result of function 2 from the Durable Promise after the process restarts.
+That is because the result of function 2 was stored in promise 2 before the process crashed.
+This effectively resumes the execution of function 1 from where it left off.
+
+Next, you will inspect the promise in the Resonate Server to see that it resolved successfully.
+
+## Inspect promises
+
+You can inspect the promises stored in the Resonate Server via the Resonate CLI.
+
+```bash
+resonate promise get summarize-http://example.com
+```
+
+You should see output similar to the following:
+
+```
+Id:       summarize-http://example.com
+State:    RESOLVED
+Timeout:  9008909898871320
+
+Idempotency Key (create):    summarize-http://example.com
+Idempotency Key (complete):  summarize-http://example.com
+
+Param:
+  Headers:
+  Data:
+    {"func":"downloadAndSummarize","args":["http://example.com"]}
+
+Value:
+  Headers:
+  Data:
+    "This is a summary of the text"
+
+Tags:
+  resonate:invocation:  true
+```
+
+:::tip
+
+Try out your app again with another url (to create a new promise with a different ID).
+Then, kill the HTTP service halfway through execution.
+Query for the promise in the Resonate Server and check out the status.
+
+You should see that the promise is marked `PENDING`.
+
+Bring your HTTP service back up and and then query for the promise again.
+
+It should be marked `RESOLVED`.
+
+:::
+
+So, now you should have a good understanding of how to use the Resonate SDK and the Resonate Server to build a distributed async await applications!

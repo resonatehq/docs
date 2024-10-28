@@ -11,7 +11,7 @@ origins:
       repo: docs
       ref: main
   - files:
-      pattern: ./docs/get-started/python-quickstart/part-1/code/src/**/**.py
+      pattern: ./docs/get-started/python-quickstart/code/part-1/src/**/**.py
       owner: resonatehq
       repo: docs
       ref: main
