@@ -1,14 +1,27 @@
 from flask import Flask, request, jsonify
 from resonate.scheduler import Scheduler
 from resonate.storage import RemoteServer
-from summarize.app import downloadAndSummarize
+import time
 
 app = Flask(__name__)
 
-# @@@SNIPSTART quickstart-py-part-2-server-url
+def downloadAndSummarize(ctx, url):
+    print("Downloading and summarizing content from", url)
+    # Download the content from the provided URL
+    content = yield ctx.rfc("download", url)
+
+    # highlight-start
+    # Add a delay so you have time to simulate a failure
+    time.sleep(10)
+    #highlight-end
+
+    # Summarize the downloaded content
+    summary = yield ctx.rfc("summarize", content)
+    # Return the summary
+    return summary
+
 # Create a Resonate Scheduler   
 resonate = Scheduler(durable_promise_storage=RemoteServer(url="http://localhost:8001"))
-# @@@SNIPEND
 # Register the downloadAndSummarize function with the Resonate scheduler
 resonate.register(downloadAndSummarize)
 

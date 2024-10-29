@@ -6,7 +6,7 @@ origins:
     repo: examples-py
     ref: main
   - files:
-      pattern: ./docs/get-started/typescript-quickstart/part-1/code/src/**.ts
+      pattern: ./docs/get-started/typescript-quickstart/code/part-1/src/**.ts
       owner: resonatehq
       repo: docs
       ref: main
@@ -16,15 +16,19 @@ origins:
       repo: docs
       ref: main
   - files:
-      pattern: ./docs/get-started/typescript-quickstart/part-2/code/src/**.ts
+      pattern: ./docs/get-started/typescript-quickstart/code/part-2/src/**.ts
+      owner: resonatehq
+      repo: docs
+      ref: main
+  - files:
+      pattern: ./docs/get-started/python-quickstart/code/part-2/src/**/**.py
       owner: resonatehq
       repo: docs
       ref: main
 
 targets:
-  - docs/get-started/typescript-quickstart/part-1
-  - docs/get-started/typescript-quickstart/part-2
-  - docs/get-started/python-quickstart/part-1
+  - docs/get-started/typescript-quickstart/
+  - docs/get-started/python-quickstart/
   - docs/develop
 
 allowed_target_extensions: [.md]

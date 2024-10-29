@@ -19,14 +19,14 @@ def download(_, url):
         print("Download failed")
         raise Exception("Failed to download data")
     print("Download successful")
-    return "This is the text of the page that was downloaded"
+    return f"This is the content of {url}"
     
-def summarize(_, content):
+def summarize(_, url, content):
     print("Summarizing content...")
     time.sleep(2.5)
     if random.randint(0, 100) > 50:
         print("Summarization failed")
         raise Exception("Failed to summarize content")
     print("Summarization successful")
-    return "This is the summary of the page that was downloaded"
+    return f"This is the summary of {url}."
 # @@@SNIPEND

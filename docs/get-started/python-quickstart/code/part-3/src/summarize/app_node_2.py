@@ -1,22 +1,7 @@
+from resonate.scheduler import Scheduler
+from resonate.storage import RemoteServer
 import random
 import time
-
-# @@@SNIPSTART quickstart-py-part-2-add-sleep
-def downloadAndSummarize(ctx, url):
-    print("Downloading and summarizing content from", url)
-    # Download the content from the provided URL
-    content = yield ctx.lfc(download, url)
-
-    # highlight-start
-    # Add a delay so you have time to simulate a failure
-    time.sleep(10)
-    #highlight-end
-
-    # Summarize the downloaded content
-    summary = yield ctx.lfc(summarize, content).with_options(promise_id="asdfsda")
-    # Return the summary
-    return summary
-# @@@SNIPEND
 
 def download(_, url):
     print(f"Downloading data from {url}")
@@ -37,3 +22,12 @@ def summarize(_, content):
     print("Summarization successful")
     return "This is the summary of the page that was downloaded"
 
+# Create a Resonate Scheduler   
+resonate = Scheduler(durable_promise_storage=RemoteServer(url="http://localhost:8001"))
+# Register the downloadAndSummarize function with the Resonate scheduler
+resonate.register("download", download)
+resonate.register("summarize", summarize)
+
+# Define a main function to start the Flask app
+def main():
+    print("Running")

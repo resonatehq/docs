@@ -2,6 +2,7 @@
 id: server-quickstart
 title: Resonate Server quickstart
 sidebar_label: Server quickstart
+sidebar_position: 3
 description: Quickly install and run the Resonate Server to provide durability to your application through hard crashes and failures.
 last_update:
   date: "10-24-2024"
@@ -14,15 +15,27 @@ tags:
 
 Install and run the Resonate Server to provide durability to your application through hard crashes and failures.
 
-## MacOS and Linux
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
-**How to run the Resonate Server on your Mac OS or Linux machine?**
-
-You can use Brew, or if you have Golang installed, you can build it from source.
-
-To install it with Brew and run it as a single binary, run the following commands:
+<Tabs>
+  <TabItem value="macos" label="MacOS" default>
 
 ```shell
 brew install resonatehq/tap/resonate
 resonate serve
 ```
+
+  </TabItem>
+  <TabItem value="linux" label="Linux">
+
+```shell
+brew install resonatehq/tap/resonate
+resonate serve
+```
+
+  </TabItem>
+
+</Tabs>
+
+The default configuration starts the Resonate Server on localhost port 8001 using an SQLite database.
