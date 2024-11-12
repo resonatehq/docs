@@ -77,7 +77,7 @@
     },
     {
       "source": "get-started/typescript-quickstart/part-2",
-      "destination": "/get-started/typescript-quickstart",
+      "destination": "/get-started/typescript-quickstart#part-2-durable-execution",
       "permanent": true
     }
   ]
