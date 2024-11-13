@@ -29,7 +29,7 @@ Each code example has a link above it that will take you to the source code in t
 
 In part 1, you will start with a single [Application Node](/concepts/application-node) and observe the SDK's ability to automatically retry application-level failures (failed function executions).
 Then in part 2 you will connect your application to the Resonate Server to enable recovery from platform-level failures and see how a function execution can recover from a process crash (Durable Execution).
-In part 3 you will build on the previous example by separating your HTTP Server from the your application code and run multiple Application Nodes to see how Resonate facilitates fan-out/fan-in use cases.
+In part 3 you will build on the previous example by separating your HTTP Server from your application code and run multiple Application Nodes to see how Resonate facilitates fan-out/fan-in use cases.
 After, in part 4 you will add a third step to your workflow that blocks the execution on input from a human-in-the-loop and unblock it from another process.
 Finally, in part 5 you will integrate a webscraper, such as Beautiful Soup, and an LLM, such as Ollama, to bring your application to life.
 
@@ -252,7 +252,7 @@ There is a good chance that you will see either "download failed" or "summarizat
 However, even if you see those failures logged, eventually you should get the text response, "This is a summary of the text", back to where you made POST request.
 
 After the request for the URL succeeds, try running it again with the same URL.
-Notice that on subsequent requests with the same URL, Resonate does not start the executions again but returns the results immediately.
+Notice that on subsequent requests with the same URL, Resonate does not start the executions again but returns the result immediately.
 
 This is because the URL is the unique part of the Promise ID.
 The Resonate Python SDK stores that promise locally and ensures that if the same ID is used in subsequent calls, the result of the execution associated with that promise is returned.
@@ -562,7 +562,7 @@ But you can also create a promise that is resolved by an external process, such 
 Let's update the application (`app.py`) to send the summarization of the text to a human for review.
 In this case we will pretend the summarization is sent in an email and that it contains two links: one link to accept the summarization as correct and another link to reject it, requiring the application to try summarizing the content again.
 
-Therefor the `summarization()` function and `send_email()` function will be inside a loop that will continue until the summarization is accepted.
+Therefore the `summarization()` function and `send_email()` function will be inside a loop that will continue until the summarization is accepted.
 
 <!--SNIPSTART quickstart-py-part-4-app {"selectedLines": ["13", "19-39", "61-72"]}-->
 
