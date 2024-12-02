@@ -64,19 +64,6 @@ article a {
   text-decoration: underline !important;
 }
 
-.subscribe-button {
-  color: white;
-  background: linear-gradient(
-    to right,
-    #3b82f6,
-    #14b8a6
-  ); /* From blue-500 to teal-500 */
-  border-radius: 9999px; /* Makes the button rounded */
-  padding: 0.35rem 1.25rem; /* px-5 py-2 */
-  text-decoration: none; /* Remove underline */
-  transition: background 0.3s ease; /* Smooth transition for hover */
-}
-
 .subscribe-button:hover {
   background: #292929;
   color: white;

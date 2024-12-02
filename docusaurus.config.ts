@@ -150,6 +150,12 @@ const config: Config = {
           target: "_self",
         },
         {
+          to: "https://blog.resonatehq.io",
+          label: "Subscribe",
+          position: "right",
+          target: "_self",
+        },
+        {
           href: "https://resonatehq.io/discord",
           html: '<i class="bx bx-md bxl-discord"></i>',
           position: "right",
@@ -157,11 +163,6 @@ const config: Config = {
         {
           href: "https://github.com/resonatehq/resonate",
           html: '<i class="bx bx-md bxl-github"></i>',
-          position: "right",
-        },
-        {
-          to: "https://resonatehq.io/subscribe",
-          html: '<a href="https://resonatehq.io/subscribe" target="_blank" class="subscribe-button">Subscribe</a>',
           position: "right",
         },
       ],
