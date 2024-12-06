@@ -48,17 +48,10 @@ article a {
 
 .waiting-list-announcement {
   width: 100%;
-  background: linear-gradient(
-    to right,
-    #ec4899,
-    #ef4444,
-    #f59e0b
-  ); /* Pink to red to yellow gradient */
   color: white;
   text-align: center;
-  padding: 1rem 0; /* Padding for top and bottom */
   font-size: 1.3em;
-  font-weight: bold !important;
+  font-weight: light !important;
   text-decoration: none;
   color: white;
 }
@@ -69,19 +62,6 @@ article a {
 
 .cta-link:hover {
   text-decoration: underline !important;
-}
-
-.subscribe-button {
-  color: white;
-  background: linear-gradient(
-    to right,
-    #3b82f6,
-    #14b8a6
-  ); /* From blue-500 to teal-500 */
-  border-radius: 9999px; /* Makes the button rounded */
-  padding: 0.35rem 1.25rem; /* px-5 py-2 */
-  text-decoration: none; /* Remove underline */
-  transition: background 0.3s ease; /* Smooth transition for hover */
 }
 
 .subscribe-button:hover {

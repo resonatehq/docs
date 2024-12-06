@@ -122,9 +122,9 @@ const config: Config = {
     announcementBar: {
       id: "python-sdk-waiting-list",
       content:
-        '<div class="waiting-list-announcement"><a class="cta-link" href="https://forms.gle/BnFiDUQExseQcH8h9" target="_blank" rel="noopener noreferrer">Join the Resonate Python SDK wait list!</a> 🚀</div>',
+        '<div class="waiting-list-announcement"><a class="cta-link" href="https://resonatehq.io/webinars" target="_blank" rel="noopener noreferrer">RSVP to the next community event!</a> 🚀</div>',
       isCloseable: false,
-      backgroundColor: "#121212",
+      backgroundColor: "#18181B",
       textColor: "#efefef",
     },
     navbar: {
@@ -150,6 +150,12 @@ const config: Config = {
           target: "_self",
         },
         {
+          to: "https://resonatehq.io/subscribe",
+          label: "Subscribe",
+          position: "right",
+          target: "_self",
+        },
+        {
           href: "https://resonatehq.io/discord",
           html: '<i class="bx bx-md bxl-discord"></i>',
           position: "right",
@@ -157,11 +163,6 @@ const config: Config = {
         {
           href: "https://github.com/resonatehq/resonate",
           html: '<i class="bx bx-md bxl-github"></i>',
-          position: "right",
-        },
-        {
-          to: "https://resonatehq.io/subscribe",
-          html: '<a href="https://resonatehq.io/subscribe" target="_blank" class="subscribe-button">Subscribe</a>',
           position: "right",
         },
       ],

@@ -1,0 +1,53 @@
+---
+id: tasks
+title: CLI tasks command
+sidebar_label: Tasks
+description: Interact directly with the Task Framework to mock the behaviour of Application Node.
+tags:
+  - cli
+  - tasks
+---
+
+The `tasks` command enables you to interact with the Task Framework by simulating the behavior of an Application Node.
+
+```shell
+resonate tasks <sub-command> <args> [flags]
+```
+
+## complete
+
+Complete a Task.
+
+```shell
+resonate tasks complete <id> [flags]
+```
+
+Flags:
+
+- [--counter](/operate/cli-reference/flags#--counter)
+- [--process-id](/operate/cli-reference/flags#--process-id)
+- [--ttl](/operate/cli-reference/flags#--ttl)
+
+## claim
+
+Claim one or more Tasks associated with the given ID.
+
+```shell
+resonate tasks claim <id> [flags]
+```
+
+Flags:
+
+- [--counter](/operate/cli-reference/flags#--counter)
+
+## heartbeat
+
+Send Heartbeat signals for Tasks associated with the given process ID.
+
+```shell
+resonate tasks heartbeat <id> [flags]
+```
+
+Flags:
+
+- [--process-id](/operate/cli-reference/flags#--process-id)
