@@ -10,7 +10,92 @@ tags:
   - evaluate
 ---
 
-Curious to know what Resonate can do for your cloud application?
+**Why adopt Resonate?**
+
+There isn't just one reason.
+There are many.
+
+## Use cases
+
+Resonate can be used to serve a wide range of use cases.
+
+- [Human-in-the-loop](/evaluate/use-cases/human-in-the-loop)
+- [Fan-out/Fan-in](/evaluate/use-cases/fan-out-fan-in)
+- [Work stealing](/evaluate/use-cases/work-stealing)
+
+## Developer experience
+
+Resonate aims to serve a **dead simple** developer experience.
+
+- [Sequential programming model](/evaluate/developer-experience/sequential-programming)
+- [incremental adoption](/evaluate/developer-experience/incremental-adoption)
+- [Minimal primitives](/evaluate/developer-experience/minimal-primitives)
+
+## Automatic function execution retries
+
+**Automatic function execution retries** ensure that failed functions are retried automatically when they encounter an error.
+This feature is essential for distributed applications, where function calls often depend on other services, APIs, or endpoints that may be slow, flaky, or temporarily unavailable.
+
+In a distributed application, failures are inevitable due to factors like network instability or service downtime.
+Without a retry mechanism:
+
+- A portion of your workflows may fail, disrupting user experiences.
+- Developers must write and maintain complex custom logic to handle retries.
+
+Resonate addresses these challenges by automating retries with minimal setup, improving reliability and reducing the development burden.
+
+You can define a **Retry Policy**, and Resonate will handle retries for you, ensuring seamless execution even in the face of temporary failures.
+\Resonate automatically applies these retries to every function within the application’s **Call Graph**, handling errors, exceptions, or failures with ease.
+
+Retry policies are flexible and can be configured at the **Application Node** level or for individual functions, giving you fine-grained control over how your application handles transient issues.
+
+With a predefined retry policy, Resonate ensures that:
+
+- Transient issues are retried based on your specifications (e.g., backoff intervals, retry limits).
+- Your application logic remains clean and focused without additional error-handling boilerplate.
+- Failed functions across distributed services or APIs retry automatically until they succeed or meet the retry policy limit
+
+## Crash failure recovery
+
+**Crash failure recovery** is the ability for an application to seamlessly continue its workflows after an **Application Node** crashes.
+This is also known as **Durable Execution**.
+This feature is critical in distributed systems where disruptions can halt operations or lead to unintended consequences.
+
+When an **Application Node** crashes mid-flow, it creates several challenges:
+
+- The node must be restarted, often requiring a supervisor to detect the crash and handle the recovery process.
+- Flows may have already initiated **side effects** (e.g., database writes or API calls), which must not be duplicated if they have irreversible consequences.
+- In multi-node environments, reassigning the execution to another node introduces additional complexity.
+
+**Resonate** addresses these challenges with built-in crash recovery mechanisms. Imagine a flow involving a series of steps:
+
+```jsx
+fn () {
+    await step1(); // Creates a side effect
+    await step2(); // Application Node crashes mid-step
+    await step3();
+}
+```
+
+- For single-node setups, Resonate restarts the function execution automatically as soon as the process is back online.
+- For multi-node environments, Resonate can reassign the execution to another **Application Node**, ensuring the flow resumes seamlessly without duplicating the side effect from step 1.
+
+This process is made reliable by **Resonate’s Durable Promises**, which guarantee that side effects are not duplicated unless explicitly allowed. Developers can focus on application logic, knowing that Resonate handles recovery and consistency behind the scenes.
+
+## Incremental adoption
+
+## Fan-out/Fan-in
+
+**Fan-out/Fan-in** is an architectural pattern designed to distribute computation across multiple resources, automatically scaling as application load increases.
+This approach helps eliminate bottlenecks and ensures application flows can continue to progress efficiently, even under high demand.
+
+With **Resonate**, you can scale dynamically by running as many **Application Nodes** as needed, all deployed with the same code base.
+When a flow requires additional capacity, any available Application Node can pick up the next task, enabling seamless distribution of workloads without developer intervention.
+
+Resonate also provides developers with fine-grained control over how and where to apply fan-out/fan-in within their application flows.
+Unlike an all-or-nothing approach, Resonate’s APIs allow you to decide which parts of your flow benefit from this pattern, ensuring optimal scaling and resource utilization.
+
+## Work stealing
 
 ### Distributed Async Await
 
@@ -28,16 +113,6 @@ Durable Execution ensures that your code executes to completion, effectively onc
 Our philosophy is to make things "Dead Simple".
 
 The Distributed Async Await model is based on an intuitive paradigm that you already know, and we strive to make every aspect of the product simple to use and simple to understand.
-
-### Incremental adoption
-
-Resonate is designed to allow for [incremental adoption](/evaluate/features/incremental-adoption) without vendor lock-in.
-If you need to, you can convert just one function at a time.
-
-Plus, unlike other Durable Execution systems, you don't need the Resonate Server or database to get started.
-While the Server does enables platform-level recovery and distributed orchestration, many of the SDK features, such as automatic failure detection and migitation, are provided out-of-the-box, and don't require communication with the Server to work.
-
-If you do want to add that extra layer of durability to your application, the Server comes as a single binary without heavy dependency requirements.
 
 ### Open source and open standard
 
