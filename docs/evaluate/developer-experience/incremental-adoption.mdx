@@ -1,0 +1,47 @@
+---
+id: incremental-adoption
+title: Developers can incrementally adopt Resonate
+sidebar_label: Incremental adoption
+sidebar_position: 5
+description: Local mode enables incremental adoption of Resonate without the overhead of running the Resonate Server.
+last_update:
+  date: "10-02-2024"
+tags:
+  - evaluate
+  - features
+---
+
+**Incremental adoption** refers to the ability to integrate Resonate into an existing application gradually, avoiding the common “all-or-nothing” challenge of adopting new technology.
+With Resonate, you can start small, experimenting with its programming model in a single-node setup before scaling to more complex, distributed workflows.
+
+Resonate’s flexibility supports various persistence strategies, including storing promises in local memory.
+This means you can adopt the programming model and benefit from features like **automatic function execution retries** with minimal overhead.
+While the local memory store doesn’t provide process crash recovery, it offers an easy and lightweight way to get started without requiring a full infrastructure setup.
+
+This incremental approach removes the pressure of big migrations or costly refactorings.
+It enables you to explore the power of **Distributed Async Await** by installing the Resonate SDK—just like any other package in your language environment—without needing a supervisor or persistence server initially.
+
+Resonate’s **Local Mode** is perfect for trying out **Distributed Async Await** in single-node applications.
+
+In Local Mode:
+
+- You can integrate Resonate’s programming model with no external dependencies.
+- There’s no need to run the Resonate Server, keeping your setup lightweight and straightforward.
+- It’s ideal for experimenting with the framework or building parts of your application incrementally.
+
+Once you’re ready to scale, you can transition to **Remote Mode**, unlocking the full power of Resonate for distributed recovery and resume.
+
+With Resonate, you can adopt Distributed Async Await incrementally by starting with Local Mode and then moving to Remote Mode.
+
+Local Mode is ideal for starting out with Resonate.
+It enables you to integrate Distributed Async Await into a single Application Node without the overhead of running the Resonate Server.
+
+Try Part 1 of the quickstart tutorials to see Local Mode in action:
+
+- [TypeScript SDK quickstart Part 1](/get-started/typescript-quickstart/part-1)
+
+For practical guidance on switching between Local and Remote mode, see the following feature guidance:
+
+- [TypeScript storage modes](/develop/typescript#promise-storage-modes)
+
+For a deep dive into the different storage modes, see [Durable Promises](/concepts/durable-promise).

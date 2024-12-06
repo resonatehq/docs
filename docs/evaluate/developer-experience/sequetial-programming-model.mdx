@@ -1,0 +1,70 @@
+---
+id: sequential-programming-model
+title: Sequential programming model
+sidebar_label: Sequential programming model
+sidebar_position: 1
+description: Learn how Resonate simplifies the development of complex, distributed applications.
+last_update:
+  date: "10-02-2024"
+tags:
+  - why-resonate
+  - features
+---
+
+A **sequential programming model** allows developers to write function calls in a straightforward, linear order, making the program’s flow easy to understand.
+This simplicity lets you capture the entire application flow in a single function, which enhances comprehension and collaboration for developers crafting or contributing to the application’s logic.
+
+However, sequential programming becomes challenging when dealing with distributed systems or tasks that require concurrency.
+Flaky endpoints, long-running processes, or sequences prone to crashes before completion can complicate this model.
+Adding parallel or concurrent operations further increases complexity, making it harder to manage and debug.
+
+**Resonate** addresses these challenges by reintroducing the benefits of sequential programming while solving for distribution and concurrency. With just a few elegant syntax enhancements, Resonate empowers developers to write holistic, intuitive code that seamlessly handles complex, distributed workloads.
+At its core is the concept of **Distributed Async Await**, based on familiar constructs like functions and promises.
+
+Unlike normal promises, Distributed Async Await **promises are durable**, meaning they persist even through process crashes or interruptions. This ensures your application remains resilient and reliable, even under distributed or concurrent workloads.
+
+Here’s an example of what programming with Resonate looks like:
+
+```jsx
+fn () {
+    await step1();
+    await step2();
+    await step3();
+    await step4();
+}
+```
+
+If you’ve worked with single-node applications, this style will feel familiar: readable, easy to reason about, and straightforward.
+With Resonate, you can write similar code for distributed systems, and the platform ensures each step executes reliably—even if they run on different **Application Nodes**.
+
+When you use Resonate to build applications, you benefit from a sequential, holistic, programming model that simplifies the development of complex, distributed applications.
+The programming model is based on functions and promises, which are familiar concepts to most developers, we call it [Distributed Async Await](/concepts/distributed-async-await).
+
+Consider the following pseudo-code example:
+
+```
+fn () {
+    await step1();
+    await step2();
+    await step3();
+    await step4();
+}
+```
+
+The pseudo-code example above is probably familiar to you if you have developed single node applications that run in a single process.
+The code is easy to read and understand, and it is easy to reason about.
+
+When you use Resonate to build applications, you can write code like the example above, and Resonate will ensure the steps execute, even if the steps execute on different [Application Nodes](/concepts/application-node).
+
+Get started using one of the following quickstart tutorials:
+
+- [TypeScript SDK quickstart Part 1](/get-started/typescript-quickstart/part-1)
+
+Or jump right into the feature development guides:
+
+- [TypeScript SDK](/develop/typescript)
+- [Python SDK](/develop/python)
+
+The main difference between normal promises and Resonate's promises, is that [Resonate's promises are durable](/concepts/durable-promise).
+
+With Resonate, you don't have to worry about learning to use special primitives like Workflows or Activities, just functions and promises.
