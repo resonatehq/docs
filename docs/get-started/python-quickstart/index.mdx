@@ -51,9 +51,9 @@ Part 5 of this tutorial assumes you have [Ollama](https://ollama.com/) installed
 
 ## Part 1 Incremental adoption
 
-In this part of the tutorial you will see how Resonate promotes incremental adoption.
-You can get started with the Resonate programming model without connecting to an external orchestrator, such as the Resonate Server.
-Using the SDK without the Resonate Server also provides your application with automatic function execution retries.
+In this part of the tutorial you'll see how Resonate promotes incremental adoption.
+You can get started with the Resonate programming model without connecting to an external orchestrator or promise store, such as the Resonate Server.
+Using the SDK without the Resonate Server still provides your application with automatic function execution retries.
 
 Start by setting up a new project.
 
@@ -79,7 +79,7 @@ rye sync
 Install the dependencies:
 
 ```shell
-rye add resonate-sdk flask
+rye add resonate-sdk==0.3.3 flask
 ```
 
 Rye automatically generates a **init**.py file and **main**.py file in the `src/summarize` directory.
@@ -95,11 +95,18 @@ Create an **app.py** file in the `src/summarize` directory and copy and paste th
 [quickstart/part-1/src/summarize/app.py](https://github.com/resonatehq/examples-py/blob/main/quickstart/part-1/src/summarize/app.py)
 
 ```py
+from resonate.stores.local import LocalStore, MemoryStorage
+from resonate.resonate import Resonate
 from resonate.context import Context
 import random
 import time
 
+# Create a Resonate instance with a local store
+resonate = Resonate(store=LocalStore(MemoryStorage()))
 
+
+# Define and register the downloadAndSummarize function
+@resonate.register
 def downloadAndSummarize(ctx: Context, url: str):
     print("Downloading and summarizing content from", url)
     # Download the content from the provided URL
@@ -141,6 +148,7 @@ When executed, the previous code example demonstrates how Resonate provides auto
 The previous code example simulates downloading a page from the internet and summarizing the content of that page.
 It represents the "business logic" of the service.
 The main function, `downloadAndSummarize()`, orchestrates the steps of the application, `download()` then `summarize()`.
+It is decorated with `@resonate.register` which registers the function with the Resonate instance, and enables it to be invoked with Resonate's `.run()` method.
 
 Both the `download()` and `summarize()` functions include a 2.5-second timeout to simulate the time required for downloading and summarizing content from a URL.
 And both functions are designed to “fail” 50% of the time.
@@ -166,16 +174,9 @@ Create a file named `gateway.py` and paste in the following code:
 
 ```py
 from flask import Flask, request, jsonify
-from resonate.scheduler import Scheduler
-from resonate.storage.local_store import LocalStore
 from summarize.app import downloadAndSummarize
 
 app = Flask(__name__)
-
-# Create a Resonate Scheduler
-resonate = Scheduler(durable_promise_storage=LocalStore())
-# Register the downloadAndSummarize function with the Resonate scheduler
-resonate.register(downloadAndSummarize)
 
 
 # Define a route handler for the /summarize endpoint
@@ -191,9 +192,7 @@ def summarize_route_handler():
         url = data["url"]
 
         # Run the summarize function asynchronously
-        promise = resonate.run(
-            f"downloadAndSummarize-{url}", downloadAndSummarize, url=url
-        )
+        promise = downloadAndSummarize.run(id=f"downloadAndSummarize-{url}", url=url)
 
         # Return the result as JSON
         return jsonify({"summary": promise.result()})
@@ -215,17 +214,14 @@ if __name__ == "__main__":
 <!--SNIPEND-->
 
 When executed, the previous code example initializes an HTTP Server listening to the `/summarize` route on port 5000.
-When a request comes in, the HTTP Server extracts the URL from the request, runs the `downloadAndSummarize()` function with `resonate.run()`, and returns the result as JSON.
+When a request comes in, the HTTP Server extracts the URL from the request, runs the `downloadAndSummarize()` function with Resonate's `.run()`, and returns the result as JSON.
 
-To run a function with `resonate.run()`, the function must be registered with the Resonate Scheduler.
-You need only provide the function pointer to register a local function.
-
-When calling `resonate.run()` on a local function you must provide a unique identifier, the function pointer, and the function’s arguments.
+When calling Resonate's `.run()` method you must provide a unique identifier and the function’s arguments.
 The identifier serves as the [Durable Promise ID](/concepts/durable-promise#identity) that correlates to the function invocation.
 Note that the Durable Promise ID does not correlate to a function execution, but instead the invocation of the function.
 The function may be executed as many times as needed to complete and resolve the promise.
 
-If you use the same identifier for multiple calls to `resonate.run()`, you will receive the result from the initial execution without re-running the function.
+If you use the same identifier for multiple calls to the `.run()` method, you will receive the result from the initial execution without re-running the function.
 To get a new result on each call, you need to supply a different promise ID.
 
 Lastly, make sure to update your `pyproject.toml` file to includes the following scripts:
@@ -268,9 +264,9 @@ However, if you restart the service or provide a different URL, the service will
 
 In the next part of the tutorial, you will connect to a Resonate Server which stores the promise remotely, so that even if your HTTP server crashes, the function executions will be able to eventually complete.
 
-## Part 2 Durable Execution
+## Part 2 Crash recovery
 
-In this part of the tutorial you will connect your service to a Resonate Server to enable recovery from platform-level failures, effectively providing Durable Execution.
+In this part of the tutorial you will connect your service to a Resonate Server to enable recovery from platform-level failures, effectively providing "Durable Execution".
 The Resonate Server acts as a supervisor and orchestrator for your application, storing promises and providing tasks to Application Nodes.
 
 Follow these steps to install and run the Resonate Server:
@@ -304,37 +300,32 @@ After the server is running, you can update your service code.
 
 There are two places where you need to update your code for this part of the tutorial.
 
-First, in your `gateway.py` file import the `RemoteServer` and pass an instance of it to the `Scheduler` constructor, while providing the URL of the Resonate Server.
+First, in your `app.py` file import the `RemoteServer` and pass an instance of it to the `Resonate` constructor, while providing the URL of the Resonate Server.
 In this case, the URL of the server is `http://localhost:8001`.
 
-<!--SNIPSTART quickstart-py-part-2-gateway {"selectedLines": ["3","8-9"]}-->
-
-[quickstart/part-2/src/summarize/gateway.py](https://github.com/resonatehq/examples-py/blob/main/quickstart/part-2/src/summarize/gateway.py)
-
-```py
-# ...
-from resonate.storage.resonate_server import RemoteServer
-# ...
-# Create a Resonate Scheduler
-resonate = Scheduler(durable_promise_storage=RemoteServer(url="http://localhost:8001"))
-```
-
-<!--SNIPEND-->
-
-{/* Then, extend the top-level promise resolution timeout to a full minute. */}
-
-<!--SNIPSTART quickstart-py-part-2-register-timeout-->
-<!--SNIPEND-->
-
-{/* You are increasing the top-level promise resolution timeout to a full minute so that you have time to kill the service and bring it back up again. */}
-
-Next, in your `app.py` file add a 10 second sleep to the `downloadAndSummarize()` function between `download()` and `summarize()`.
-
-<!--SNIPSTART quickstart-py-part-2-add-sleep-->
+<!--SNIPSTART quickstart-py-part-2-app {"selectedLines": ["1","7-8"]}-->
 
 [quickstart/part-2/src/summarize/app.py](https://github.com/resonatehq/examples-py/blob/main/quickstart/part-2/src/summarize/app.py)
 
 ```py
+from resonate.stores.remote import RemoteStore
+# ...
+# Create an instance of Resonate with a remote promise store
+resonate = Resonate(store=RemoteStore(url="http://localhost:8001"))
+```
+
+<!--SNIPEND-->
+
+Next, add a 10 second sleep to the `downloadAndSummarize()` function between `download()` and `summarize()`.
+
+<!--SNIPSTART quickstart-py-part-2-app {"selectedLines": ["11-26"]}-->
+
+[quickstart/part-2/src/summarize/app.py](https://github.com/resonatehq/examples-py/blob/main/quickstart/part-2/src/summarize/app.py)
+
+```py
+# ...
+# Define and register the downloadAndSummarize function with Resonate
+@resonate.register
 def downloadAndSummarize(ctx: Context, url: str):
     print("Downloading and summarizing content from", url)
     # Download the content from the provided URL
@@ -349,8 +340,6 @@ def downloadAndSummarize(ctx: Context, url: str):
     print(summary)
     # Return the summary
     return summary
-
-
 ```
 
 <!--SNIPEND-->
@@ -393,7 +382,7 @@ That is because the result of function 2 was stored in promise 2 before the proc
 This effectively resumes the execution of function 1 from where it left off.
 
 You can also simulate a crash on the client side by killing the cURL request before the `downloadAndSummarize()` function completes.
-Then send the same cURL request again, before the function completes and with the same URL, and notice how Resonate doesn't start a new execution.
+Then send the same cURL request again before the function completes, and with the same URL, and notice how Resonate doesn't start a new execution.
 Instead the cURL request waits on the existing execution to complete.
 This shows how Durable Promise IDs act as Idempotency Keys.
 
@@ -452,7 +441,7 @@ Once separated you will run multiple Application Nodes and send multiple request
 
 Start by converting from a Local Function Invocation to a Remote Function Invocation.
 In the `gateway.py` file, remove the import of the `downloadAndSummarize` function from the `app.py` file.
-Also, remove the registration of the function with the Resonate Scheduler.
+Also, remove the registration of the function with the instance of Resonate.
 Then, change `resonate.run()` to `resonate.rfi()`, and don't await on the result of the workflow.
 
 <!--SNIPSTART quickstart-py-part-3-gateway {"selectedLines": ["11-13", "23-32"]}-->
@@ -483,7 +472,7 @@ The decision to not await on the result of the workflow in the gateway is purely
 
 Next, update the `app.py` file with the following changes:
 
-- Import the `Scheduler` and `RemoteServer`.
+- Import the `Scheduler` and `RemoteStore`.
 - Connect to the Resonate Server, specifying the logic group as `summarization-nodes`.
 - Remove durability from the Local Function Incovations to `download()` and `summarize()`.
 - Register the top-level `downloadAndSummarize()` function.

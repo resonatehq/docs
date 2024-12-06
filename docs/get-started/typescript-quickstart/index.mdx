@@ -226,9 +226,9 @@ However, if you restart the service or provide a different url, the service will
 
 In the next part of the tutorial, you will connect to a Resonate Server which stores the promise remotely, so that even if your HTTP server crashes, the function executions will be able to eventually complete.
 
-## Part 2 Durable Execution
+## Part 2 Crash recovery
 
-Now it is time to connect your service to a Resonate Server to enable recovery from platform-level failures.
+Now it is time to connect your service to a Resonate Server to enable recovery from platform-level failures, otherwise known as Durable Execution.
 To simulate a platform-level failure, you will kill the HTTP server process in the middle of the execution of the `downloadAndSummarize()` function.
 
 Follow the steps in the [Resonate Server install guide](/get-started/server-quickstart) to install and run the server on your machine.
