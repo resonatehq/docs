@@ -5,10 +5,11 @@ sidebar_label: Sequential programming model
 sidebar_position: 1
 description: Learn how Resonate simplifies the development of complex, distributed applications.
 last_update:
-  date: "10-02-2024"
+  date: "12-12-2024"
 tags:
-  - why-resonate
-  - features
+  - sequential-programming-model
+  - developer-experience
+  - evaluate
 ---
 
 A **sequential programming model** allows developers to write function calls in a straightforward, linear order, making the program’s flow easy to understand.
@@ -37,28 +38,10 @@ fn () {
 If you’ve worked with single-node applications, this style will feel familiar: readable, easy to reason about, and straightforward.
 With Resonate, you can write similar code for distributed systems, and the platform ensures each step executes reliably—even if they run on different **Application Nodes**.
 
-When you use Resonate to build applications, you benefit from a sequential, holistic, programming model that simplifies the development of complex, distributed applications.
-The programming model is based on functions and promises, which are familiar concepts to most developers, we call it [Distributed Async Await](/concepts/distributed-async-await).
-
-Consider the following pseudo-code example:
-
-```
-fn () {
-    await step1();
-    await step2();
-    await step3();
-    await step4();
-}
-```
-
-The pseudo-code example above is probably familiar to you if you have developed single node applications that run in a single process.
-The code is easy to read and understand, and it is easy to reason about.
-
-When you use Resonate to build applications, you can write code like the example above, and Resonate will ensure the steps execute, even if the steps execute on different [Application Nodes](/concepts/application-node).
-
 Get started using one of the following quickstart tutorials:
 
-- [TypeScript SDK quickstart Part 1](/get-started/typescript-quickstart/part-1)
+- [Python SDK quickstart](/get-started/python-quickstart)
+- [TypeScript SDK quickstart](/get-started/typescript-quickstart)
 
 Or jump right into the feature development guides:
 
