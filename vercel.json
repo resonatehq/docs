@@ -59,6 +59,31 @@
       "source": "/evaluate/why-resonate-hq",
       "destination": "/evaluate/why-resonate",
       "permanent": true
+    },
+    {
+      "source": "/get-started/python-quickstart/part-1",
+      "destination": "/get-started/python-quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/get-started/server-installation",
+      "destination": "/get-started/server-quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/get-started/typescript-quickstart/part-1",
+      "destination": "/get-started/typescript-quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/get-started/typescript-quickstart/part-2",
+      "destination": "/get-started/typescript-quickstart#part-2-durable-execution",
+      "permanent": true
+    },
+    {
+      "source": "/evaluate/system-components",
+      "destination": "/evaluate/system-architecture",
+      "permanent": true
     }
   ]
 }

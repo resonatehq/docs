@@ -10,36 +10,30 @@ tags:
   - evaluate
 ---
 
-Curious to know what Resonate can do for your cloud application?
+**Why adopt Resonate?**
 
-### Distributed Async Await
+There isn't just one reason.
+There are many.
 
-[Distributed Async Await](/concepts/distributed-async-await) extends your traditional Async Await.
-Traditional Aysnc Await enables concurrent execution on a single physical location using just functions and promises.
-Distributed Async Await provides the same level of concurrency, but for distributed locations, making it an incredibly effective cloud programming model.
+## Developer experience
 
-### Durable Execution
+Resonate aims to serve a **dead simple** developer experience.
 
-With Resonate [promises are durable](/concepts/durable-promise), enabling [Call Graph](/concepts/call-graph) recovery, and thus enabling Durable Execution.
-Durable Execution ensures that your code executes to completion, effectively once, even in the face of hardware or software failures.
+- [Sequential programming model](/evaluate/developer-experience/sequential-programming-model)
+- [incremental adoption](/evaluate/developer-experience/incremental-adoption)
+- [Minimal primitives](/evaluate/developer-experience/minimal-primitives)
+- [Built on an open specification](/evaluate/developer-experience/open-specification)
 
-### Dead Simple philosophy
+## Application architectures
 
-Our philosophy is to make things "Dead Simple".
+Resonate can be used to build architectures that solve for many different needs.
 
-The Distributed Async Await model is based on an intuitive paradigm that you already know, and we strive to make every aspect of the product simple to use and simple to understand.
+- [Human-in-the-loop](/evaluate/application-architectures/human-in-the-loop)
+- [Fan-out/Fan-in](/evaluate/application-architectures/fan-out-fan-in)
 
-### Incremental adoption
+## Features
 
-Resonate is designed to allow for [incremental adoption](/evaluate/features/incremental-adoption) without vendor lock-in.
-If you need to, you can convert just one function at a time.
-
-Plus, unlike other Durable Execution systems, you don't need the Resonate Server or database to get started.
-While the Server does enables platform-level recovery and distributed orchestration, many of the SDK features, such as automatic failure detection and migitation, are provided out-of-the-box, and don't require communication with the Server to work.
-
-If you do want to add that extra layer of durability to your application, the Server comes as a single binary without heavy dependency requirements.
-
-### Open source and open standard
-
-All [Resonate components](/evaluate/system-components) are open source.
-And the Distributed Async Await programming model is built on top of Durable Promises, an [open standard](https://github.com/resonatehq/durable-promise-specification) with an intentionally minimal API surface area.
+- [Automatic function execution retries](/evaluate/features/execution-retries)
+- [Crash failure recovery (Durable Execution)](/evaluate/features/recovery)
+- [Transparent batching](/evaluate/features/transparent-batching)
+- [Scheduled function executions](/evaluate/features/scheduled-executions)
