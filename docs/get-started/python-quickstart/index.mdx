@@ -672,6 +672,8 @@ def send_email(ctx: Context, summary: str, email: str, promise_id: str):
 <!--SNIPEND-->
 
 In the previous code example, the `downloadAndSummarize()` function now includes a loop that continues until the summarization is accepted.
+The 10 second sleep was also removed to focus on the human-in-the-loop aspect of the workflow.
+
 The entire workflow will wait until the promise is resolved by the human-in-the-loop.
 And the loop will break if the data we receive via the promise resolution is `true`, and continue if `false`.
 
