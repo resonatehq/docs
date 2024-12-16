@@ -84,6 +84,16 @@
       "source": "/evaluate/system-components",
       "destination": "/evaluate/system-architecture",
       "permanent": true
+    },
+    {
+      "source": "/evaluate/features/sequential-programming-model",
+      "destination": "/evaluate/developer-experience/sequential-programming-model",
+      "permanent": true
+    },
+    {
+      "source": "/evaluate/features/incremental-adoption",
+      "destination": "/evaluate/developer-experience/incremental-adoption",
+      "permanent": true
     }
   ]
 }
