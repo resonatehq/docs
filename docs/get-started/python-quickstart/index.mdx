@@ -79,7 +79,7 @@ rye sync
 Install the dependencies:
 
 ```shell
-rye add resonate-sdk==0.3.3 flask
+rye add resonate-sdk flask
 ```
 
 Rye automatically generates a **init**.py file and **main**.py file in the `src/summarize` directory.
@@ -622,7 +622,7 @@ In this case we will pretend the summarization is sent in an email and that it c
 
 Therefore the `summarization()` function and a new `send_email()` function will be inside a loop that will continue until the summarization is accepted.
 
-<!--SNIPSTART quickstart-py-part-4-app {"selectedLines": ["16-43", "65-75"]}-->
+<!--SNIPSTART quickstart-py-part-4-app {"selectedLines": ["16-42", "64-74"]}-->
 
 [quickstart/part-4/src/summarize/app.py](https://github.com/resonatehq/examples-py/blob/main/quickstart/part-4/src/summarize/app.py)
 
@@ -634,8 +634,7 @@ def downloadAndSummarize(ctx: Context, url: str, email: str):
     print("Downloading and summarizing content from", url)
     # Download the content from the provided URL
     content = yield ctx.lfc(download, url)
-    # Add a delay so you have time to simulate a failure
-    time.sleep(10)
+    # Loop until the summary is confirmed
     while True:
         # Summarize the downloaded content
         summary = yield ctx.lfc(summarize, url, content)
