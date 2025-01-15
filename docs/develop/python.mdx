@@ -36,16 +36,26 @@ rye add resonate-sdk
 pip install resonate-sdk
 ```
 
-Then initialize the SDK in your project, register your top-level function(s) and call `.run()`:
+Then initialize the SDK in your project, register your top-level function(s) and call the `.run()` method:
 
 ```python
-from resonate.scheduler import Scheduler
+# Import the Resonate SDK
+from resonate.stores.local import LocalStore, MemoryStorage
+from resonate.resonate import Resonate
 
 # ...
 
-resonate = Scheduler(durable_promise_storage=LocalPromiseStore())
-resonate.register(your_func)
-resonate.run(your_func)
+# Create a Resonate instance with a local store
+resonate = Resonate(store=LocalStore(MemoryStorage()))
+
+# Define and register your function
+@resonate.register
+def your_function(ctx, args):
+    # ...
+    return
+
+# Invoke the function using the run method
+your_function.run("your_promise_id", args)
 ```
 
 ## Promise storage modes
@@ -59,7 +69,13 @@ The Resonate Python SDK supports two storage modes: Local and Remote.
 [Local storage mode](/concepts/durable-promise#local-storage) is ideal for starting out with Resonate.
 
 ```python
-resonate = Scheduler(durable_promise_storage=LocalPromiseStore())
+from resonate.stores.local import LocalStore, MemoryStorage
+from resonate.resonate import Resonate
+
+# ...
+
+# Create a Resonate instance with a local store
+resonate = Resonate(store=LocalStore(MemoryStorage()))
 ```
 
 ### Remote storage
@@ -70,12 +86,80 @@ Remote storage ensures promises are stored in the Resonate Server.
 To enable Remote storage, pass the Resonate Server's address when initializing Resonate:
 
 ```python
-resonate = Scheduler(durable_promise_storage=RemotePromiseStore(url="http://localhost:8001"))
+from resonate.task_sources.poller import Poller
+from resonate.stores.remote import RemoteStore
+from resonate.resonate import Resonate
+
+# ...
+
+# Initialize the Resonate using the Resonate Server as remote storage
+resonate = Resonate(
+    store=RemoteStore(url="http://localhost:8001"),
+    task_source=Poller(url="http://localhost:8002"),
+)
+```
+
+## Function registration
+
+**How to register a function with Resonate in the Python SDK.**
+
+There are two ways to register a function with Resonate: using the `register` method or using the `@resonate.register` decorator.
+
+**Decorator**
+
+```python
+from resonate.stores.local import LocalStore, MemoryStorage
+from resonate.resonate import Resonate
+from resonate.context import Context
+
+# ...
+
+# Create a Resonate instance with a local store or remote store
+resonate = Resonate(store=LocalStore(MemoryStorage()))
+
+# Define your function
+# Use the register decorator to register a function
+@resonate.register
+def your_function(ctx, args):
+    # ...
+    return
+
+# Invoke the function using the run method
+your_function.run("your_promise_id", args)
+```
+
+**Method**
+
+```python
+from resonate.stores.local import LocalStore, MemoryStorage
+from resonate.resonate import Resonate
+
+# ...
+
+# Create a Resonate instance with a local store or remote store
+resonate = Resonate(store=LocalStore(MemoryStorage()))
+
+# Define your function
+def your_function(ctx, args):
+    # ...
+    return
+
+# Register the function with Resonate using the register method
+resonate.register(your_function)
+
+# Invoke the function using the run method
+resonate.run("your_promise_id", your_function, args)
 ```
 
 ## Set a Retry Policy
 
 **How to set a Retry Policy in the Resonate Python SDK.**
+
+:::warning Older version
+
+The following documentation reflects version 0.2.4 of the Resonate Python SDK.
+
+:::
 
 You can set a Retry Policy to control how a function should be retried if it fails.
 A Retry Policy can be set at the function level or when the individual function is invoked.
@@ -113,26 +197,37 @@ ctx.lfc(another_func, retry_policy=Constant())
 You can inject dependencies into your Resonate instance and use them in functions that receive the Resonate Context.
 
 ```python
-from resonate.scheduler import Scheduler
-from resonate.storage import LocalPromiseStore
+from resonate.stores.local import LocalStore, MemoryStorage
+from resonate.resonate import Resonate
+from resonate.context import Context
 
 # ...
 
-s = Scheduler(durable_promise_storage=LocalPromiseStore())
+# Create a Resonate instance with a local or remote store
+resonate = Resonate(store=LocalStore(MemoryStorage()))
+
 # ...
-s._deps.set("dependency-a", dependency())
-s._deps.set("dependency-b", "some-dependency")
+resonate.set_dependency("dependency-a", dependency())
+resonate.set_dependency"dependency-b", "some-dependency")
 ```
 
 Then you can access the dependencies in your functions:
 
 ```python
-def your_func(ctx: Context):
+def yourFunc(ctx: Context):
 # ...
-dep = ctx.deps.get("dependency-a")
+dep = ctx.get_dependency("dependency-a")
 ```
 
 ## Batch operations
+
+**How to use batch operations in the Resonate Python SDK.**
+
+:::warning Older version
+
+The following documentation reflects version 0.2.4 of the Resonate Python SDK.
+
+:::
 
 Resonate's transparent batching feature handles the coordination of otherwise concurrent executions to create batches, enabling you to write concurrent, non-coordinated code.
 For a deeper dive into transparent batching, check out the [Transparent batching with the Resonate Python SDK](https://blog.resonatehq.io/transparent-batching-with-the-resonate-python-sdk) blog post.
