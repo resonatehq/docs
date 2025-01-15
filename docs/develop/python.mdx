@@ -219,6 +219,22 @@ def yourFunc(ctx: Context):
 dep = ctx.get_dependency("dependency-a")
 ```
 
+## Sleep
+
+**How to sleep inside a function with the Resonate Python SDK.**
+
+Resonate's sleep is durable, meaning it will persist across restarts and failures.
+
+```python
+@resonate.register
+def your_function(ctx, args):
+    # ...
+    ctx.sleep(5)
+    # ...
+```
+
+The previous function will sleep for 5 seconds and then continue execution.
+
 ## Batch operations
 
 **How to use batch operations in the Resonate Python SDK.**
