@@ -144,7 +144,7 @@ const config: Config = {
           target: "_self",
         },
         {
-          to: "https://blog.resonatehq.io",
+          to: "https://resonatehqio.substack.com/",
           label: "Blog",
           position: "right",
           target: "_self",
