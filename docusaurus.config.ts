@@ -122,7 +122,7 @@ const config: Config = {
     announcementBar: {
       id: "rsvp-form",
       content:
-        '<div class="waiting-list-announcement"><a class="cta-link" href="https://forms.gle/Ew6GnpRYt45JjnxS8" target="_blank" rel="noopener noreferrer">RSVP to the next community event!</a> 🚀</div>',
+        '<div class="waiting-list-announcement"><a class="cta-link" href="https://resonatehq.io/rsvp" target="_blank" rel="noopener noreferrer">RSVP to the next community event!</a> 🚀</div>',
       isCloseable: false,
       backgroundColor: "#18181B",
       textColor: "#efefef",
